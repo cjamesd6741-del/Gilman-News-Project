@@ -15,6 +15,8 @@ class Storedata { // handles all interactions with files
   Map catdata = {};
   Duration totalduration = Duration.zero;
   Queue<String> past10articles = Queue<String>();
+  AuthorStorage authorStorage = AuthorStorage();
+  ClearData clearData = ClearData();
 
   Future<void> updatearticleread() async {
       state = await storage.filereader();
@@ -51,6 +53,10 @@ class Storedata { // handles all interactions with files
   Future<int> numarticleread() async {
       String state = await storage.filereader();
       if (state == 'didnt work') {
+        debugPrint(state);
+        return 0; 
+      }
+      else if (state == '') {
         debugPrint(state);
         return 0; 
       }
@@ -141,7 +147,7 @@ class Storedata { // handles all interactions with files
     await catstorage.writing(enocodeddata);   
     }
   }// write categories from article to file
-  
+
   Future<Map> categoryreader() async {
     String state = await catstorage.filereader();
     if (state == 'didnt work') {
@@ -150,6 +156,49 @@ class Storedata { // handles all interactions with files
     }
     else {
       Map data = jsonDecode(state);
+      debugPrint(data.toString());
+      return data;
+    }
+  }
+
+    Future<void> authorwriter(List authors) async {
+    String authstate = await authorStorage.filereader();
+    Map authdata = {}; 
+    if (authstate == 'didnt work') {
+      debugPrint("didnt work");
+      for (int i = 0; i < authors.length; ++i) 
+      {
+          authdata[authors[i]] = 1;
+      }
+      String enocodeddata = jsonEncode(authdata);
+      await authorStorage.writing(enocodeddata);
+    }  
+    else {   
+    authdata = jsonDecode(authstate);
+    for (int i = 0; i < authors.length; ++i) 
+      {
+      if (authdata[authors[i]] == null) {
+        authdata[authors[i]] = 1;
+      }
+      else if (authdata[authors[i]] != null) {
+        authdata[authors[i]] = authdata[authors[i]] + 1;
+      }
+    }  
+    debugPrint(authdata.toString());
+    String enocodeddata = jsonEncode(authdata);
+    await authorStorage.writing(enocodeddata);   
+    }
+  }
+
+  Future<Map> authorreader() async {
+    String state = await authorStorage.filereader();
+    if (state == 'didnt work') {
+      debugPrint(state);
+      return {};
+    }
+    else {
+      debugPrint(state);
+      data = jsonDecode(state);
       debugPrint(data.toString());
       return data;
     }

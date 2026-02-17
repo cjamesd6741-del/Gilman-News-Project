@@ -37,6 +37,15 @@ class Topthree {
     topThree = sortedEntries.take(3).map((e) => Category(name : e.key, count : e.value)).toList();
     return topThree;
   }
+
+  Future<List<Category>> gettopthreeauthors() async {
+    Map authormap = await catstorage.authorreader();
+    var sortedEntries = authormap.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    topThree = sortedEntries.take(3).map((e) => Category(name : e.key, count : e.value)).toList();
+    return topThree;
+  }
+  
 }
 
 class Category {

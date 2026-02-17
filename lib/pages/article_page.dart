@@ -1,5 +1,5 @@
 import 'dart:collection';
-
+import '/services/similarity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -19,6 +19,10 @@ class _Article_PageState extends State<Article_Page> {
   bool firstbuild = true;
   List categories = [];
   Stopwatch stopwatch = Stopwatch();
+  List authorslist = [];
+  String authors = '';
+  Similarity_Finder similar = Similarity_Finder();
+  int id = 0; 
 
   Map data  = {};
   @override
@@ -33,6 +37,12 @@ class _Article_PageState extends State<Article_Page> {
       categories = args['category'] ?? [];
       storedata.categorywriter(categories);
       storedata.past10update(ListQueue.from(categories));
+      authors = args['author'];
+      authorslist = authors.split(RegExp(r',\s*|\s+and\s+'));
+      debugPrint(authorslist.toString());
+      storedata.authorwriter(authorslist);
+      id = args['id'];
+      similar.getsimilarcategories(id);
     }});
   }
 

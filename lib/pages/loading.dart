@@ -29,6 +29,7 @@ class _LoadingState extends State<Loading> {
           'category': inputjson['category'],
           'image_urls': inputjson['Image_urls'],
           'image_labels': inputjson['Image_label'],
+          'id' : inputjson['id']
         });
     }
   @override

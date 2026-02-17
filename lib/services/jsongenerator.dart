@@ -7,7 +7,7 @@ class Getter {
   Future fetchArticleJson() async {
     Map info = await Supabase.instance.client
         .from('Articles')
-        .select('json_article_file, Extra_Article_Room , Image_urls, Image_label')
+        .select('Article_ID , json_article_file, Extra_Article_Room , Image_urls, Image_label')
         .eq('Author', author)
         .eq('Article_Title', title)
         .single();
@@ -19,9 +19,11 @@ class Getter {
         info['json_article_file'] = infowthimage;
       }
       info['json_article_file'] = infowthimage; 
+      info['json_article_file']['id'] = info["Article_ID"];
       return info['json_article_file'];
     }
     if (info['Extra_Article_Room'] == null) {
+      info['json_article_file']['id'] = info["Article_ID"];
       return info['json_article_file'];
     }
     else{
@@ -30,8 +32,8 @@ class Getter {
       final List mainlist = info['json_article_file']['body'];
       final combinedList = [...mainlist, ...listextra];
       info['json_article_file']['body'] = combinedList;
+      info['json_article_file']['id'] = info["Article_ID"];
       return info['json_article_file'];
     }
-
   }
 }

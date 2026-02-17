@@ -18,6 +18,7 @@ class _StatsState extends State<Stats> {
   Topthree topthree = Topthree();
   List<Category> topthreecategorieslist = [];
   List<Category> recentcategorieslist = [];
+  List<Category> topthreeauthorslist = [];
 
 
   Future getdata() async {
@@ -25,12 +26,14 @@ class _StatsState extends State<Stats> {
     duration =  await storedata.durationreader();
     topthreecategorieslist = await topthree.gettopthreecategories();
     recentcategorieslist = await topthree.gettopthreerecentcategories();
+    topthreeauthorslist = await topthree.gettopthreeauthors();
     setState(() {
       articler = articlesRead;
       debugPrint(articler.toString());
       shownduration = Duration(seconds: duration.inSeconds);
       topthreecategorieslist = topthreecategorieslist;
       recentcategorieslist = recentcategorieslist;
+      topthreeauthorslist = topthreeauthorslist;
     });
   }
   @override
@@ -84,7 +87,25 @@ class _StatsState extends State<Stats> {
                 itemBuilder: (context, index) {
                   return CategoryCard(category: recentcategorieslist[index]);
                 },
-              )
+              ),
+              const SizedBox(height: 30),
+              Text  ('Favorite Writers', style: const TextStyle(fontSize: 22 , fontWeight: FontWeight.w400 , color:  Color.fromARGB(255, 255, 249, 249)),),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: topthreeauthorslist.length,
+                itemBuilder: (context, index) {
+                  return CategoryCard(category: topthreeauthorslist[index]);
+                },
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: ()
+                {
+                  storedata.clearData.clear();
+                  getdata();
+                }, 
+                child: Text("clear all data"))
 
             ],
         )],),
