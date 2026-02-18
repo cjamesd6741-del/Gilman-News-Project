@@ -18,7 +18,7 @@ class _StatsState extends State<Stats> {
   Topthree topthree = Topthree();
   List<Category> topthreecategorieslist = [];
   List<Category> recentcategorieslist = [];
-  List<Category> topthreeauthorslist = [];
+  List<Author> topthreeauthorslist = [];
 
 
   Future getdata() async {
@@ -95,7 +95,7 @@ class _StatsState extends State<Stats> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: topthreeauthorslist.length,
                 itemBuilder: (context, index) {
-                  return CategoryCard(category: topthreeauthorslist[index]);
+                  return AuthorCard(author: topthreeauthorslist[index]);
                 },
               ),
               const SizedBox(height: 30),

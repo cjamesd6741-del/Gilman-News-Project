@@ -8,6 +8,7 @@ class Topthree {
   Map data = {};
   String state = "";
   List<Category> topThree = [];
+  List<Author> topThree_a = [];
   List recentCategories = [];
 
   Future<List<Category>> gettopthreecategories() async {
@@ -38,12 +39,12 @@ class Topthree {
     return topThree;
   }
 
-  Future<List<Category>> gettopthreeauthors() async {
+  Future<List<Author>> gettopthreeauthors() async {
     Map authormap = await catstorage.authorreader();
     var sortedEntries = authormap.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    topThree = sortedEntries.take(3).map((e) => Category(name : e.key, count : e.value)).toList();
-    return topThree;
+    topThree_a = sortedEntries.take(3).map((e) => Author(name : e.key, count : e.value)).toList();
+    return topThree_a;
   }
   
 }
@@ -53,6 +54,13 @@ class Category {
   int count;
   Category({required this.name, required this.count});
 }
+
+class Author {
+  String name;
+  int count;
+  Author({required this.name, required this.count});
+}
+
 
 class CategoryCard extends StatelessWidget {
 
@@ -73,4 +81,21 @@ class CategoryCard extends StatelessWidget {
   }
 }
 
+class AuthorCard extends StatelessWidget {
 
+  final Author author;
+  const AuthorCard({super.key, required this.author});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+      child: Card(
+        child: ListTile(
+          title: Text(author.name),
+          trailing: Text(author.count.toString()),
+        ),
+      ),
+    );
+  }
+}

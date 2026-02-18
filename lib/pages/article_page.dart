@@ -23,6 +23,8 @@ class _Article_PageState extends State<Article_Page> {
   String authors = '';
   Similarity_Finder similar = Similarity_Finder();
   int id = 0; 
+  late Future<List<Similar_Instance>> recs;
+  bool _initialized = false;
 
   Map data  = {};
   @override
@@ -42,8 +44,22 @@ class _Article_PageState extends State<Article_Page> {
       debugPrint(authorslist.toString());
       storedata.authorwriter(authorslist);
       id = args['id'];
-      similar.getsimilarcategories(id);
     }});
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args != null && args is Map) {
+        data = args;
+        categories = args['category'] ?? [];
+        authors = args['author'];
+        id = args['id'];
+        recs = similar.getsimilarcategories(id, authors);
+      }
+      _initialized = true;
+    }
   }
 
 
@@ -81,7 +97,7 @@ class _Article_PageState extends State<Article_Page> {
     if (didPop) {
       onLeave();
     }},
-    child: Scaffold(
+    child: Scaffold(// actual layout
         appBar: AppBar(
           toolbarHeight: height + 32,
           title: Text(data['title'] ?? 'Article' , 
@@ -179,7 +195,7 @@ class _Article_PageState extends State<Article_Page> {
                   'By ${data['author'] ?? ''} - ${data['date'] ?? ''}',
                   style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: (data['words'] as List<dynamic>).map<Widget>((word) {
@@ -191,7 +207,26 @@ class _Article_PageState extends State<Article_Page> {
                       ),
                     );
                   }).toList(),
-                )]
+                ),
+                const SizedBox(height: 16),
+                FutureBuilder(
+                  future: recs, 
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if( snapshot.connectionState == ConnectionState.waiting) {
+                      return Row(children:[
+                        SpinKitCubeGrid()
+                        ],);
+                    }
+
+                    List<Similar_Instance> recommendations = snapshot.data; 
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: recommendations.map((recommend) {
+                        return SimilarCard(similar_instance : recommend);
+                      }).toList());
+                  }
+                  )
+                ]
                 )
           ),
         ),

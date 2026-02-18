@@ -2,7 +2,7 @@ import 'package:apitest_2/services/cardclass.dart';
 import 'package:flutter/material.dart';
 
 class  Cardbuild extends StatelessWidget {
-  final Cardclass  cardclass;
+  final Cardclass cardclass;
   const Cardbuild({required this.cardclass});
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,5 @@ class  CurrentCardbuild extends StatelessWidget {
 
     );
   }
-
-
 
 }
