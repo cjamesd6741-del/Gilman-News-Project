@@ -10,14 +10,16 @@ class CurrentArticles extends StatefulWidget {
 }
 
 class _CurrentArticlesState extends State<CurrentArticles> {
-  final currentarticledata = Supabase.instance.client
-      .from('Current_Articles')
-      .select('Author, Article_Title, Date, Article_ID');
-  
   @override
   initState() {
       super.initState();
   }
+  Future<List<dynamic>> fetchCurrentArticles() async {
+    final response = await Supabase.instance.client
+        .from('Current_Articles')
+        .select('Author, Article_Title, Date, Article_ID');
+    return response as List<dynamic>;}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +81,7 @@ class _CurrentArticlesState extends State<CurrentArticles> {
         ];
         },
         body: FutureBuilder(
-              future: currentarticledata,
+              future: fetchCurrentArticles(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());

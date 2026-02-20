@@ -5,6 +5,7 @@ import 'package:apitest_2/pages/loading.dart';
 import 'package:apitest_2/pages/all_articles.dart';
 import 'package:apitest_2/pages/currentarticles.dart';
 import 'pages/stats.dart';
+import 'pages/routmanager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,11 +17,13 @@ Future<void> main() async {
   runApp(MaterialApp(
     initialRoute: '/',
     routes: {
-      '/': (context) =>  CurrentArticles(),
-      '/all_articles' : (context) =>  AllArticlesPage(),
-      '/article_page' : (context) =>  Article_Page(),
-      '/loading' : (context) =>  Loading(),
-      '/stats' : (context) =>  Stats(),
+      '/': (context) =>  HomePage(),
+      // '/current_articles': (context) =>  CurrentArticles(),
+      // '/all_articles' : (context) =>  AllArticlesPage(),
+      // '/article_page' : (context) =>  Article_Page(),
+      // '/loading' : (context) =>  Loading(),
+      // '/stats' : (context) =>  Stats(),
+
     }
 
 

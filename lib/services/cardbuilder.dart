@@ -12,7 +12,7 @@ class  Cardbuild extends StatelessWidget {
         children: <Widget>[
               ElevatedButton(
                 onPressed: (){
-                  Navigator.pushNamed(context, '/loading', 
+                  Navigator.of(context).pushNamed( '/loading', 
                   arguments:{
                     'title': cardclass.articleTitle,
                     'author': cardclass.author,
@@ -44,7 +44,7 @@ class  CurrentCardbuild extends StatelessWidget {
         children: <Widget>[
               ElevatedButton(
                 onPressed: (){
-                  Navigator.pushNamed(context, '/loading', 
+                  Navigator.of(context).pushNamed('/loading', 
                   arguments:{
                     'title': currentcardclass.articleTitle,
                     'author': currentcardclass.author,
@@ -63,7 +63,6 @@ class  CurrentCardbuild extends StatelessWidget {
                 ))
         ],
       ),
-
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '/services/stats/Articlestorage.dart';
 import '/services/appbartext.dart';
+import '/services/back_from_rec.dart';
 class Article_Page extends StatefulWidget {
   const Article_Page({super.key});
 
@@ -25,6 +26,10 @@ class _Article_PageState extends State<Article_Page> {
   int id = 0; 
   late Future<List<Similar_Instance>> recs;
   bool _initialized = false;
+  String prevauthor = '';
+  String prevtitle = '';
+  bool recommended = false; //note this variable is only used to determine if the current article was pushed by an recommend button, in which case we create a way for the reader to go back
+
 
   Map data  = {};
   @override
@@ -43,7 +48,13 @@ class _Article_PageState extends State<Article_Page> {
       authorslist = authors.split(RegExp(r',\s*|\s+and\s+'));
       debugPrint(authorslist.toString());
       storedata.authorwriter(authorslist);
-      id = args['id'];
+      if (args['recommended'] == true){
+        setState(() {
+          recommended = true;
+          prevauthor = args['prevauthor'];
+          prevtitle = args['prevtitle'];
+        });
+      }
     }});
   }
   @override
@@ -56,7 +67,7 @@ class _Article_PageState extends State<Article_Page> {
         categories = args['category'] ?? [];
         authors = args['author'];
         id = args['id'];
-        recs = similar.getsimilarcategories(id, authors);
+        recs = similar.getsimilarcategories(id, authors , args['title'] );
       }
       _initialized = true;
     }
@@ -99,12 +110,20 @@ class _Article_PageState extends State<Article_Page> {
     }},
     child: Scaffold(// actual layout
         appBar: AppBar(
-          toolbarHeight: height + 32,
-          title: Text(data['title'] ?? 'Article' , 
-          softWrap: true,
-          maxLines: null,
-          overflow: TextOverflow.visible,
-          style: appbartextStyle
+          toolbarHeight: height + 80,
+          actions: [
+            if (recommended == true) RecommendCard(back_from_rec: Back_From_Rec(author: prevauthor, title: prevtitle)),], 
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(data['title'] ?? 'Article', 
+              softWrap: true,
+              maxLines: null,
+              overflow: TextOverflow.visible,
+              style: appbartextStyle
+              ),
+            const SizedBox(height: 12),
+            ],
           ),
           
         ),
@@ -209,20 +228,36 @@ class _Article_PageState extends State<Article_Page> {
                   }).toList(),
                 ),
                 const SizedBox(height: 16),
+                Text("Recommended Articles" , style: TextStyle(
+                  fontSize: 25 , color: const Color.fromARGB(255, 12, 67, 111)
+                ),),
                 FutureBuilder(
                   future: recs, 
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if( snapshot.connectionState == ConnectionState.waiting) {
-                      return Row(children:[
-                        SpinKitCubeGrid()
-                        ],);
+                      return Center(
+                        child: SpinKitCubeGrid(
+                            color:  const Color.fromARGB(255, 2, 4, 88),
+                            size: 75,
+                          ),
+                      );
                     }
-
+                    if (!snapshot.hasData || snapshot.hasError) {
+                      return Center(
+                        child: SpinKitCubeGrid(
+                            color: const Color.fromARGB(255, 2, 4, 88),
+                            size: 75,
+                          ),
+                      );
+                    }
                     List<Similar_Instance> recommendations = snapshot.data; 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: recommendations.map((recommend) {
-                        return SimilarCard(similar_instance : recommend);
+                        return Padding(
+                          padding: const EdgeInsetsGeometry.fromLTRB(0, 15, 0, 0),
+                          child: SimilarCard(similar_instance : recommend),
+                        );
                       }).toList());
                   }
                   )

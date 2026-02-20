@@ -102,22 +102,9 @@ class _AllArticlesPageState extends State<AllArticlesPage> {
                   )).toList();
           
               return ListView.builder(
-                itemCount: instruments.length + 3,
+                itemCount: instruments.length + 1,
                 itemBuilder: ((context, index) {
                   if (index == instruments.length) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushReplacementNamed( context, '/');
-                          },
-                          child: const Text('View Current Articles'),
-                          ),
-                          ),
-                          );
-                    }// End of index button\
-                  if (index == instruments.length + 1) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       child: Center(
@@ -129,19 +116,6 @@ class _AllArticlesPageState extends State<AllArticlesPage> {
                               );
                           }, 
                           icon: Icon(Icons.search_rounded, color: Colors.black, ),)
-                          ),
-                          );
-                    }// End of index button\
-                  if (index == instruments.length + 2) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed( context, '/stats');
-                          },
-                          child: const Text('Stats'),
-                          ),
                           ),
                           );
                     }// End of index button\

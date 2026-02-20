@@ -11,6 +11,7 @@ class Loading extends StatefulWidget {
 
 class _LoadingState extends State<Loading> {
     Map data = {};
+    bool recommended = false;
     Future <void> getData(String author , String title) async{
       final articlejsonjson = await Getter(author: author, title: title).fetchArticleJson();
       Map ajstring = articlejsonjson;
@@ -29,7 +30,10 @@ class _LoadingState extends State<Loading> {
           'category': inputjson['category'],
           'image_urls': inputjson['Image_urls'],
           'image_labels': inputjson['Image_label'],
-          'id' : inputjson['id']
+          'id' : inputjson['id'],
+          'recommended' : recommended,
+          'prevauthor' : data["prevauthor"],
+          'prevtitle' : data["prevtitle"],
         });
     }
   @override
@@ -39,6 +43,7 @@ class _LoadingState extends State<Loading> {
       final args = ModalRoute.of(context)?.settings.arguments;
       if (args != null && args is Map) {
         data = args;
+        recommended = data["recommended"] ?? false;
         getData(
           data['author'] as String,
           data['title'] as String,
