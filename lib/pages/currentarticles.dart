@@ -88,21 +88,8 @@ class _CurrentArticlesState extends State<CurrentArticles> {
                 }
                 final instruments = snapshot.data!;
                 return ListView.builder(
-                  itemCount: instruments.length + 1, 
+                  itemCount: instruments.length, 
                   itemBuilder: ((context, index) {
-                    if (index == instruments.length) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 20),
-                              child: Center(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, '/all_articles');
-                                  },
-                                  child: const Text('View All Articles'),
-                                ),
-                              ),
-                            );
-                          }// End of index button\
                     final instrument = instruments[index];
                     return ListTile(
                       title: Cardbuild(cardclass: Cardclass(articleTitle: instrument['Article_Title'], author: instrument['Author']),

@@ -17,12 +17,7 @@ Future<void> main() async {
   runApp(MaterialApp(
     initialRoute: '/',
     routes: {
-      '/': (context) =>  HomePage(),
-      // '/current_articles': (context) =>  CurrentArticles(),
-      // '/all_articles' : (context) =>  AllArticlesPage(),
-      // '/article_page' : (context) =>  Article_Page(),
-      // '/loading' : (context) =>  Loading(),
-      // '/stats' : (context) =>  Stats(),
+      '/': (context) =>  Route_Manager(),
 
     }
 

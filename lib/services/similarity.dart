@@ -50,7 +50,6 @@ class Similarity_Finder {
       instance['match_score'] = instance['match_score']/3;
       List instance_cats = instance['Categories'];
       instance['match_score'] = instance['match_score'] + catintersection(instance_cats , catpref) + authprefintersection(authpref, instance['Author']) + authgivenintersection(instance['Author'], given_author);
-      debugPrint("${instance['match_score'].toString()} + ${instance['title']}");
       all_recommended_articles.add(instance);
     }
     all_recommended_articles.sort((a, b) {
@@ -77,7 +76,8 @@ class Similar_Instance {
 
 class  SimilarCard extends StatelessWidget {
   final Similar_Instance similar_instance;
-  const SimilarCard({required this.similar_instance});
+  VoidCallback onleave;
+  SimilarCard({required this.similar_instance , required this.onleave});
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -86,6 +86,7 @@ class  SimilarCard extends StatelessWidget {
         children: <Widget>[
               ElevatedButton(
                 onPressed: (){
+                  onleave();
                   Navigator.pushReplacementNamed(context, '/loading', 
                   arguments:{
                     'title': similar_instance.title,
@@ -98,9 +99,9 @@ class  SimilarCard extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(similar_instance.title),
+                    Text(similar_instance.title, style : TextStyle(fontSize: 20)),
                     const SizedBox(width: 30),
-                    Text(similar_instance.author , style :TextStyle(fontStyle: FontStyle.italic)),
+                    Text(similar_instance.author , style :TextStyle(fontStyle: FontStyle.italic , fontSize: 12)),
                     const SizedBox(width: 30),
                   ],
                 ))

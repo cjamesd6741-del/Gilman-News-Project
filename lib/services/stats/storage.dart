@@ -137,10 +137,40 @@ class AuthorStorage { // writes and reads files for categories
       debugPrint('file never existed');
     }
   }
-
-
 }
 
+class Followed_AuthorStorage { // writes and reads files for followed author
+  Future<String> get paths async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+  Future<File> get localfile async {
+    final path = await paths;
+    return File('$path/followed_authors.txt');
+  }
+  Future<String> filereader() async {
+    try {
+      final file =  await localfile;
+      return await file.readAsString();
+    }
+    catch (e) {
+      return 'didnt work';
+    }
+  }
+
+  Future<File> writing(String material) async {
+    final file = await localfile;
+    return file.writeAsString(material);
+  }
+
+  Future<void> delete() async {
+    final file = await localfile;
+    try {await file.delete();}
+    catch(e) {
+      debugPrint('file never existed');
+    }
+  }
+}
 
 class ClearData {
   Storage storage = Storage();

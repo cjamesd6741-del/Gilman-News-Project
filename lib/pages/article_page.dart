@@ -1,4 +1,6 @@
 import 'dart:collection';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:apitest_2/services/following_system.dart';
 import '/services/similarity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -6,6 +8,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import '/services/stats/Articlestorage.dart';
 import '/services/appbartext.dart';
 import '/services/back_from_rec.dart';
+
 class Article_Page extends StatefulWidget {
   const Article_Page({super.key});
 
@@ -29,9 +32,9 @@ class _Article_PageState extends State<Article_Page> {
   String prevauthor = '';
   String prevtitle = '';
   bool recommended = false; //note this variable is only used to determine if the current article was pushed by an recommend button, in which case we create a way for the reader to go back
-
-
   Map data  = {};
+
+
   @override
   initState() {
     super.initState();
@@ -44,10 +47,6 @@ class _Article_PageState extends State<Article_Page> {
       categories = args['category'] ?? [];
       storedata.categorywriter(categories);
       storedata.past10update(ListQueue.from(categories));
-      authors = args['author'];
-      authorslist = authors.split(RegExp(r',\s*|\s+and\s+'));
-      debugPrint(authorslist.toString());
-      storedata.authorwriter(authorslist);
       if (args['recommended'] == true){
         setState(() {
           recommended = true;
@@ -66,6 +65,8 @@ class _Article_PageState extends State<Article_Page> {
         data = args;
         categories = args['category'] ?? [];
         authors = args['author'];
+        authorslist = authors.split(RegExp(r',\s*|\s+and\s+'));
+        storedata.authorwriter(authorslist);
         id = args['id'];
         recs = similar.getsimilarcategories(id, authors , args['title'] );
       }
@@ -78,6 +79,7 @@ class _Article_PageState extends State<Article_Page> {
     stopwatch.stop();
     storedata.durationupdate(stopwatch.elapsed);
     firstbuild = false;
+    debugPrint('test');
   }
 
   @override
@@ -128,7 +130,7 @@ class _Article_PageState extends State<Article_Page> {
           
         ),
         body: Padding(
-          padding: const EdgeInsets.fromLTRB(60.0, 16.0, 60.0, 0),
+          padding: const EdgeInsets.fromLTRB(30.0, 16.0, 30.0, 0),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,10 +213,33 @@ class _Article_PageState extends State<Article_Page> {
                     ],
                   ),
                 Text(
-                  'By ${data['author'] ?? ''} - ${data['date'] ?? ''}',
+                  'Authors:',
                   style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
                 ),
                 const SizedBox(height: 16),
+                FutureBuilder(
+                  future: storedata.followed_author_reader(), 
+                  builder: (BuildContext context, AsyncSnapshot snapshot){
+                    if (!snapshot.hasData) {
+                      return SpinKitChasingDots(size: 75, color: const Color.fromARGB(255, 2, 4, 88));
+                    }
+                    List followed_authors = snapshot.data;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: authorslist.map((author) {
+                        return Row(
+                          children: [
+                            Text(author , style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),),
+                            const SizedBox(width: 10,),
+                            Follow_Card(author: author, followed: followed_authors.contains(author)),
+                          ],
+                        );
+                      }).toList()
+                    );
+                  }),
+                
+                const SizedBox(height: 16,),
+                Text(data['date'], style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic), ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: (data['words'] as List<dynamic>).map<Widget>((word) {
@@ -222,7 +247,7 @@ class _Article_PageState extends State<Article_Page> {
                       padding: const EdgeInsets.only(bottom: 12.0),
                       child: Text(
                         '       ${word.toString()}',
-                        style: TextStyle(fontSize: 18, height: 1.5),
+                        style: GoogleFonts.lora(fontSize: 19, height: 1.5, ),
                       ),
                     );
                   }).toList(),
@@ -256,7 +281,7 @@ class _Article_PageState extends State<Article_Page> {
                       children: recommendations.map((recommend) {
                         return Padding(
                           padding: const EdgeInsetsGeometry.fromLTRB(0, 15, 0, 0),
-                          child: SimilarCard(similar_instance : recommend),
+                          child: SimilarCard(similar_instance : recommend , onleave: onLeave,),
                         );
                       }).toList());
                   }

@@ -6,10 +6,10 @@ class Stats extends StatefulWidget {
   const Stats({super.key});
 
   @override
-  State<Stats> createState() => _StatsState();
+  State<Stats> createState() => StatsState();
 }
 
-class _StatsState extends State<Stats> {
+class StatsState extends State<Stats> {
   int articlesRead = 0;
   Duration duration = Duration.zero;
   Duration shownduration = Duration.zero;
@@ -29,7 +29,6 @@ class _StatsState extends State<Stats> {
     topthreeauthorslist = await topthree.gettopthreeauthors();
     setState(() {
       articler = articlesRead;
-      debugPrint(articler.toString());
       shownduration = Duration(seconds: duration.inSeconds);
       topthreecategorieslist = topthreecategorieslist;
       recentcategorieslist = recentcategorieslist;
@@ -40,6 +39,13 @@ class _StatsState extends State<Stats> {
   initState() {
     super.initState();
     getdata();
+  }
+
+  void onTabVisible() {
+    setState(() {
+      getdata();
+      debugPrint('test');
+    });
   }
   @override
   Widget build(BuildContext context) {

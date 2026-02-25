@@ -10,12 +10,13 @@ class Storedata { // handles all interactions with files
   Storage storage = Storage();
   CatStorage catstorage = CatStorage();
   RecentStorage recentstorage = RecentStorage();
+  AuthorStorage authorStorage = AuthorStorage();
+  Followed_AuthorStorage followed_authorStorage = Followed_AuthorStorage();
   int articlesRead = 0;
   Map data = {};
   Map catdata = {};
   Duration totalduration = Duration.zero;
   Queue<String> past10articles = Queue<String>();
-  AuthorStorage authorStorage = AuthorStorage();
   ClearData clearData = ClearData();
 
   Future<void> updatearticleread() async {
@@ -204,4 +205,23 @@ class Storedata { // handles all interactions with files
     }
   }
 
+  Future<List> followed_author_reader() async {
+    String file = await followed_authorStorage.filereader(); 
+    debugPrint(file);
+    if(file == 'didnt work') {
+      return [];
+    }
+    return jsonDecode(file);
+  }
+
+  Future add_new_followed_author(String new_auth) async {
+    List followed_authors = await followed_author_reader();
+    followed_authors.add(new_auth);
+    await followed_authorStorage.writing(jsonEncode(followed_authors));
+  }
+  Future remove_new_followed_author(String new_auth) async {
+    List followed_authors = await followed_author_reader();
+    followed_authors.remove(new_auth);
+    await followed_authorStorage.writing(jsonEncode(followed_authors));
+  }
 }

@@ -7,15 +7,16 @@ import 'package:apitest_2/pages/currentarticles.dart';
 import 'package:apitest_2/pages/stats.dart';
 import 'package:apitest_2/pages/article_page.dart';
 import 'package:apitest_2/pages/loading.dart';
+import 'package:apitest_2/pages/home_page.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class Route_Manager extends StatefulWidget {
+  const Route_Manager({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<Route_Manager> createState() => _Route_ManagerState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _Route_ManagerState extends State<Route_Manager> {
   int page_index = 0;
   List<Widget> pages = const [
     AllArticlesPage(),
@@ -30,6 +31,8 @@ class _HomePageState extends State<HomePage> {
   GlobalKey<NavigatorState>(),
   GlobalKey<NavigatorState>(),
   ];
+  final GlobalKey<StatsState> _statsKey =
+    GlobalKey<StatsState>();
 
   Widget _buildTabNavigator({
     required GlobalKey<NavigatorState> navigatorKey,
@@ -44,10 +47,12 @@ class _HomePageState extends State<HomePage> {
   Route current_articlesRoutes(RouteSettings settings) {
     switch (settings.name) {
       case '/':
+        return MaterialPageRoute(builder: (_) => Home_Page());
+
+      case '/current_articles':
         return MaterialPageRoute(builder: (_) => CurrentArticles());
 
       case '/loading':
-        debugPrint('67');
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => Loading(
@@ -72,7 +77,6 @@ class _HomePageState extends State<HomePage> {
         return MaterialPageRoute(builder: (_) => AllArticlesPage());
 
       case '/loading':
-        debugPrint('67');
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => Loading(
@@ -108,7 +112,7 @@ class _HomePageState extends State<HomePage> {
         _buildTabNavigator(
           navigatorKey: _navigatorKeys[2],
           onGenerateRoute: (settings) =>
-          MaterialPageRoute(builder: (_) => const Stats()),
+          MaterialPageRoute(builder: (_) => Stats(key: _statsKey)),
         ),
         _buildTabNavigator(
           navigatorKey: _navigatorKeys[3],
@@ -131,6 +135,8 @@ class _HomePageState extends State<HomePage> {
             onTabChange: (index) {
               setState(() {
                 page_index = index;// first one is the var stored while second one is the arg given
+                if (index == 2) {
+                  _statsKey.currentState?.onTabVisible();}
               });
             },
             tabs: const [

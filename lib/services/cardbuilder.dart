@@ -20,9 +20,9 @@ class  Cardbuild extends StatelessWidget {
                 }, 
                 child: Column(
                   children: [
-                    Text(cardclass.articleTitle),
+                    Text(cardclass.articleTitle, style : TextStyle(fontSize: 20)),
                     const SizedBox(width: 30),
-                    Text(cardclass.author , style :TextStyle(fontStyle: FontStyle.italic)),
+                    Text(cardclass.author , style :TextStyle(fontStyle: FontStyle.italic , fontSize: 12)),
                     const SizedBox(width: 30),
                   ],
                 ))
@@ -53,9 +53,9 @@ class  CurrentCardbuild extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(currentcardclass.articleTitle),
+                    Text(currentcardclass.articleTitle, style : TextStyle(fontSize: 20)),
                     const SizedBox(width: 30),
-                    Text(currentcardclass.author , style :TextStyle(fontStyle: FontStyle.italic)),
+                    Text(currentcardclass.author , style :TextStyle(fontStyle: FontStyle.italic , fontSize: 12)),
                     const SizedBox(width: 30),
                     Text(currentcardclass.date),
                     const SizedBox(width: 30),
