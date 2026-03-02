@@ -6,24 +6,26 @@ class Back_From_Rec {
   Back_From_Rec({required this.author, required this.title});
 }
 
-class  RecommendCard extends StatelessWidget {
+class RecommendCard extends StatelessWidget {
   final Back_From_Rec back_from_rec;
-  const RecommendCard({required this.back_from_rec});
+  const RecommendCard({super.key, required this.back_from_rec});
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-                onPressed: (){
-                  Navigator.pushReplacementNamed(context, '/loading', 
-                  arguments:{
-                    'title': back_from_rec.title,
-                    'author': back_from_rec.author,
-                  });
-                }, 
-                child: Text("Prev Article",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 10
-                )),);
+      onPressed: () {
+        Navigator.pushReplacementNamed(
+          context,
+          '/loading',
+          arguments: {
+            'title': back_from_rec.title,
+            'author': back_from_rec.author,
+          },
+        );
+      },
+      child: Text(
+        "Prev Article",
+        style: TextStyle(color: Colors.black, fontSize: 10),
+      ),
+    );
   }
-
 }

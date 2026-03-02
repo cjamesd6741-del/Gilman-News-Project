@@ -10,32 +10,39 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
-    Map data = {};
-    bool recommended = false;
-    Future <void> getData(String author , String title) async{
-      final articlejsonjson = await Getter(author: author, title: title).fetchArticleJson();
-      Map ajstring = articlejsonjson;
+  Map data = {};
+  bool recommended = false;
+  Future<void> getData(String author, String title) async {
+    final articlejsonjson = await Getter(
+      author: author,
+      title: title,
+    ).fetchArticleJson();
+    Map ajstring = articlejsonjson;
 
-      final articlejson = ajstring;
-      push(articlejson,  author,  title);
-      }
+    final articlejson = ajstring;
+    push(articlejson, author, title);
+  }
 
-    void push(Map inputjson, String author, String title) {
-      Navigator.pushReplacementNamed(
-        context, '/article_page', arguments: {
-          'words': inputjson['body'],
-          'title': title,
-          'author': author,
-          'date': inputjson['date'],
-          'category': inputjson['category'],
-          'image_urls': inputjson['Image_urls'],
-          'image_labels': inputjson['Image_label'],
-          'id' : inputjson['id'],
-          'recommended' : recommended,
-          'prevauthor' : data["prevauthor"],
-          'prevtitle' : data["prevtitle"],
-        });
-    }
+  void push(Map inputjson, String author, String title) {
+    Navigator.pushReplacementNamed(
+      context,
+      '/article_page',
+      arguments: {
+        'words': inputjson['body'],
+        'title': title,
+        'author': author,
+        'date': inputjson['date'],
+        'category': inputjson['category'],
+        'image_urls': inputjson['Image_urls'],
+        'image_labels': inputjson['Image_label'],
+        'id': inputjson['id'],
+        'recommended': recommended,
+        'prevauthor': data["prevauthor"],
+        'prevtitle': data["prevtitle"],
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -44,33 +51,20 @@ class _LoadingState extends State<Loading> {
       if (args != null && args is Map) {
         data = args;
         recommended = data["recommended"] ?? false;
-        getData(
-          data['author'] as String,
-          data['title'] as String,
-        );
-      }});
+        getData(data['author'] as String, data['title'] as String);
       }
-
-
-
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold
-    (
+    return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Center(
-            child: SpinKitFadingCircle(
-              color: Colors.blue,
-              size: 50.0,
-            ),
-          ),
+          Center(child: SpinKitFadingCircle(color: Colors.blue, size: 50.0)),
         ],
       ),
     );
-
-
   }
 }

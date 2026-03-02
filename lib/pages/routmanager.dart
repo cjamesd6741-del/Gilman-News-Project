@@ -5,9 +5,8 @@ import 'package:apitest_2/pages/loading.dart';
 import 'package:apitest_2/pages/all_articles.dart';
 import 'package:apitest_2/pages/currentarticles.dart';
 import 'package:apitest_2/pages/stats.dart';
-import 'package:apitest_2/pages/article_page.dart';
-import 'package:apitest_2/pages/loading.dart';
 import 'package:apitest_2/pages/home_page.dart';
+import 'package:apitest_2/pages/followed.dart';
 
 class Route_Manager extends StatefulWidget {
   const Route_Manager({super.key});
@@ -22,26 +21,53 @@ class _Route_ManagerState extends State<Route_Manager> {
     AllArticlesPage(),
     CurrentArticles(),
     Stats(),
-    Text("Games")
+    Text("Games"),
   ];
 
   final _navigatorKeys = [
-  GlobalKey<NavigatorState>(),
-  GlobalKey<NavigatorState>(),
-  GlobalKey<NavigatorState>(),
-  GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
   ];
-  final GlobalKey<StatsState> _statsKey =
-    GlobalKey<StatsState>();
+
+  final _routeObservers = [
+    RouteObserver<ModalRoute<void>>(),
+    RouteObserver<ModalRoute<void>>(),
+    RouteObserver<ModalRoute<void>>(),
+    RouteObserver<ModalRoute<void>>(),
+  ];
 
   Widget _buildTabNavigator({
     required GlobalKey<NavigatorState> navigatorKey,
     required RouteFactory onGenerateRoute,
+    required RouteObserver observer,
   }) {
     return Navigator(
       key: navigatorKey,
+      observers: [observer],
       onGenerateRoute: onGenerateRoute,
     );
+  }
+
+  void notifyTabVisibility(int index) {
+    for (int i = 0; i < _navigatorKeys.length; i++) {
+      final nav = _navigatorKeys[i].currentState;
+      if (nav == null) continue;
+
+      void checkElement(Element element) {
+        final articleState = element
+            .findAncestorStateOfType<Article_PageState>();
+        articleState?.onTabVisibilityChanged(i == index);
+
+        final statsState = element.findAncestorStateOfType<StatsState>();
+        statsState?.onTabVisibilityChanged(i == index);
+
+        element.visitChildren(checkElement);
+      }
+
+      nav.context.visitChildElements(checkElement);
+    }
   }
 
   Route current_articlesRoutes(RouteSettings settings) {
@@ -52,75 +78,74 @@ class _Route_ManagerState extends State<Route_Manager> {
       case '/current_articles':
         return MaterialPageRoute(builder: (_) => CurrentArticles());
 
+      case '/followed_articles':
+        return MaterialPageRoute(builder: (_) => Followed_Page());
+
       case '/loading':
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => Loading(
-          ),
-        );
+        return MaterialPageRoute(settings: settings, builder: (_) => Loading());
 
       case '/article_page':
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => Article_Page(
-          ),
+          builder: (_) =>
+              Article_Page(tab_index: 1, observer: _routeObservers[1]),
         );
 
-    default:
-      throw Exception('Invalid route: ${settings.name}');
-  }
+      default:
+        throw Exception('Invalid route: ${settings.name}');
+    }
   }
 
-    Route all_articlesRoutes(RouteSettings settings) {
+  Route all_articlesRoutes(RouteSettings settings) {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => AllArticlesPage());
 
       case '/loading':
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => Loading(
-          ),
-        );
+        return MaterialPageRoute(settings: settings, builder: (_) => Loading());
 
       case '/article_page':
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => Article_Page(
-          ),
+          builder: (_) =>
+              Article_Page(tab_index: 0, observer: _routeObservers[0]),
         );
 
-    default:
-      throw Exception('Invalid route: ${settings.name}');
-  }
+      default:
+        throw Exception('Invalid route: ${settings.name}');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
-      index: page_index,
-      children: [
-        _buildTabNavigator(
-          navigatorKey: _navigatorKeys[0],
-          onGenerateRoute: all_articlesRoutes,
-        ),
-        _buildTabNavigator(
-          navigatorKey: _navigatorKeys[1],
-          onGenerateRoute: current_articlesRoutes,
-        ),
-        _buildTabNavigator(
-          navigatorKey: _navigatorKeys[2],
-          onGenerateRoute: (settings) =>
-          MaterialPageRoute(builder: (_) => Stats(key: _statsKey)),
-        ),
-        _buildTabNavigator(
-          navigatorKey: _navigatorKeys[3],
-          onGenerateRoute: (settings) =>
-          MaterialPageRoute(builder: (_) => const Text("Games")),
-        ),
-      ],
-    ),
+        index: page_index,
+        children: [
+          _buildTabNavigator(
+            navigatorKey: _navigatorKeys[0],
+            observer: _routeObservers[0],
+            onGenerateRoute: all_articlesRoutes,
+          ),
+          _buildTabNavigator(
+            navigatorKey: _navigatorKeys[1],
+            observer: _routeObservers[1],
+            onGenerateRoute: current_articlesRoutes,
+          ),
+          _buildTabNavigator(
+            navigatorKey: _navigatorKeys[2],
+            observer: _routeObservers[2],
+            onGenerateRoute: (settings) =>
+                MaterialPageRoute(builder: (_) => Stats()),
+          ),
+          _buildTabNavigator(
+            navigatorKey: _navigatorKeys[3],
+            observer: _routeObservers[3],
+            onGenerateRoute: (settings) =>
+                MaterialPageRoute(builder: (_) => const Text("Games")),
+          ),
+        ],
+      ),
       bottomNavigationBar: Container(
         color: const Color.fromARGB(255, 10, 62, 105),
         child: Padding(
@@ -130,36 +155,23 @@ class _Route_ManagerState extends State<Route_Manager> {
             backgroundColor: const Color.fromARGB(255, 10, 62, 105),
             color: const Color.fromARGB(255, 135, 135, 135),
             tabBackgroundColor: const Color.fromARGB(255, 14, 90, 152),
-            textStyle: TextStyle(fontSize: 19 , color: Colors.white),
+            textStyle: TextStyle(fontSize: 19, color: Colors.white),
             iconSize: 25,
             onTabChange: (index) {
               setState(() {
-                page_index = index;// first one is the var stored while second one is the arg given
-                if (index == 2) {
-                  _statsKey.currentState?.onTabVisible();}
+                page_index = index;
+                notifyTabVisibility(index);
               });
             },
             tabs: const [
-              GButton(
-                icon: Icons.newspaper,
-                text: "Articles", 
-                ),
-              GButton(
-                icon: Icons.home,
-                text: "Home", 
-              ),
-              GButton(
-                icon: Icons.settings,
-                text: "Personal", 
-              ),
-              GButton(
-                icon: Icons.gamepad_sharp,
-                text: "Games",
-                )
-            ]),
+              GButton(icon: Icons.newspaper, text: "Articles"),
+              GButton(icon: Icons.home, text: "Home"),
+              GButton(icon: Icons.settings, text: "Personal"),
+              GButton(icon: Icons.gamepad_sharp, text: "Games"),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-

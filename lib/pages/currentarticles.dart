@@ -12,93 +12,102 @@ class CurrentArticles extends StatefulWidget {
 class _CurrentArticlesState extends State<CurrentArticles> {
   @override
   initState() {
-      super.initState();
+    super.initState();
   }
+
   Future<List<dynamic>> fetchCurrentArticles() async {
     final response = await Supabase.instance.client
         .from('Current_Articles')
         .select('Author, Article_Title, Date, Article_ID');
-    return response as List<dynamic>;}
+    return response as List<dynamic>;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: NestedScrollView(
-        floatHeaderSlivers : false,
+        floatHeaderSlivers: false,
         headerSliverBuilder: (context, innerBoxIsScrolled) {
-        return [SliverAppBar(
-          backgroundColor: const Color.fromARGB(255, 34, 72, 92),
-          expandedHeight: 180,
-          collapsedHeight: 80,
-          pinned: true,
-          flexibleSpace: Stack(
-            fit: StackFit.expand,
-            children: [
-        Image.asset(
-          'lib/images/gilmanschool2.png',
-          fit: BoxFit.cover,
-        ),
-        Align(
-        alignment: Alignment.bottomCenter,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 100),
-          width: double.infinity,
-          height: double.infinity,
-          color: innerBoxIsScrolled
-              ? const Color.fromARGB(255, 34, 72, 92)
-              : Colors.transparent,
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Text(
-                  'Gilman News',
-                  style: TextStyle(
-                    fontSize: 26, 
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+          return [
+            SliverAppBar(
+              backgroundColor: const Color.fromARGB(255, 34, 72, 92),
+              expandedHeight: 180,
+              collapsedHeight: 80,
+              pinned: true,
+              flexibleSpace: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset(
+                    'lib/images/gilmanschool2.png',
+                    fit: BoxFit.cover,
                   ),
-                ),
-                Text(
-                  'Current Articles',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white70,
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 100),
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: innerBoxIsScrolled
+                          ? const Color.fromARGB(255, 34, 72, 92)
+                          : Colors.transparent,
+                      child: SafeArea(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
+                              Text(
+                                'Gilman News',
+                                style: TextStyle(
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                'Current Articles',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white70,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ),
-      )),
-    ],
-  ),
-),
-
-        ];
+          ];
         },
         body: FutureBuilder(
-              future: fetchCurrentArticles(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final instruments = snapshot.data!;
-                return ListView.builder(
-                  itemCount: instruments.length, 
-                  itemBuilder: ((context, index) {
+          future: fetchCurrentArticles(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            final instruments = snapshot.data!;
+            return ListView.builder(
+              itemCount: instruments.length,
+              itemBuilder:
+                  ((context, index) {
                     final instrument = instruments[index];
                     return ListTile(
-                      title: Cardbuild(cardclass: Cardclass(articleTitle: instrument['Article_Title'], author: instrument['Author']),
-                    ));
-                  }// itemBuilder function
-                  ) //itembuilder parenthesis,
-                );
-              },
-            ),
+                      title: Cardbuild(
+                        cardclass: Cardclass(
+                          articleTitle: instrument['Article_Title'],
+                          author: instrument['Author'],
+                        ),
+                      ),
+                    );
+                  } // itemBuilder function
+                  ), //itembuilder parenthesis,
+            );
+          },
+        ),
       ),
     );
   }

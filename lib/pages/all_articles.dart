@@ -12,125 +12,138 @@ class AllArticlesPage extends StatefulWidget {
 }
 
 class _AllArticlesPageState extends State<AllArticlesPage> {
-  List <Searchclass> articles = [];
+  List<Searchclass> articles = [];
   final _future = Supabase.instance.client
       .from('Articles')
       .select('Author, Article_Title, Date, Article_ID');
-  
 
   @override
   initState() {
-      super.initState();
+    super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
-        return [SliverAppBar(
-              backgroundColor:  const Color.fromARGB(255, 34, 72, 92),
-              expandedHeight: 180,   
+          return [
+            SliverAppBar(
+              backgroundColor: const Color.fromARGB(255, 34, 72, 92),
+              expandedHeight: 180,
               collapsedHeight: 90,
               pinned: true,
               floating: true,
               forceElevated: innerBoxIsScrolled,
               flexibleSpace: Stack(
-                children: [FlexibleSpaceBar(
-                  background: Image.asset(
-                    'lib/images/IMG_0425.png',
-                    fit: BoxFit.cover,
+                children: [
+                  FlexibleSpaceBar(
+                    background: Image.asset(
+                      'lib/images/IMG_0425.png',
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 100),
-                    width: double.infinity,
-                    height: double.infinity,
-                    color: innerBoxIsScrolled
-                        ? const Color.fromARGB(255, 34, 72, 92)
-                        : Colors.transparent,
-                  child: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          AnimatedDefaultTextStyle(
-                            duration: const Duration(milliseconds: 100),
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                              color: innerBoxIsScrolled
-                                  ? Colors.white
-                                  : Color.fromARGB(255, 34, 72, 92),
-                            ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 100),
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: innerBoxIsScrolled
+                          ? const Color.fromARGB(255, 34, 72, 92)
+                          : Colors.transparent,
+                      child: SafeArea(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AnimatedDefaultTextStyle(
+                                duration: const Duration(milliseconds: 100),
+                                style: TextStyle(
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                  color: innerBoxIsScrolled
+                                      ? Colors.white
+                                      : Color.fromARGB(255, 34, 72, 92),
+                                ),
 
-                            child : Text('Gilman News')
+                                child: Text('Gilman News'),
+                              ),
+                              AnimatedDefaultTextStyle(
+                                duration: const Duration(milliseconds: 100),
+                                style: TextStyle(
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                  color: innerBoxIsScrolled
+                                      ? Colors.white
+                                      : Color.fromARGB(255, 34, 72, 92),
+                                ),
+                                child: Text('All Articles'),
+                              ),
+                            ],
                           ),
-                          AnimatedDefaultTextStyle(
-                            duration: const Duration(milliseconds: 100),
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                              color: innerBoxIsScrolled
-                                  ? Colors.white
-                                  : Color.fromARGB(255, 34, 72, 92),
-                            ),
-                            child : Text('All Articles')
-                            )
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ))
-            ]
-            
+                ],
+              ),
             ),
-              )]; 
-              },     
-        body:  FutureBuilder(
-            future: _future,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              final instruments = snapshot.data!;
-              articles = instruments.map((instrument) => Searchclass(
-                  searcharticletitle: instrument['Article_Title'],
-                  searchauthor: instrument['Author'],
-                  )).toList();
-          
-              return ListView.builder(
-                itemCount: instruments.length + 1,
-                itemBuilder: ((context, index) {
-                  if (index == instruments.length) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: Center(
-                        child: IconButton(
-                          onPressed: (){
-                            showSearch(
-                              context: context, 
-                              delegate: AllArticleSearch(articles: articles), //not even remotely confusing lol
-                              );
-                          }, 
-                          icon: Icon(Icons.search_rounded, color: Colors.black, ),)
-                          ),
+          ];
+        },
+        body: FutureBuilder(
+          future: _future,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            final instruments = snapshot.data!;
+            articles = instruments
+                .map(
+                  (instrument) => Searchclass(
+                    searcharticletitle: instrument['Article_Title'],
+                    searchauthor: instrument['Author'],
+                  ),
+                )
+                .toList();
+
+            return ListView.builder(
+              itemCount: instruments.length + 1,
+              itemBuilder: ((context, index) {
+                if (index == instruments.length) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Center(
+                      child: IconButton(
+                        onPressed: () {
+                          showSearch(
+                            context: context,
+                            delegate: AllArticleSearch(
+                              articles: articles,
+                            ), //not even remotely confusing lol
                           );
-                    }// End of index button\
-                  final instrument = instruments[index];
-                  return ListTile(
-                    title: CurrentCardbuild(currentcardclass: CurrentCardclass(articleTitle: instrument['Article_Title'], author: instrument['Author'] , date: instrument['Date'],),
-                  ));
-                }),
-              );
-            },
-          ),
+                        },
+                        icon: Icon(Icons.search_rounded, color: Colors.black),
+                      ),
+                    ),
+                  );
+                } // End of index button\
+                final instrument = instruments[index];
+                return ListTile(
+                  title: CurrentCardbuild(
+                    currentcardclass: CurrentCardclass(
+                      articleTitle: instrument['Article_Title'],
+                      author: instrument['Author'],
+                      date: instrument['Date'],
+                    ),
+                  ),
+                );
+              }),
+            );
+          },
         ),
-      
+      ),
     );
   }
 }
-
-

@@ -1,69 +1,82 @@
 import 'package:apitest_2/services/cardclass.dart';
 import 'package:flutter/material.dart';
 
-class  Cardbuild extends StatelessWidget {
+class Cardbuild extends StatelessWidget {
   final Cardclass cardclass;
-  const Cardbuild({required this.cardclass});
+  const Cardbuild({super.key, required this.cardclass});
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-              ElevatedButton(
-                onPressed: (){
-                  Navigator.of(context).pushNamed( '/loading', 
-                  arguments:{
-                    'title': cardclass.articleTitle,
-                    'author': cardclass.author,
-                  });
-                }, 
-                child: Column(
-                  children: [
-                    Text(cardclass.articleTitle, style : TextStyle(fontSize: 20)),
-                    const SizedBox(width: 30),
-                    Text(cardclass.author , style :TextStyle(fontStyle: FontStyle.italic , fontSize: 12)),
-                    const SizedBox(width: 30),
-                  ],
-                ))
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                '/loading',
+                arguments: {
+                  'title': cardclass.articleTitle,
+                  'author': cardclass.author,
+                },
+              );
+            },
+            child: Column(
+              children: [
+                Text(cardclass.articleTitle, style: TextStyle(fontSize: 20)),
+                const SizedBox(width: 30),
+                Text(
+                  cardclass.author,
+                  style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
+                ),
+                const SizedBox(width: 30),
+              ],
+            ),
+          ),
         ],
       ),
-
     );
   }
 }
 
-class  CurrentCardbuild extends StatelessWidget {
+class CurrentCardbuild extends StatelessWidget {
   final CurrentCardclass currentcardclass;
-  const CurrentCardbuild({required this.currentcardclass});
+  const CurrentCardbuild({super.key, required this.currentcardclass});
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-              ElevatedButton(
-                onPressed: (){
-                  Navigator.of(context).pushNamed('/loading', 
-                  arguments:{
-                    'title': currentcardclass.articleTitle,
-                    'author': currentcardclass.author,
-                  });
-                }, 
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(currentcardclass.articleTitle, style : TextStyle(fontSize: 20)),
-                    const SizedBox(width: 30),
-                    Text(currentcardclass.author , style :TextStyle(fontStyle: FontStyle.italic , fontSize: 12)),
-                    const SizedBox(width: 30),
-                    Text(currentcardclass.date),
-                    const SizedBox(width: 30),
-                  ],
-                ))
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                '/loading',
+                arguments: {
+                  'title': currentcardclass.articleTitle,
+                  'author': currentcardclass.author,
+                },
+              );
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  currentcardclass.articleTitle,
+                  style: TextStyle(fontSize: 20),
+                ),
+                const SizedBox(width: 30),
+                Text(
+                  currentcardclass.author,
+                  style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
+                ),
+                const SizedBox(width: 30),
+                Text(currentcardclass.date),
+                const SizedBox(width: 30),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
-
 }
