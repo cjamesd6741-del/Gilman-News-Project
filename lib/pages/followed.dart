@@ -41,7 +41,7 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
     super.didChangeDependencies();
     final route = ModalRoute.of(context);
     if (route is PageRoute) {
-      routeObserver.subscribe(this, route);
+      widget.observer.subscribe(this, route);
     }
   }
 
@@ -53,7 +53,7 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
 
   @override
   void dispose() {
-    routeObserver.unsubscribe(this);
+    widget.observer.unsubscribe(this);
     super.dispose();
   }
 
@@ -72,11 +72,13 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
   @override
   void didPushNext() {
     _isRouteVisible = false;
+    _checkIfShouldRefresh();
   }
 
   @override
   void didPop() {
     _isRouteVisible = false;
+    _checkIfShouldRefresh();
   }
 
   void onTabVisibilityChanged(bool visible) {
@@ -89,7 +91,6 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
   }
 
   void onTabVisible() {
-    debugPrint("6-7");
     Future<List> authors = followed_authors;
     followed_authors = storedata.followed_author_reader();
     if (authors != followed_authors) {
@@ -134,7 +135,7 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
         return [
           SliverAppBar(
             backgroundColor: const Color.fromARGB(255, 34, 72, 92),
-            expandedHeight: 180,
+            expandedHeight: 140,
             collapsedHeight: 80,
             pinned: true,
             flexibleSpace: Stack(
@@ -183,34 +184,45 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
                 ),
               ],
             ),
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(3),
+              child: Container(
+                color: const Color.fromARGB(255, 31, 30, 46),
+                height: 3,
+              ),
+            ),
           ),
         ];
       },
-      body: FutureBuilder<List<FollowCardclass>>(
-        future: finalcards,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: SpinKitCubeGrid(size: 100, color: Colors.blueGrey),
+      body: Container(
+        color: const Color.fromARGB(255, 158, 175, 206),
+        child: FutureBuilder<List<FollowCardclass>>(
+          future: finalcards,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: SpinKitCubeGrid(size: 100, color: Colors.blueGrey),
+              );
+            }
+
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+
+            final data = snapshot.data ?? [];
+
+            if (data.isEmpty) {
+              return const Center(child: Text('No followed articles'));
+            }
+
+            return ListView.builder(
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                return FollowCardbuild(followcardclass: data[index]);
+              },
             );
-          }
-
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-
-          final data = snapshot.data ?? [];
-
-          if (data.isEmpty) {
-            return const Center(child: Text('No followed articles'));
-          }
-
-          return ListView(
-            children: data
-                .map((e) => FollowCardbuild(followcardclass: e))
-                .toList(),
-          );
-        },
+          },
+        ),
       ),
     );
   }

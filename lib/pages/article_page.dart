@@ -74,7 +74,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
     super.didChangeDependencies();
     final route = ModalRoute.of(context);
     if (route is PageRoute) {
-      routeObserver.subscribe(this, route);
+      widget.observer.subscribe(this, route);
     }
     if (!_initialized) {
       final args = ModalRoute.of(context)?.settings.arguments;
@@ -93,7 +93,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
 
   @override
   void dispose() {
-    routeObserver.unsubscribe(this);
+    widget.observer.unsubscribe(this);
     super.dispose();
   }
 

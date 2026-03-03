@@ -25,6 +25,7 @@ class _CurrentArticlesState extends State<CurrentArticles> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 158, 175, 206),
       body: NestedScrollView(
         floatHeaderSlivers: false,
         headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -79,6 +80,13 @@ class _CurrentArticlesState extends State<CurrentArticles> {
                     ),
                   ),
                 ],
+              ),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(3),
+                child: Container(
+                  color: const Color.fromARGB(255, 31, 30, 46),
+                  height: 3,
+                ),
               ),
             ),
           ];

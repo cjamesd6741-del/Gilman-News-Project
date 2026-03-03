@@ -20,7 +20,9 @@ class _Home_PageState extends State<Home_Page> {
       "Welcome to the News!",
       appbartextStyle,
     );
+    debugPrint("$width + $height");
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 158, 175, 206),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerboxisscrolled) {
           return [

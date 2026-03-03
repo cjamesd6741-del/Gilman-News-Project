@@ -26,7 +26,7 @@ class Follow_Card extends StatelessWidget {
           ontoggle();
         },
         child: Text(
-          "follow",
+          "Follow",
           style: GoogleFonts.tinos(
             fontStyle: FontStyle.italic,
             color: const Color.fromARGB(255, 13, 33, 94),
@@ -42,7 +42,7 @@ class Follow_Card extends StatelessWidget {
         ontoggle();
       },
       child: Text(
-        "unfollow",
+        "Unfollow",
         style: GoogleFonts.tinos(
           fontStyle: FontStyle.italic,
           color: Colors.white,

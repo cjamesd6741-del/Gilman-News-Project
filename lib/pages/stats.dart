@@ -124,7 +124,7 @@ class StatsState extends State<Stats> with RouteAware {
               ),
               floating: true,
               forceElevated: innerBoxIsScrolled,
-              expandedHeight: 180,
+              expandedHeight: 100,
               collapsedHeight: 80,
             ),
           ];
