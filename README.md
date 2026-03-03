@@ -2,7 +2,7 @@
 
 Basic App in development for local school newspaper. Currently has ability to interface with online database to display articles, images, and authors. Basic Search Functionality has been implemented, although you cannot yet sort by date. User Stats have been implemented and store information on local device for simplicity. 
 
-Most Recent Update 2/20/26: Added Bottom Navigation Bar and Redid app routing to allow for each tab to have its own navigation route.  
+Most Recent Update 3/3/26: Recommended Articles added, Button Overhaul, Navigation Overhaul to allow syncing of data between tabs (stats). Author Following and Recommended Articles. New Home Page.
 
 To view the code, got to lib/pages or lib/services. 
 
