@@ -60,6 +60,10 @@ class _Route_ManagerState extends State<Route_Manager> {
             .findAncestorStateOfType<Article_PageState>();
         articleState?.onTabVisibilityChanged(i == index);
 
+        final followState = element
+            .findAncestorStateOfType<Followed_PageState>();
+        followState?.onTabVisibilityChanged(i == index);
+
         final statsState = element.findAncestorStateOfType<StatsState>();
         statsState?.onTabVisibilityChanged(i == index);
 
@@ -79,7 +83,10 @@ class _Route_ManagerState extends State<Route_Manager> {
         return MaterialPageRoute(builder: (_) => CurrentArticles());
 
       case '/followed_articles':
-        return MaterialPageRoute(builder: (_) => Followed_Page());
+        return MaterialPageRoute(
+          builder: (_) =>
+              Followed_Page(tab_index: 1, observer: _routeObservers[1]),
+        );
 
       case '/loading':
         return MaterialPageRoute(settings: settings, builder: (_) => Loading());

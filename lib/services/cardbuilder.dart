@@ -80,3 +80,46 @@ class CurrentCardbuild extends StatelessWidget {
     );
   }
 }
+
+class FollowCardbuild extends StatelessWidget {
+  final FollowCardclass followcardclass;
+  const FollowCardbuild({super.key, required this.followcardclass});
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                '/loading',
+                arguments: {
+                  'title': followcardclass.articleTitle,
+                  'author': followcardclass.author,
+                },
+              );
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  followcardclass.articleTitle,
+                  style: TextStyle(fontSize: 20),
+                ),
+                const SizedBox(width: 30),
+                Text(
+                  followcardclass.author,
+                  style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
+                ),
+                const SizedBox(width: 30),
+                Text(followcardclass.date),
+                const SizedBox(width: 30),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

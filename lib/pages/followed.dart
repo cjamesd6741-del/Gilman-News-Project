@@ -1,17 +1,40 @@
+import 'dart:convert';
+
 import 'package:apitest_2/services/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:apitest_2/services/stats/Articlestorage.dart';
+import 'package:apitest_2/services/stats/Articlestorage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:apitest_2/services/cardclass.dart';
+import 'package:apitest_2/services/cardbuilder.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Followed_Page extends StatefulWidget {
-  const Followed_Page({super.key});
+  final int tab_index;
+  final RouteObserver<ModalRoute<void>> observer;
+  const Followed_Page({
+    super.key,
+    required this.observer,
+    required this.tab_index,
+  });
 
   @override
-  State<Followed_Page> createState() => _Followed_PageState();
+  State<Followed_Page> createState() => Followed_PageState();
 }
 
-class _Followed_PageState extends State<Followed_Page> with RouteAware {
+class Followed_PageState extends State<Followed_Page> with RouteAware {
+  bool _isRouteVisible = false;
   bool _isTabVisible = false;
-  late List followed_authors;
+  late Future<List> followed_authors;
+  late Future<List<FollowCardclass>> finalcards;
+  Storedata storedata = Storedata();
+
+  @override
+  void initState() {
+    super.initState();
+    followed_authors = storedata.followed_author_reader();
+    finalcards = followed_articles_updater();
+  }
 
   @override
   void didChangeDependencies() {
@@ -20,6 +43,88 @@ class _Followed_PageState extends State<Followed_Page> with RouteAware {
     if (route is PageRoute) {
       routeObserver.subscribe(this, route);
     }
+  }
+
+  void _checkIfShouldRefresh() {
+    if (_isRouteVisible && _isTabVisible) {
+      onTabVisible();
+    }
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPush() {
+    _isRouteVisible = true;
+    _checkIfShouldRefresh();
+  }
+
+  @override
+  void didPopNext() {
+    _isRouteVisible = true;
+    _checkIfShouldRefresh();
+  }
+
+  @override
+  void didPushNext() {
+    _isRouteVisible = false;
+  }
+
+  @override
+  void didPop() {
+    _isRouteVisible = false;
+  }
+
+  void onTabVisibilityChanged(bool visible) {
+    if (_isTabVisible == visible) return; // only act if state changes
+    _isTabVisible = visible;
+
+    if (visible) {
+      _checkIfShouldRefresh();
+    }
+  }
+
+  void onTabVisible() {
+    debugPrint("6-7");
+    Future<List> authors = followed_authors;
+    followed_authors = storedata.followed_author_reader();
+    if (authors != followed_authors) {
+      setState(() {
+        finalcards = followed_articles_updater();
+      });
+    }
+  }
+
+  Future<List<FollowCardclass>> followed_articles_updater() async {
+    final authors = await followed_authors;
+    if (authors.isNotEmpty) {
+      final data = await Supabase.instance.client.rpc(
+        'follow_author_gen',
+        params: {'followed_list': authors},
+      );
+      debugPrint('data loaded');
+      List finaldata = data;
+      List<FollowCardclass> cards = finaldata
+          .map(
+            (e) => FollowCardclass(
+              articleTitle: e["Article_Title"],
+              author: e["Author"],
+              date: e["Date"],
+              edition_num: e["edition_num"],
+            ),
+          )
+          .toList();
+      cards.shuffle();
+      cards.sort((a, b) {
+        return b.edition_num.compareTo(a.edition_num);
+      });
+      return cards;
+    } else
+      return [];
   }
 
   @override
@@ -81,8 +186,31 @@ class _Followed_PageState extends State<Followed_Page> with RouteAware {
           ),
         ];
       },
-      body: SingleChildScrollView(
-        child: Column(children: [const SizedBox(height: 1000), Text("6,7")]),
+      body: FutureBuilder<List<FollowCardclass>>(
+        future: finalcards,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: SpinKitCubeGrid(size: 100, color: Colors.blueGrey),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+
+          final data = snapshot.data ?? [];
+
+          if (data.isEmpty) {
+            return const Center(child: Text('No followed articles'));
+          }
+
+          return ListView(
+            children: data
+                .map((e) => FollowCardbuild(followcardclass: e))
+                .toList(),
+          );
+        },
       ),
     );
   }
