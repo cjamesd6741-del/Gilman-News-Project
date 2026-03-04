@@ -72,7 +72,7 @@ class Storedata {
     } else {
       Map data = jsonDecode(state);
       debugPrint(state);
-      return Duration(seconds: data['duration']);
+      return Duration(seconds: data['duration'] ?? 0);
     }
   } // return total duration
 

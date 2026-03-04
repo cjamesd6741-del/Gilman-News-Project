@@ -1,8 +1,4 @@
-import 'dart:convert';
-
-import 'package:apitest_2/services/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:apitest_2/services/stats/Articlestorage.dart';
 import 'package:apitest_2/services/stats/Articlestorage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:apitest_2/services/cardclass.dart';

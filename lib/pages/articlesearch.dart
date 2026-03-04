@@ -44,79 +44,38 @@ class AllArticleSearch extends SearchDelegate {
     final matches = articles.where((article) {
       final title = _normalize(article.searcharticletitle);
       final author = _normalize(article.searchauthor);
-      return title.contains(q) || author.contains(q);
+      final date = _normalize(article.searchdate);
+      return title.contains(q) || author.contains(q) || date.contains(q);
     }).toList();
+
+    matches.sort((a, b) {
+      return b.searchdate.compareTo(a.searchdate);
+    });
 
     return ListView.builder(
       itemCount: matches.length,
       itemBuilder: (context, index) {
         var article = matches[index];
-        return ListTile(
-          title: ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                '/loading',
-                arguments: {
-                  'title': article.searcharticletitle,
-                  'author': article.searchauthor,
-                },
-              );
-            },
-            child: SafeArea(
-              child: Column(
-                children: [
-                  Text(article.searcharticletitle),
-                  const SizedBox(height: 30),
-                  Text(article.searchauthor),
-                ],
-              ),
-            ),
-          ),
-        );
+        return SearchCard(searchclass: article);
       },
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final matches = articles
-        .where(
-          (article) =>
-              article.searcharticletitle.toLowerCase().contains(
-                query.toLowerCase(),
-              ) ||
-              article.searchauthor.toLowerCase().contains(query.toLowerCase()),
-        )
-        .toList();
+    final q = _normalize(query);
+    final matches = articles.where((article) {
+      final title = _normalize(article.searcharticletitle);
+      final author = _normalize(article.searchauthor);
+      final date = _normalize(article.searchdate);
+      return title.contains(q) || author.contains(q) || date.contains(q);
+    }).toList();
 
     return ListView.builder(
       itemCount: matches.length,
       itemBuilder: (context, index) {
         var article = matches[index];
-        return ListTile(
-          title: ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                '/loading',
-                arguments: {
-                  'title': article.searcharticletitle,
-                  'author': article.searchauthor,
-                },
-              );
-            },
-            child: SafeArea(
-              child: Column(
-                children: [
-                  Text(article.searcharticletitle),
-                  const SizedBox(height: 30),
-                  Text(article.searchauthor),
-                ],
-              ),
-            ),
-          ),
-        );
+        return SearchCard(searchclass: article);
       },
     );
   }

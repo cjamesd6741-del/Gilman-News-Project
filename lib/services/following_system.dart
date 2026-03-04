@@ -3,9 +3,9 @@ import 'package:apitest_2/services/stats/Articlestorage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Follow_Card extends StatelessWidget {
-  String author;
-  bool followed;
-  VoidCallback ontoggle;
+  final String author;
+  final bool followed;
+  final VoidCallback ontoggle;
   Follow_Card({
     super.key,
     required this.author,

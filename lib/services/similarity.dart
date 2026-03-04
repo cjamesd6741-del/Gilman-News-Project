@@ -1,4 +1,4 @@
-import 'package:apitest_2/services/stats/Articlestorage.dart';
+import 'package:apitest_2/services/stats/articlestorage.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '/services/stats/algorithm.dart';
@@ -108,75 +108,78 @@ class Similar_Instance {
 
 class SimilarCard extends StatelessWidget {
   final Similar_Instance similar_instance;
-  VoidCallback onleave;
-  SimilarCard({
+  final VoidCallback onleave;
+  const SimilarCard({
     super.key,
     required this.similar_instance,
     required this.onleave,
   });
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: const Color.fromARGB(255, 46, 48, 50),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: const BorderSide(
-          color: Color.fromARGB(255, 204, 214, 219),
-          width: 5,
+    return SizedBox(
+      width: double.infinity,
+      child: Card(
+        color: const Color.fromARGB(255, 46, 48, 50),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(
+            color: Color.fromARGB(255, 204, 214, 219),
+            width: 5,
+          ),
         ),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        splashColor: Colors.white,
-        highlightColor: Colors.blueGrey,
-        onTap: () async {
-          await Future.delayed(const Duration(milliseconds: 350));
-          onleave();
-          Navigator.pushReplacementNamed(
-            context,
-            '/loading',
-            arguments: {
-              'title': similar_instance.title,
-              'author': similar_instance.author,
-              'recommended': true,
-              'prevauthor': similar_instance.prevauthor,
-              'prevtitle': similar_instance.prevtitle,
-            },
-          );
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              Text(
-                similar_instance.title,
-                style: const TextStyle(
-                  fontSize: 25,
-                  color: Color.fromARGB(255, 211, 211, 211),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          splashColor: Colors.white,
+          highlightColor: Colors.blueGrey,
+          onTap: () async {
+            await Future.delayed(const Duration(milliseconds: 350));
+            onleave();
+            Navigator.pushReplacementNamed(
+              context,
+              '/loading',
+              arguments: {
+                'title': similar_instance.title,
+                'author': similar_instance.author,
+                'recommended': true,
+                'prevauthor': similar_instance.prevauthor,
+                'prevtitle': similar_instance.prevtitle,
+              },
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
+                Text(
+                  similar_instance.title,
+                  style: const TextStyle(
+                    fontSize: 25,
+                    color: Color.fromARGB(255, 211, 211, 211),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                similar_instance.author,
-                style: const TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontSize: 14,
-                  color: Color.fromARGB(255, 211, 211, 211),
+                const SizedBox(height: 10),
+                Text(
+                  similar_instance.author,
+                  style: const TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 14,
+                    color: Color.fromARGB(255, 211, 211, 211),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                similar_instance.date,
-                style: const TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontSize: 10,
-                  color: Color.fromARGB(255, 211, 211, 211),
+                const SizedBox(height: 10),
+                Text(
+                  similar_instance.date,
+                  style: const TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 10,
+                    color: Color.fromARGB(255, 211, 211, 211),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-            ],
+                const SizedBox(height: 10),
+              ],
+            ),
           ),
         ),
       ),

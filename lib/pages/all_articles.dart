@@ -15,7 +15,7 @@ class _AllArticlesPageState extends State<AllArticlesPage> {
   List<Searchclass> articles = [];
   final _future = Supabase.instance.client
       .from('Articles')
-      .select('Author, Article_Title, Date, Article_ID');
+      .select('Author, Article_Title, Date, Article_ID, edition_num');
 
   @override
   initState() {
@@ -112,6 +112,8 @@ class _AllArticlesPageState extends State<AllArticlesPage> {
                   (instrument) => Searchclass(
                     searcharticletitle: instrument['Article_Title'],
                     searchauthor: instrument['Author'],
+                    searchdate: instrument['Date'],
+                    edition_num: instrument['edition_num'],
                   ),
                 )
                 .toList();
@@ -119,7 +121,7 @@ class _AllArticlesPageState extends State<AllArticlesPage> {
             return ListView.builder(
               itemCount: instruments.length + 1,
               itemBuilder: ((context, index) {
-                if (index == instruments.length) {
+                if (index == 0) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Center(
@@ -137,7 +139,7 @@ class _AllArticlesPageState extends State<AllArticlesPage> {
                     ),
                   );
                 } // End of index button\
-                final instrument = instruments[index];
+                final instrument = instruments[index - 1];
                 return ListTile(
                   title: CurrentCardbuild(
                     currentcardclass: CurrentCardclass(

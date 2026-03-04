@@ -1,6 +1,6 @@
 import 'package:apitest_2/services/followed_author_widget.dart';
 import 'package:flutter/material.dart';
-import '/services/stats/Articlestorage.dart';
+import '../services/stats/articlestorage.dart';
 import '/services/stats/algorithm.dart';
 import 'package:apitest_2/services/routes.dart';
 
@@ -65,6 +65,7 @@ class StatsState extends State<Stats> with RouteAware {
     _isTabVisible = visible;
 
     if (visible) {
+      debugPrint('67');
       onTabVisible();
     }
   }

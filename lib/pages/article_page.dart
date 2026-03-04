@@ -8,7 +8,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import '/services/stats/Articlestorage.dart';
 import '/services/appbartext.dart';
 import '/services/back_from_rec.dart';
-import 'package:apitest_2/services/routes.dart';
 
 class Article_Page extends StatefulWidget {
   final int tab_index;
@@ -28,7 +27,11 @@ class Article_PageState extends State<Article_Page> with RouteAware {
   bool _isTabVisible = false;
   Storedata storedata = Storedata();
   Textconfigure textconfigure = Textconfigure();
-  TextStyle appbartextStyle = const TextStyle(fontSize: 18, height: 1.2);
+  TextStyle appbartextStyle = const TextStyle(
+    fontSize: 18,
+    height: 1.2,
+    color: Color.fromARGB(255, 54, 91, 144),
+  );
   bool firstbuild = true;
   List categories = [];
   Stopwatch stopwatch = Stopwatch();
@@ -177,9 +180,11 @@ class Article_PageState extends State<Article_Page> with RouteAware {
         }
       },
       child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 234, 217, 205),
         // actual layout
         appBar: AppBar(
-          toolbarHeight: height + 80,
+          backgroundColor: Color.fromARGB(255, 203, 203, 203),
+          toolbarHeight: height + 50,
           actions: [
             if (recommended == true)
               RecommendCard(
@@ -203,220 +208,228 @@ class Article_PageState extends State<Article_Page> with RouteAware {
             ],
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(30.0, 16.0, 30.0, 0),
+        body: InteractiveViewer(
+          minScale: 1,
+          maxScale: 4,
+          panEnabled: false,
+          scaleEnabled: true,
+          boundaryMargin: EdgeInsets.all(double.infinity),
+          clipBehavior: Clip.none,
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
-                if (data['image_urls'] != null &&
-                    (data['image_urls'] as List).length > 1)
-                  SafeArea(
-                    left: true,
-                    right: true,
-                    child: ClipRect(
-                      child: CarouselSlider(
-                        options: CarouselOptions(
-                          viewportFraction: .95,
-                          height: 500,
-                          enlargeCenterPage: true,
-                          enableInfiniteScroll: true,
-                          autoPlay: false,
-                          clipBehavior: Clip.hardEdge,
-                        ),
-                        items: List.generate(
-                          (data['image_urls'] as List).length,
-                          (index) {
-                            final url = data['image_urls'][index];
-                            final labels = data['image_labels'] as List?;
-                            return Column(
-                              children: [
-                                if (labels != null &&
-                                    index < labels.length) ...[
-                                  Text(
-                                    labels[index] ?? "",
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                ],
-
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: const Color.fromARGB(
-                                        255,
-                                        9,
-                                        8,
-                                        50,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(30.0, 16.0, 30.0, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 16),
+                  if (data['image_urls'] != null &&
+                      (data['image_urls'] as List).length > 1)
+                    SafeArea(
+                      left: true,
+                      right: true,
+                      child: ClipRect(
+                        child: CarouselSlider(
+                          options: CarouselOptions(
+                            viewportFraction: .95,
+                            height: 500,
+                            enlargeCenterPage: true,
+                            enableInfiniteScroll: true,
+                            autoPlay: false,
+                            clipBehavior: Clip.hardEdge,
+                          ),
+                          items: List.generate(
+                            (data['image_urls'] as List).length,
+                            (index) {
+                              final url = data['image_urls'][index];
+                              final labels = data['image_labels'] as List?;
+                              return Column(
+                                children: [
+                                  if (labels != null &&
+                                      index < labels.length) ...[
+                                    Text(
+                                      labels[index] ?? "",
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                      width: 5,
+                                    ),
+                                    const SizedBox(height: 8),
+                                  ],
+
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: const Color.fromARGB(
+                                          255,
+                                          9,
+                                          8,
+                                          50,
+                                        ),
+                                        width: 5,
+                                      ),
+                                    ),
+                                    child: Image.network(
+                                      url,
+                                      fit: BoxFit.cover,
+                                      height: 350,
                                     ),
                                   ),
-                                  child: Image.network(
-                                    url,
-                                    fit: BoxFit.cover,
-                                    height: 350,
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ), // if there are multiple images, show a carousel
-                if (data['image_urls'] != null &&
-                    (data['image_urls'] as List).length == 1)
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: const Color.fromARGB(255, 9, 8, 50),
-                              width: 5,
-                            ),
-                          ),
-                          child: Image.network(
-                            data['image_urls'][0],
-                            fit: BoxFit.cover,
+                                ],
+                              );
+                            },
                           ),
                         ),
                       ),
-                      if (data['image_labels'] != null &&
-                          (data['image_labels'] as List).isNotEmpty)
+                    ), // if there are multiple images, show a carousel
+                  if (data['image_urls'] != null &&
+                      (data['image_urls'] as List).length == 1)
+                    Column(
+                      children: [
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 16.0),
-                          child: Text(
-                            data['image_labels'][0],
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                Text(
-                  'Authors:',
-                  style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
-                ),
-                const SizedBox(height: 16),
-                FutureBuilder(
-                  future: followed_authors,
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (!snapshot.hasData) {
-                      return SpinKitChasingDots(
-                        size: 75,
-                        color: const Color.fromARGB(255, 2, 4, 88),
-                      );
-                    }
-                    List followedAuthors = snapshot.data;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: authorslist.map((author) {
-                        return Row(
-                          children: [
-                            Text(
-                              author,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontStyle: FontStyle.italic,
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color.fromARGB(255, 9, 8, 50),
+                                width: 5,
                               ),
                             ),
-                            const SizedBox(width: 10),
-                            Follow_Card(
-                              author: author,
-                              followed: followedAuthors.contains(author),
-                              ontoggle: () {
-                                setState(() {
-                                  if (followedAuthors.contains(author)) {
-                                    followedAuthors.remove(author);
-                                  } else {
-                                    followedAuthors.add(author);
-                                  }
-                                });
-                              },
+                            child: Image.network(
+                              data['image_urls'][0],
+                              fit: BoxFit.cover,
                             ),
-                          ],
-                        );
-                      }).toList(),
-                    );
-                  },
-                ),
-
-                const SizedBox(height: 16),
-                Text(
-                  data['date'],
-                  style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: (data['words'] as List<dynamic>).map<Widget>((
-                    word,
-                  ) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: Text(
-                        '       ${word.toString()}',
-                        style: GoogleFonts.lora(fontSize: 19, height: 1.5),
-                      ),
-                    );
-                  }).toList(),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  "Recommended Articles",
-                  style: TextStyle(
-                    fontSize: 25,
-                    color: const Color.fromARGB(255, 12, 67, 111),
+                          ),
+                        ),
+                        if (data['image_labels'] != null &&
+                            (data['image_labels'] as List).isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: Text(
+                              data['image_labels'][0],
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  Text(
+                    'Authors:',
+                    style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
                   ),
-                ),
-                FutureBuilder(
-                  future: recs,
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: SpinKitCubeGrid(
-                          color: const Color.fromARGB(255, 2, 4, 88),
+                  const SizedBox(height: 16),
+                  FutureBuilder(
+                    future: followed_authors,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (!snapshot.hasData) {
+                        return SpinKitChasingDots(
                           size: 75,
+                          color: const Color.fromARGB(255, 2, 4, 88),
+                        );
+                      }
+                      List followedAuthors = snapshot.data;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: authorslist.map((author) {
+                          return Row(
+                            children: [
+                              Text(
+                                author,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Follow_Card(
+                                author: author,
+                                followed: followedAuthors.contains(author),
+                                ontoggle: () {
+                                  setState(() {
+                                    if (followedAuthors.contains(author)) {
+                                      followedAuthors.remove(author);
+                                    } else {
+                                      followedAuthors.add(author);
+                                    }
+                                  });
+                                },
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: 16),
+                  Text(
+                    data['date'],
+                    style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: (data['words'] as List<dynamic>).map<Widget>((
+                      word,
+                    ) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: Text(
+                          '       ${word.toString()}',
+                          style: GoogleFonts.lora(fontSize: 19, height: 1.5),
                         ),
                       );
-                    }
-                    if (!snapshot.hasData || snapshot.hasError) {
-                      return Center(
-                        child: SpinKitCubeGrid(
-                          color: const Color.fromARGB(255, 2, 4, 88),
-                          size: 75,
-                        ),
-                      );
-                    }
-                    List<Similar_Instance> recommendations = snapshot.data;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: recommendations.map((recommend) {
-                        return Padding(
-                          padding: const EdgeInsetsGeometry.fromLTRB(
-                            0,
-                            15,
-                            0,
-                            0,
-                          ),
-                          child: SimilarCard(
-                            similar_instance: recommend,
-                            onleave: onLeave,
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "Recommended Articles",
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: const Color.fromARGB(255, 12, 67, 111),
+                    ),
+                  ),
+                  FutureBuilder(
+                    future: recs,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: SpinKitCubeGrid(
+                            color: const Color.fromARGB(255, 2, 4, 88),
+                            size: 75,
                           ),
                         );
-                      }).toList(),
-                    );
-                  },
-                ),
-              ],
+                      }
+                      if (!snapshot.hasData || snapshot.hasError) {
+                        return Center(
+                          child: SpinKitCubeGrid(
+                            color: const Color.fromARGB(255, 2, 4, 88),
+                            size: 75,
+                          ),
+                        );
+                      }
+                      List<Similar_Instance> recommendations = snapshot.data;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: recommendations.map((recommend) {
+                          return Padding(
+                            padding: const EdgeInsetsGeometry.fromLTRB(
+                              0,
+                              15,
+                              0,
+                              0,
+                            ),
+                            child: SimilarCard(
+                              similar_instance: recommend,
+                              onleave: onLeave,
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
