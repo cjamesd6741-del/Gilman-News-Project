@@ -30,7 +30,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
   TextStyle appbartextStyle = const TextStyle(
     fontSize: 18,
     height: 1.2,
-    color: Color.fromARGB(255, 54, 91, 144),
+    color: Color.fromARGB(255, 79, 123, 184),
   );
   bool firstbuild = true;
   List categories = [];
@@ -180,10 +180,10 @@ class Article_PageState extends State<Article_Page> with RouteAware {
         }
       },
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 234, 217, 205),
+        backgroundColor: const Color.fromARGB(255, 218, 222, 226),
         // actual layout
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 203, 203, 203),
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
           toolbarHeight: height + 50,
           actions: [
             if (recommended == true)

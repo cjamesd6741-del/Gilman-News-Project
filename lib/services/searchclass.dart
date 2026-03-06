@@ -20,6 +20,8 @@ class SearchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 10,
+      shadowColor: const Color.fromARGB(255, 116, 127, 149),
       color: const Color.fromARGB(255, 46, 48, 50),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -50,10 +52,7 @@ class SearchCard extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 searchclass.searcharticletitle,
-                style: const TextStyle(
-                  fontSize: 25,
-                  color: Color.fromARGB(255, 211, 211, 211),
-                ),
+                style: const TextStyle(fontSize: 25, color: Colors.white),
               ),
               const SizedBox(height: 10),
               Text(
@@ -61,7 +60,7 @@ class SearchCard extends StatelessWidget {
                 style: const TextStyle(
                   fontStyle: FontStyle.italic,
                   fontSize: 14,
-                  color: Color.fromARGB(255, 211, 211, 211),
+                  color: Color.fromARGB(255, 220, 220, 220),
                 ),
               ),
               const SizedBox(height: 10),
@@ -70,7 +69,7 @@ class SearchCard extends StatelessWidget {
                 style: const TextStyle(
                   fontStyle: FontStyle.italic,
                   fontSize: 10,
-                  color: Color.fromARGB(255, 211, 211, 211),
+                  color: Color.fromARGB(255, 190, 190, 190),
                 ),
               ),
             ],

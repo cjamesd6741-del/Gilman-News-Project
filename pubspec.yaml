@@ -2,7 +2,7 @@ name: apitest_2
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -40,11 +40,33 @@ dependencies:
   path_provider: ^2.1.5
   google_nav_bar: ^5.0.7
   google_fonts: ^8.0.2
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.4
 
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "lib/images/App_Icon.png"
+  remove_alpha_ios: true
+  background_color_ios: "#1D1480"
+  background_color_android: "#1D1480"
+  min_sdk_android: 21
+  web:
+    generate: true
+    image_path: "lib/images/App_Icon.png"
+    background_color: "#1D1480"
+    theme_color: "#1D1480"
+  windows:
+    generate: true
+    image_path: "lib/images/App_Icon.png"
+    icon_size: 48
+  macos:
+    generate: true
+    image_path: "lib/images/App_Icon.png"
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -57,7 +79,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -65,7 +86,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - lib/images/
+    - lib/images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

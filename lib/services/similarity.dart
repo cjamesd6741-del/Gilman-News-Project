@@ -119,6 +119,8 @@ class SimilarCard extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Card(
+        elevation: 10,
+        shadowColor: const Color.fromARGB(255, 116, 127, 149),
         color: const Color.fromARGB(255, 46, 48, 50),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -156,7 +158,7 @@ class SimilarCard extends StatelessWidget {
                   similar_instance.title,
                   style: const TextStyle(
                     fontSize: 25,
-                    color: Color.fromARGB(255, 211, 211, 211),
+                    color: Color.fromARGB(255, 255, 255, 255),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -165,7 +167,7 @@ class SimilarCard extends StatelessWidget {
                   style: const TextStyle(
                     fontStyle: FontStyle.italic,
                     fontSize: 14,
-                    color: Color.fromARGB(255, 211, 211, 211),
+                    color: Color.fromARGB(255, 220, 220, 220),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -174,7 +176,7 @@ class SimilarCard extends StatelessWidget {
                   style: const TextStyle(
                     fontStyle: FontStyle.italic,
                     fontSize: 10,
-                    color: Color.fromARGB(255, 211, 211, 211),
+                    color: Color.fromARGB(255, 190, 190, 190),
                   ),
                 ),
                 const SizedBox(height: 10),

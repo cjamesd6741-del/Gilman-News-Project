@@ -8,12 +8,14 @@ class Cardbuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 10,
+      shadowColor: const Color.fromARGB(255, 116, 127, 149),
       color: const Color.fromARGB(255, 46, 48, 50),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: const BorderSide(
-          color: Color.fromARGB(255, 204, 214, 219),
-          width: 5,
+          color: Color.fromARGB(255, 80, 83, 87),
+          width: 4,
         ),
       ),
       clipBehavior: Clip.antiAlias,
@@ -38,10 +40,7 @@ class Cardbuild extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 cardclass.articleTitle,
-                style: const TextStyle(
-                  fontSize: 25,
-                  color: Color.fromARGB(255, 211, 211, 211),
-                ),
+                style: const TextStyle(fontSize: 25, color: Colors.white),
               ),
               const SizedBox(height: 10),
               Text(
@@ -49,7 +48,7 @@ class Cardbuild extends StatelessWidget {
                 style: const TextStyle(
                   fontStyle: FontStyle.italic,
                   fontSize: 14,
-                  color: Color.fromARGB(255, 211, 211, 211),
+                  color: Color.fromARGB(255, 220, 220, 220),
                 ),
               ),
               const SizedBox(height: 10),
@@ -67,12 +66,14 @@ class CurrentCardbuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 10,
+      shadowColor: const Color.fromARGB(255, 116, 127, 149),
       color: const Color.fromARGB(255, 46, 48, 50),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: const BorderSide(
-          color: Color.fromARGB(255, 204, 214, 219),
-          width: 5,
+          color: Color.fromARGB(255, 80, 83, 87),
+          width: 4,
         ),
       ),
       clipBehavior: Clip.antiAlias,
@@ -99,7 +100,7 @@ class CurrentCardbuild extends StatelessWidget {
                 currentcardclass.articleTitle,
                 style: const TextStyle(
                   fontSize: 25,
-                  color: Color.fromARGB(255, 211, 211, 211),
+                  color: Color.fromARGB(255, 255, 255, 255),
                 ),
               ),
               const SizedBox(height: 10),
@@ -108,7 +109,7 @@ class CurrentCardbuild extends StatelessWidget {
                 style: const TextStyle(
                   fontStyle: FontStyle.italic,
                   fontSize: 14,
-                  color: Color.fromARGB(255, 211, 211, 211),
+                  color: Color.fromARGB(255, 220, 220, 220),
                 ),
               ),
               const SizedBox(height: 10),
@@ -116,8 +117,8 @@ class CurrentCardbuild extends StatelessWidget {
                 currentcardclass.date,
                 style: const TextStyle(
                   fontStyle: FontStyle.italic,
-                  fontSize: 10,
-                  color: Color.fromARGB(255, 211, 211, 211),
+                  fontSize: 11,
+                  color: Color.fromARGB(255, 190, 190, 190),
                 ),
               ),
               const SizedBox(height: 10),
@@ -135,12 +136,14 @@ class FollowCardbuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 10,
+      shadowColor: const Color.fromARGB(255, 116, 127, 149),
       color: const Color.fromARGB(255, 46, 48, 50),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: const BorderSide(
-          color: Color.fromARGB(255, 204, 214, 219),
-          width: 5,
+          color: Color.fromARGB(255, 80, 83, 87),
+          width: 4,
         ),
       ),
       clipBehavior: Clip.antiAlias,
@@ -167,7 +170,7 @@ class FollowCardbuild extends StatelessWidget {
                 followcardclass.articleTitle,
                 style: const TextStyle(
                   fontSize: 25,
-                  color: Color.fromARGB(255, 211, 211, 211),
+                  color: Color.fromARGB(255, 255, 255, 255),
                 ),
               ),
               const SizedBox(height: 10),
@@ -176,7 +179,7 @@ class FollowCardbuild extends StatelessWidget {
                 style: const TextStyle(
                   fontStyle: FontStyle.italic,
                   fontSize: 14,
-                  color: Color.fromARGB(255, 211, 211, 211),
+                  color: Color.fromARGB(255, 220, 220, 220),
                 ),
               ),
               const SizedBox(height: 10),
@@ -185,7 +188,7 @@ class FollowCardbuild extends StatelessWidget {
                 style: const TextStyle(
                   fontStyle: FontStyle.italic,
                   fontSize: 14,
-                  color: Color.fromARGB(255, 211, 211, 211),
+                  color: Color.fromARGB(255, 190, 190, 190),
                 ),
               ),
             ],
