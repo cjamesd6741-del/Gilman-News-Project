@@ -27,6 +27,9 @@ class _Home_PageState extends State<Home_Page> {
         headerSliverBuilder: (context, innerboxisscrolled) {
           return [
             SliverAppBar(
+              forceElevated: true,
+              elevation: 4.0,
+              shadowColor: Colors.black,
               toolbarHeight: height + 100,
               flexibleSpace: Center(
                 child: Padding(

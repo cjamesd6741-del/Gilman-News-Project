@@ -1,3 +1,5 @@
+import 'package:apitest_2/pages/about.dart';
+import 'package:apitest_2/pages/misc_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:apitest_2/pages/article_page.dart';
@@ -16,11 +18,10 @@ class Route_Manager extends StatefulWidget {
 }
 
 class _Route_ManagerState extends State<Route_Manager> {
-  int page_index = 0;
+  int page_index = 1;
   List<Widget> pages = const [
     AllArticlesPage(),
     CurrentArticles(),
-    Stats(),
     Text("Games"),
   ];
 
@@ -123,6 +124,21 @@ class _Route_ManagerState extends State<Route_Manager> {
     }
   }
 
+  Route misc_article_routes(RouteSettings settings) {
+    switch (settings.name) {
+      case '/':
+        return MaterialPageRoute(builder: (_) => MiscPage());
+      case '/stats':
+        return MaterialPageRoute(
+          builder: (_) => Stats(tab_index: 2, observer: _routeObservers[2]),
+        );
+      case '/about':
+        return MaterialPageRoute(builder: (_) => AboutPage());
+      default:
+        throw Exception('Invalid route: ${settings.name}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,8 +158,7 @@ class _Route_ManagerState extends State<Route_Manager> {
           _buildTabNavigator(
             navigatorKey: _navigatorKeys[2],
             observer: _routeObservers[2],
-            onGenerateRoute: (settings) =>
-                MaterialPageRoute(builder: (_) => Stats()),
+            onGenerateRoute: misc_article_routes,
           ),
           _buildTabNavigator(
             navigatorKey: _navigatorKeys[3],

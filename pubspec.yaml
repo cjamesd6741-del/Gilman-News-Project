@@ -41,6 +41,7 @@ dependencies:
   google_nav_bar: ^5.0.7
   google_fonts: ^8.0.2
   flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.7
 
 dev_dependencies:
   flutter_test:
@@ -53,7 +54,7 @@ flutter_launcher_icons:
   image_path: "lib/images/App_Icon.png"
   remove_alpha_ios: true
   background_color_ios: "#1D1480"
-  background_color_android: "#1D1480"
+  adaptive_icon_background: "#1D1480"
   min_sdk_android: 21
   web:
     generate: true

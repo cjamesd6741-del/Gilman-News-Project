@@ -5,7 +5,9 @@ import '/services/stats/algorithm.dart';
 import 'package:apitest_2/services/routes.dart';
 
 class Stats extends StatefulWidget {
-  const Stats({super.key});
+  final int tab_index;
+  final RouteObserver<ModalRoute<void>> observer;
+  const Stats({super.key, required this.observer, required this.tab_index});
 
   @override
   State<Stats> createState() => StatsState();

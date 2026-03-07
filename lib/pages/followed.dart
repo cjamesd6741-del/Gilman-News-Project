@@ -130,6 +130,9 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
       headerSliverBuilder: (context, innerBoxIsScrolled) {
         return [
           SliverAppBar(
+            forceElevated: true,
+            shadowColor: Colors.black,
+            elevation: 4.0,
             backgroundColor: const Color.fromARGB(255, 34, 72, 92),
             expandedHeight: 140,
             collapsedHeight: 80,

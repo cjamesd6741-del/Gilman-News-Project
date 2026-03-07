@@ -30,12 +30,14 @@ class _AllArticlesPageState extends State<AllArticlesPage> {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
+              forceElevated: true,
+              shadowColor: Colors.black,
+              elevation: 4.0,
               backgroundColor: const Color.fromARGB(255, 34, 72, 92),
               expandedHeight: 180,
               collapsedHeight: 90,
               pinned: true,
               floating: true,
-              forceElevated: innerBoxIsScrolled,
               flexibleSpace: Stack(
                 children: [
                   FlexibleSpaceBar(

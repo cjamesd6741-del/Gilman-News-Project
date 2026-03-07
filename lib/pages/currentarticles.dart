@@ -31,6 +31,9 @@ class _CurrentArticlesState extends State<CurrentArticles> {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
+              forceElevated: true,
+              shadowColor: Colors.black,
+              elevation: 4.0,
               backgroundColor: const Color.fromARGB(255, 34, 72, 92),
               expandedHeight: 180,
               collapsedHeight: 80,

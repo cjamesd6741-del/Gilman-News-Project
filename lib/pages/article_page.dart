@@ -183,6 +183,8 @@ class Article_PageState extends State<Article_Page> with RouteAware {
         backgroundColor: const Color.fromARGB(255, 218, 222, 226),
         // actual layout
         appBar: AppBar(
+          elevation: 10,
+          shadowColor: Colors.black,
           backgroundColor: Color.fromARGB(255, 255, 255, 255),
           toolbarHeight: height + 50,
           actions: [
