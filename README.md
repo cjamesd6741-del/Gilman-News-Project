@@ -2,7 +2,7 @@
 
 Basic App in development for local school newspaper. Currently has ability to interface with online database to display articles, images, and authors. Basic Search Functionality has been implemented, although you cannot yet sort by date. User Stats have been implemented and store information on local device for simplicity.
 
-Most Recent Update 3/7/26: Miscillaneous Page Reworked. New About Section added. Shadow Added Under Most Appbars to look less akward. Splash Screen along with New App Icon Rework.
+Most Recent Update 3/12/26: Masthead Added. Caching for Masthead, planning to add it to all articles. Interactive viewer added to article pages to allow zooming.
 
 To view the code, got to lib/pages or lib/services.
 
