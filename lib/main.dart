@@ -2,9 +2,14 @@ import 'package:apitest_2/pages/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'pages/routmanager.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:apitest_2/services/cache.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox('cache');
+  await CacheManager().init();
 
   await Supabase.initialize(
     url: 'https://obzabvjplufncjyirrhk.supabase.co',

@@ -179,45 +179,42 @@ class Article_PageState extends State<Article_Page> with RouteAware {
           onLeave();
         }
       },
-      child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 218, 222, 226),
-        // actual layout
-        appBar: AppBar(
-          elevation: 10,
-          shadowColor: Colors.black,
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
-          toolbarHeight: height + 50,
-          actions: [
-            if (recommended == true)
-              RecommendCard(
-                back_from_rec: Back_From_Rec(
-                  author: prevauthor,
-                  title: prevtitle,
+      child: InteractiveViewer(
+        panEnabled: false,
+        minScale: 1,
+        maxScale: 3,
+        child: Scaffold(
+          backgroundColor: const Color.fromARGB(255, 218, 222, 226),
+          // actual layout
+          appBar: AppBar(
+            elevation: 10,
+            shadowColor: Colors.black,
+            backgroundColor: Color.fromARGB(255, 255, 255, 255),
+            toolbarHeight: height + 50,
+            actions: [
+              if (recommended == true)
+                RecommendCard(
+                  back_from_rec: Back_From_Rec(
+                    author: prevauthor,
+                    title: prevtitle,
+                  ),
                 ),
-              ),
-          ],
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                data['title'] ?? 'Article',
-                softWrap: true,
-                maxLines: null,
-                overflow: TextOverflow.visible,
-                style: appbartextStyle,
-              ),
-              const SizedBox(height: 12),
             ],
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  data['title'] ?? 'Article',
+                  softWrap: true,
+                  maxLines: null,
+                  overflow: TextOverflow.visible,
+                  style: appbartextStyle,
+                ),
+                const SizedBox(height: 12),
+              ],
+            ),
           ),
-        ),
-        body: InteractiveViewer(
-          minScale: 1,
-          maxScale: 4,
-          panEnabled: false,
-          scaleEnabled: true,
-          boundaryMargin: EdgeInsets.all(double.infinity),
-          clipBehavior: Clip.none,
-          child: SingleChildScrollView(
+          body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(30.0, 16.0, 30.0, 0),
               child: Column(

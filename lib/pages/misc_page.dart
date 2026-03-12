@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MiscPage extends StatelessWidget {
   const MiscPage({super.key});
@@ -91,10 +92,43 @@ class MiscPage extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Text(
                         "Stats",
-                        style: TextStyle(fontSize: 50, color: Colors.white),
+                        style: GoogleFonts.lora(
+                          fontSize: 50,
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              Material(
+                borderRadius: BorderRadius.circular(16),
+                clipBehavior: Clip.hardEdge,
+                elevation: 4,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/masthead');
+                  },
+                  child: Ink(
+                    height: 300,
+                    width: MediaQuery.of(context).size.width - 30,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("lib/images/Masthead.jpg"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Masthead",
+                        style: GoogleFonts.lora(
+                          fontSize: 50,
+                          color: Color.fromARGB(255, 0, 75, 141),
+                        ),
                       ),
                     ),
                   ),
@@ -122,10 +156,13 @@ class MiscPage extends StatelessWidget {
                         end: Alignment.bottomRight,
                       ),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Text(
                         "About",
-                        style: TextStyle(fontSize: 50, color: Colors.white),
+                        style: GoogleFonts.lora(
+                          fontSize: 50,
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ),
                       ),
                     ),
                   ),

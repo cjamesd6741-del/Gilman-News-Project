@@ -1,4 +1,5 @@
 import 'package:apitest_2/pages/about.dart';
+import 'package:apitest_2/pages/masthead_page.dart';
 import 'package:apitest_2/pages/misc_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -134,6 +135,8 @@ class _Route_ManagerState extends State<Route_Manager> {
         );
       case '/about':
         return MaterialPageRoute(builder: (_) => AboutPage());
+      case '/masthead':
+        return MaterialPageRoute(builder: (_) => MastHead_Page());
       default:
         throw Exception('Invalid route: ${settings.name}');
     }
@@ -173,6 +176,7 @@ class _Route_ManagerState extends State<Route_Manager> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: GNav(
+            selectedIndex: page_index,
             gap: 6,
             backgroundColor: const Color.fromARGB(255, 10, 62, 105),
             color: const Color.fromARGB(255, 135, 135, 135),
