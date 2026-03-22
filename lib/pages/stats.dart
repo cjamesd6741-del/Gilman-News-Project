@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../services/stats/articlestorage.dart';
 import '/services/stats/algorithm.dart';
 import 'package:apitest_2/services/routes.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Stats extends StatefulWidget {
   final int tab_index;
@@ -67,7 +68,6 @@ class StatsState extends State<Stats> with RouteAware {
     _isTabVisible = visible;
 
     if (visible) {
-      debugPrint('67');
       onTabVisible();
     }
   }
@@ -90,7 +90,6 @@ class StatsState extends State<Stats> with RouteAware {
 
   void onTabVisible() async {
     await getdata();
-    debugPrint('test');
   }
 
   void removeItem(int index) {
@@ -110,25 +109,57 @@ class StatsState extends State<Stats> with RouteAware {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 55, 109, 138),
+      backgroundColor: const Color.fromARGB(255, 190, 200, 206),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
-              centerTitle: true,
+              forceElevated: true,
+              shadowColor: Colors.black,
+              elevation: 4.0,
               backgroundColor: const Color.fromARGB(255, 34, 72, 92),
-              title: const Text(
-                'Your Stats',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w600,
-                  color: Color.fromARGB(255, 216, 214, 214),
+              expandedHeight: 180,
+              collapsedHeight: 80,
+              pinned: true,
+              flexibleSpace: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset('lib/images/Stats.png', fit: BoxFit.cover),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 100),
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: innerBoxIsScrolled
+                          ? const Color.fromARGB(255, 34, 72, 92)
+                          : Colors.transparent,
+                      child: SafeArea(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Center(
+                            child: Text(
+                              'Stats',
+                              style: GoogleFonts.lora(
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 255, 255, 255),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(3),
+                child: Container(
+                  color: const Color.fromARGB(255, 31, 30, 46),
+                  height: 3,
                 ),
               ),
-              floating: true,
-              forceElevated: innerBoxIsScrolled,
-              expandedHeight: 100,
-              collapsedHeight: 80,
             ),
           ];
         },
@@ -141,28 +172,37 @@ class StatsState extends State<Stats> with RouteAware {
                   const SizedBox(height: 30),
                   Text(
                     'Articles Read: $articler',
-                    style: const TextStyle(
-                      fontSize: 22,
+                    style: GoogleFonts.ibmPlexSans(
+                      fontSize: 30,
                       fontWeight: FontWeight.w400,
-                      color: Colors.white54,
+                      color: Color.fromARGB(255, 0, 75, 141),
                     ),
                   ),
                   const SizedBox(height: 30),
                   Text(
-                    'Reading Duration: $shownduration',
-                    style: const TextStyle(
-                      fontSize: 22,
+                    'Reading Duration:',
+                    style: GoogleFonts.ibmPlexSans(
+                      fontSize: 30,
                       fontWeight: FontWeight.w400,
-                      color: Colors.white54,
+                      color: Color.fromARGB(255, 0, 75, 141),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Hours : ${shownduration.inHours} , Minutes : ${shownduration.inMinutes.remainder(60)}, Seconds : ${shownduration.inSeconds.remainder(60)}',
+                    style: GoogleFonts.inter(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      color: Color.fromARGB(255, 0, 75, 141),
                     ),
                   ),
                   const SizedBox(height: 30),
                   Text(
                     'Top Categories:',
-                    style: const TextStyle(
-                      fontSize: 22,
+                    style: GoogleFonts.ibmPlexSans(
+                      fontSize: 30,
                       fontWeight: FontWeight.w400,
-                      color: Color.fromARGB(255, 255, 249, 249),
+                      color: Color.fromARGB(255, 0, 75, 141),
                     ),
                   ),
                   ListView.builder(
@@ -178,10 +218,10 @@ class StatsState extends State<Stats> with RouteAware {
                   const SizedBox(height: 30),
                   Text(
                     'Top Recent Categories:',
-                    style: const TextStyle(
-                      fontSize: 22,
+                    style: GoogleFonts.ibmPlexSans(
+                      fontSize: 30,
                       fontWeight: FontWeight.w400,
-                      color: Color.fromARGB(255, 255, 249, 249),
+                      color: Color.fromARGB(255, 0, 75, 141),
                     ),
                   ),
                   ListView.builder(
@@ -197,10 +237,10 @@ class StatsState extends State<Stats> with RouteAware {
                   const SizedBox(height: 30),
                   Text(
                     'Favorite Writers',
-                    style: const TextStyle(
-                      fontSize: 22,
+                    style: GoogleFonts.ibmPlexSans(
+                      fontSize: 30,
                       fontWeight: FontWeight.w400,
-                      color: Color.fromARGB(255, 255, 249, 249),
+                      color: Color.fromARGB(255, 0, 75, 141),
                     ),
                   ),
                   ListView.builder(
@@ -213,6 +253,18 @@ class StatsState extends State<Stats> with RouteAware {
                   ),
                   const SizedBox(height: 30),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 34, 72, 92),
+                      foregroundColor: Colors.white,
+                      elevation: 3,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 28,
+                        vertical: 14,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                     onPressed: () {
                       storedata.clearData.clear();
                       getdata();
@@ -223,10 +275,10 @@ class StatsState extends State<Stats> with RouteAware {
                   Center(
                     child: Text(
                       "Followed Authors",
-                      style: const TextStyle(
-                        fontSize: 22,
+                      style: GoogleFonts.ibmPlexSans(
+                        fontSize: 30,
                         fontWeight: FontWeight.w400,
-                        color: Color.fromARGB(255, 255, 249, 249),
+                        color: Color.fromARGB(255, 0, 75, 141),
                       ),
                     ),
                   ),

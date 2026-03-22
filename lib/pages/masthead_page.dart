@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:apitest_2/services/cache.dart';
 import 'package:apitest_2/services/masthead_year_selector.dart';
+import 'package:apitest_2/services/tree.dart';
 
 class MastHead_Page extends StatefulWidget {
   const MastHead_Page({super.key});
@@ -15,6 +16,7 @@ class MastHead_Page extends StatefulWidget {
 class _MastHead_PageState extends State<MastHead_Page> {
   late Future<List> data = Future.value([]);
   late int year = 0;
+  late double screenwidth = 0;
   double maxyear = 0;
   int version_number = CacheManager().get("masthead_version_number") ?? 0;
   CacheManager cacheManager = CacheManager();
@@ -30,7 +32,6 @@ class _MastHead_PageState extends State<MastHead_Page> {
         data = getdata(online_version_number['Version']);
       });
     } else {
-      debugPrint('local_call');
       setState(() {
         year = cacheManager.get("masthead_year") ?? 0;
         maxyear = year.toDouble();
@@ -40,7 +41,6 @@ class _MastHead_PageState extends State<MastHead_Page> {
   }
 
   Future<List> getdata(int vnum) async {
-    debugPrint("supabase call");
     var futures = await Future.wait<dynamic>([
       Supabase.instance.client
           .from('Mastheads')
@@ -64,6 +64,11 @@ class _MastHead_PageState extends State<MastHead_Page> {
   void initState() {
     super.initState();
     datagenerator();
+  }
+
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    screenwidth = MediaQuery.of(context).size.width - 30;
   }
 
   Widget build(BuildContext context) {
@@ -146,7 +151,6 @@ class _MastHead_PageState extends State<MastHead_Page> {
                     color: const Color.fromARGB(255, 22, 21, 88),
                   );
                 }
-                debugPrint('67');
                 Map<dynamic, dynamic>? currentdata;
                 try {
                   currentdata = useddata.firstWhere(
@@ -170,51 +174,23 @@ class _MastHead_PageState extends State<MastHead_Page> {
                 }
                 return Column(
                   children: [
-                    Expanded(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: stafflength,
-                        itemBuilder: (context, index) {
-                          if (index == 0) {
-                            if (maxyear == 0) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-
-                            return YearSelector(
-                              year: year.toDouble(),
-                              firstyear: maxyear,
-                              changeyear: (double value) {
-                                setState(() {
-                                  year = value.toInt();
-                                });
-                              },
-                            );
-                          }
-                          if (staff.isEmpty) {
-                            return Text("No data");
-                          }
-                          final person = staff[index - 1];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: 160,
-                                  child: Text(
-                                    person['role'],
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(child: Text(person['name'])),
-                              ],
-                            ),
-                          );
+                    if (maxyear == 0)
+                      const Center(child: CircularProgressIndicator()),
+                    if (maxyear != 0)
+                      YearSelector(
+                        year: year.toDouble(),
+                        firstyear: maxyear,
+                        changeyear: (double value) {
+                          setState(() {
+                            year = value.toInt();
+                          });
                         },
+                      ),
+                    Expanded(
+                      child: HierarchyTree(
+                        staff: staff,
+                        maxyear: maxyear.toInt(),
+                        screenwidth: screenwidth,
                       ),
                     ),
                   ],

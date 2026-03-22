@@ -1,29 +1,24 @@
-class Cardclass {
-  String articleTitle;
-  String author;
-  Cardclass({required this.articleTitle, required this.author});
+class ArticleWithReadStatus {
+  final Article article;
+  final bool isRead;
+  ArticleWithReadStatus({required this.article, required this.isRead});
 }
 
-class CurrentCardclass {
-  String articleTitle;
-  String author;
-  String date;
-  CurrentCardclass({
-    required this.articleTitle,
+class Article {
+  final String author;
+  final String Article_Title;
+  final String Date;
+  final double edition_num;
+  final int Article_ID;
+  final String? prevtitle;
+  final String? prevauthor;
+  Article({
     required this.author,
-    required this.date,
-  });
-}
-
-class FollowCardclass {
-  String articleTitle;
-  String author;
-  String date;
-  double edition_num;
-  FollowCardclass({
-    required this.articleTitle,
-    required this.author,
-    required this.date,
+    required this.Article_ID,
+    required this.Date,
+    required this.Article_Title,
     required this.edition_num,
+    this.prevauthor,
+    this.prevtitle,
   });
 }

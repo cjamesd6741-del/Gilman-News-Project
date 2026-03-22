@@ -1,6 +1,7 @@
 import 'package:apitest_2/pages/about.dart';
 import 'package:apitest_2/pages/masthead_page.dart';
 import 'package:apitest_2/pages/misc_page.dart';
+import 'package:apitest_2/services/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:apitest_2/pages/article_page.dart';
@@ -20,11 +21,7 @@ class Route_Manager extends StatefulWidget {
 
 class _Route_ManagerState extends State<Route_Manager> {
   int page_index = 1;
-  List<Widget> pages = const [
-    AllArticlesPage(),
-    CurrentArticles(),
-    Text("Games"),
-  ];
+  List<Widget> pages = const [Text("Games")];
 
   final _navigatorKeys = [
     GlobalKey<NavigatorState>(),
@@ -69,6 +66,14 @@ class _Route_ManagerState extends State<Route_Manager> {
         final statsState = element.findAncestorStateOfType<StatsState>();
         statsState?.onTabVisibilityChanged(i == index);
 
+        final allarticleState = element
+            .findAncestorStateOfType<AllArticlesPageState>();
+        allarticleState?.onTabVisibilityChanged(i == index);
+
+        final currentarticleState = element
+            .findAncestorStateOfType<CurrentArticlesState>();
+        currentarticleState?.onTabVisibilityChanged(i == index);
+
         element.visitChildren(checkElement);
       }
 
@@ -82,7 +87,10 @@ class _Route_ManagerState extends State<Route_Manager> {
         return MaterialPageRoute(builder: (_) => Home_Page());
 
       case '/current_articles':
-        return MaterialPageRoute(builder: (_) => CurrentArticles());
+        return MaterialPageRoute(
+          builder: (_) =>
+              CurrentArticles(tab_index: 1, observer: _routeObservers[1]),
+        );
 
       case '/followed_articles':
         return MaterialPageRoute(
@@ -108,7 +116,11 @@ class _Route_ManagerState extends State<Route_Manager> {
   Route all_articlesRoutes(RouteSettings settings) {
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => AllArticlesPage());
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) =>
+              AllArticlesPage(tab_index: 0, observer: _routeObservers[0]),
+        );
 
       case '/loading':
         return MaterialPageRoute(settings: settings, builder: (_) => Loading());
@@ -192,7 +204,7 @@ class _Route_ManagerState extends State<Route_Manager> {
             tabs: const [
               GButton(icon: Icons.newspaper, text: "Articles"),
               GButton(icon: Icons.home, text: "Home"),
-              GButton(icon: Icons.settings, text: "Personal"),
+              GButton(icon: Icons.settings, text: "Misc"),
               GButton(icon: Icons.gamepad_sharp, text: "Games"),
             ],
           ),

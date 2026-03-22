@@ -2,24 +2,123 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../services/cardbuilder.dart';
 import '../services/cardclass.dart';
+import 'package:apitest_2/services/cache.dart';
 
 class CurrentArticles extends StatefulWidget {
-  const CurrentArticles({super.key});
+  final int tab_index;
+  final RouteObserver<ModalRoute<void>> observer;
+  const CurrentArticles({
+    super.key,
+    required this.tab_index,
+    required this.observer,
+  });
   @override
-  State<CurrentArticles> createState() => _CurrentArticlesState();
+  State<CurrentArticles> createState() => CurrentArticlesState();
 }
 
-class _CurrentArticlesState extends State<CurrentArticles> {
+class CurrentArticlesState extends State<CurrentArticles> with RouteAware {
+  CacheManager cacheManager = CacheManager();
+  bool _isRouteVisible = false; // is on current tab?
+  bool _isTabVisible = false; // is on current screen?
+  late List<ArticleWithReadStatus> processedArticles;
+  late Set readarticles;
+  List<Article> articlelist = [];
+  late Future _future;
+  late int version_num =
+      cacheManager.get('current_article_version_number') ?? 0;
+
+  @override // all are checks to see if visibility changes
+  void dispose() {
+    widget.observer.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPush() {
+    _isRouteVisible = true;
+    _checkIfShouldRefresh();
+  }
+
+  @override
+  void didPopNext() {
+    _isRouteVisible = true;
+    _checkIfShouldRefresh();
+  }
+
+  @override
+  void didPushNext() {
+    _isRouteVisible = false;
+  }
+
+  @override
+  void didPop() {
+    _isRouteVisible = false;
+  }
+
+  void onTabVisibilityChanged(bool visible) {
+    if (_isTabVisible == visible) return; // only act if state changes
+    _isTabVisible = visible;
+
+    if (visible) {
+      _checkIfShouldRefresh();
+    }
+  }
+
+  void _checkIfShouldRefresh() {
+    if (_isRouteVisible && _isTabVisible) {
+      onTabVisible();
+    }
+  }
+
+  void onTabVisible() {
+    debugPrint("hello");
+    refreshPage();
+  }
+
+  void refreshPage() async {
+    final cached = await cacheManager.get("read_articles") ?? [];
+    readarticles = Set<int>.from(cached);
+    setState(() {
+      _future = datagenerator(); // 🔥 refetch data
+    });
+  }
+
   @override
   initState() {
     super.initState();
+    final cached = cacheManager.get("read_articles") ?? [];
+    readarticles = cached.toSet();
+    _future = datagenerator();
   }
 
-  Future<List<dynamic>> fetchCurrentArticles() async {
-    final response = await Supabase.instance.client
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      widget.observer.subscribe(this, route);
+    }
+  }
+
+  Future<List> datagenerator() async {
+    var online_version_number = await Supabase.instance.client
+        .from('Version_Numbers')
+        .select('Table_Name, Version')
+        .eq('Table_Name,', 'Current_Articles')
+        .single();
+    if (online_version_number['Version'] != version_num) {
+      return getdata(online_version_number['Version']);
+    }
+    return Future.value(cacheManager.get('current_article_cards'));
+  }
+
+  Future<List> getdata(int vnum) async {
+    var data = await Supabase.instance.client
         .from('Current_Articles')
         .select('Author, Article_Title, Date, Article_ID');
-    return response as List<dynamic>;
+    cacheManager.save('current_article_version_number', vnum);
+    cacheManager.save('current_article_cards', data);
+    return data;
   }
 
   @override
@@ -95,25 +194,33 @@ class _CurrentArticlesState extends State<CurrentArticles> {
           ];
         },
         body: FutureBuilder(
-          future: fetchCurrentArticles(),
+          future: _future,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             }
-            final instruments = snapshot.data!;
+            final List instruments = snapshot.data! as List;
+            articlelist = instruments.map((article) {
+              return Article(
+                Article_ID: article['Article_ID'],
+                Article_Title: article['Article_Title'],
+                author: article['Author'],
+                Date: article['Date'],
+                edition_num: article["edition_num"] ?? 0.0,
+              );
+            }).toList();
+            processedArticles = articlelist.map((article) {
+              return ArticleWithReadStatus(
+                article: article,
+                isRead: readarticles.contains(article.Article_ID),
+              );
+            }).toList();
             return ListView.builder(
               itemCount: instruments.length,
               itemBuilder:
                   ((context, index) {
-                    final instrument = instruments[index];
-                    return ListTile(
-                      title: Cardbuild(
-                        cardclass: Cardclass(
-                          articleTitle: instrument['Article_Title'],
-                          author: instrument['Author'],
-                        ),
-                      ),
-                    );
+                    final instrument = processedArticles[index];
+                    return ListTile(title: Cardbuild(article: instrument));
                   } // itemBuilder function
                   ), //itembuilder parenthesis,
             );

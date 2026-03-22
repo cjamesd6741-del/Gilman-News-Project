@@ -2,25 +2,30 @@ import 'dart:io';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:apitest_2/services/cache.dart';
+import 'package:apitest_2/services/globals.dart';
 
-class Storage { // writes and reads files
+class Storage {
+  // writes and reads files
   Future<String> get paths async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }
+
   Future<File> get localfile async {
     final path = await paths;
     return File('$path/statistics.txt');
   }
+
   Future<String> filereader() async {
     try {
-      final file =  await localfile;
+      final file = await localfile;
       return await file.readAsString();
-    }
-    catch (e) {
+    } catch (e) {
       return 'didnt work';
     }
   }
+
   Future<File> writing(String material) async {
     final file = await localfile;
     return file.writeAsString(material);
@@ -28,29 +33,31 @@ class Storage { // writes and reads files
 
   Future<void> delete() async {
     final file = await localfile;
-    try {await file.delete();}
-    catch(e) {
+    try {
+      await file.delete();
+    } catch (e) {
       debugPrint('file never existed');
     }
   }
-
 }
 
-class CatStorage { // writes and reads files for categories
+class CatStorage {
+  // writes and reads files for categories
   Future<String> get paths async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }
+
   Future<File> get localfile async {
     final path = await paths;
     return File('$path/preferences.txt');
   }
+
   Future<String> filereader() async {
     try {
-      final file =  await localfile;
+      final file = await localfile;
       return await file.readAsString();
-    }
-    catch (e) {
+    } catch (e) {
       return 'didnt work';
     }
   }
@@ -62,30 +69,31 @@ class CatStorage { // writes and reads files for categories
 
   Future<void> delete() async {
     final file = await localfile;
-    try {await file.delete();}
-    catch(e) {
+    try {
+      await file.delete();
+    } catch (e) {
       debugPrint('file never existed');
     }
   }
-
-
 }
 
-class RecentStorage { // writes and reads files for categories
+class RecentStorage {
+  // writes and reads files for categories
   Future<String> get paths async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }
+
   Future<File> get localfile async {
     final path = await paths;
     return File('$path/recents.txt');
   }
+
   Future<String> filereader() async {
     try {
-      final file =  await localfile;
+      final file = await localfile;
       return await file.readAsString();
-    }
-    catch (e) {
+    } catch (e) {
       return 'didnt work';
     }
   }
@@ -97,30 +105,31 @@ class RecentStorage { // writes and reads files for categories
 
   Future<void> delete() async {
     final file = await localfile;
-    try {await file.delete();}
-    catch(e) {
+    try {
+      await file.delete();
+    } catch (e) {
       debugPrint('file never existed');
     }
   }
-
-
 }
 
-class AuthorStorage { // writes and reads files for categories
+class AuthorStorage {
+  // writes and reads files for categories
   Future<String> get paths async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }
+
   Future<File> get localfile async {
     final path = await paths;
     return File('$path/authorpref.txt');
   }
+
   Future<String> filereader() async {
     try {
-      final file =  await localfile;
+      final file = await localfile;
       return await file.readAsString();
-    }
-    catch (e) {
+    } catch (e) {
       return 'didnt work';
     }
   }
@@ -132,28 +141,31 @@ class AuthorStorage { // writes and reads files for categories
 
   Future<void> delete() async {
     final file = await localfile;
-    try {await file.delete();}
-    catch(e) {
+    try {
+      await file.delete();
+    } catch (e) {
       debugPrint('file never existed');
     }
   }
 }
 
-class Followed_AuthorStorage { // writes and reads files for followed author
+class Followed_AuthorStorage {
+  // writes and reads files for followed author
   Future<String> get paths async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }
+
   Future<File> get localfile async {
     final path = await paths;
     return File('$path/followed_authors.txt');
   }
+
   Future<String> filereader() async {
     try {
-      final file =  await localfile;
+      final file = await localfile;
       return await file.readAsString();
-    }
-    catch (e) {
+    } catch (e) {
       return 'didnt work';
     }
   }
@@ -165,8 +177,9 @@ class Followed_AuthorStorage { // writes and reads files for followed author
 
   Future<void> delete() async {
     final file = await localfile;
-    try {await file.delete();}
-    catch(e) {
+    try {
+      await file.delete();
+    } catch (e) {
       debugPrint('file never existed');
     }
   }
@@ -177,11 +190,13 @@ class ClearData {
   CatStorage catStorage = CatStorage();
   RecentStorage recentStorage = RecentStorage();
   AuthorStorage authorStorage = AuthorStorage();
+  CacheManager cacheManager = CacheManager();
 
-  Future<void> clear () async {
+  Future<void> clear() async {
     storage.delete();
     catStorage.delete();
     recentStorage.delete();
     authorStorage.delete();
+    cacheManager.clear("read_articles");
   }
 }

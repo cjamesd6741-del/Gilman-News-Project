@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import '/services/stats/storage.dart';
+import 'package:apitest_2/services/globals.dart';
 
 class Storedata {
   // handles all interactions with files
@@ -37,7 +38,6 @@ class Storedata {
     Map data = {};
     state = await storage.filereader();
     if (state == 'didnt work') {
-      debugPrint('no file found');
       data["duration"] = Duration.zero.inSeconds;
     } else {
       data = jsonDecode(state);
@@ -52,14 +52,11 @@ class Storedata {
   Future<int> numarticleread() async {
     String state = await storage.filereader();
     if (state == 'didnt work') {
-      debugPrint(state);
       return 0;
     } else if (state == '') {
-      debugPrint(state);
       return 0;
     } else {
       Map data = jsonDecode(state);
-      debugPrint(data.toString());
       return data['articlesRead'] ?? 0;
     }
   } // return number of articles read
@@ -67,11 +64,9 @@ class Storedata {
   Future<Duration> durationreader() async {
     String state = await storage.filereader();
     if (state == 'didnt work') {
-      debugPrint(state);
       return Duration.zero;
     } else {
       Map data = jsonDecode(state);
-      debugPrint(state);
       return Duration(seconds: data['duration'] ?? 0);
     }
   } // return total duration
@@ -80,36 +75,30 @@ class Storedata {
     //Recent articles section
     String state = await recentstorage.filereader();
     if (state == 'didnt work') {
-      debugPrint(state);
       past10articles = recents;
       String enocodeddata = jsonEncode(past10articles.toList());
       await recentstorage.writing(enocodeddata);
     } else {
       past10articles = Queue.from(jsonDecode(state));
-      if (past10articles.length <= 27) {
+      if (past10articles.length <= 30 - recents.length) {
         past10articles.addAll(recents);
-        debugPrint('41');
       } else {
         for (int i = 0; i < recents.length; ++i) {
           past10articles.removeFirst();
         }
-        debugPrint('67');
         past10articles.addAll(recents);
       }
       String enocodeddata = jsonEncode(past10articles.toList());
       await recentstorage.writing(enocodeddata);
     }
-    debugPrint(past10articles.length.toString());
   } // return queue of past 10 articles read
 
   Future<List> past10reader() async {
     String state = await recentstorage.filereader();
     if (state == 'didnt work') {
-      debugPrint(state);
       return [];
     } else {
       List data = jsonDecode(state);
-      debugPrint(data.toString());
       return data;
     }
   }
@@ -118,11 +107,9 @@ class Storedata {
     Map catdata = {};
     String catstate = await catstorage.filereader();
     if (catstate == 'didnt work') {
-      debugPrint(catstate);
       for (int i = 0; i < category.length; ++i) {
         catdata[category[i]] = 1;
       }
-      debugPrint(catdata.toString());
       String enocodeddata = jsonEncode(catdata);
       await catstorage.writing(enocodeddata);
     } else {
@@ -135,7 +122,6 @@ class Storedata {
           catdata[category[i]] = catdata[category[i]] + 1;
         }
       }
-      debugPrint(catdata.toString());
       String enocodeddata = jsonEncode(catdata);
       await catstorage.writing(enocodeddata);
     }
@@ -144,11 +130,9 @@ class Storedata {
   Future<Map> categoryreader() async {
     String state = await catstorage.filereader();
     if (state == 'didnt work') {
-      debugPrint(state);
       return {};
     } else {
       Map data = jsonDecode(state);
-      debugPrint(data.toString());
       return data;
     }
   }
@@ -157,7 +141,6 @@ class Storedata {
     String authstate = await authorStorage.filereader();
     Map authdata = {};
     if (authstate == 'didnt work') {
-      debugPrint("didnt work");
       for (int i = 0; i < authors.length; ++i) {
         authdata[authors[i]] = 1;
       }
@@ -172,7 +155,6 @@ class Storedata {
           authdata[authors[i]] = authdata[authors[i]] + 1;
         }
       }
-      debugPrint(authdata.toString());
       String enocodeddata = jsonEncode(authdata);
       await authorStorage.writing(enocodeddata);
     }
@@ -182,19 +164,15 @@ class Storedata {
     String state = await authorStorage.filereader();
     Map data = {};
     if (state == 'didnt work') {
-      debugPrint(state);
       return {};
     } else {
-      debugPrint(state);
       data = jsonDecode(state);
-      debugPrint(data.toString());
       return data;
     }
   }
 
   Future<List> followed_author_reader() async {
     String file = await followed_authorStorage.filereader();
-    debugPrint(file);
     if (file == 'didnt work') {
       return [];
     }
@@ -204,11 +182,13 @@ class Storedata {
   Future add_new_followed_author(String newAuth) async {
     List followedAuthors = await followed_author_reader();
     followedAuthors.add(newAuth);
+    Globals.followed_changed = true;
     await followed_authorStorage.writing(jsonEncode(followedAuthors));
   }
 
   Future remove_new_followed_author(String newAuth) async {
     List followedAuthors = await followed_author_reader();
+    Globals.followed_changed = true;
     followedAuthors.remove(newAuth);
     await followed_authorStorage.writing(jsonEncode(followedAuthors));
   }

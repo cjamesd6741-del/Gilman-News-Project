@@ -20,4 +20,8 @@ class CacheManager {
     }
     return null;
   }
+
+  void clear(key) {
+    box.delete(key);
+  }
 }

@@ -2,6 +2,7 @@ import 'package:apitest_2/services/stats/articlestorage.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '/services/stats/algorithm.dart';
+import 'package:apitest_2/services/cardclass.dart';
 
 class Similarity_Finder {
   Topthree topthree = Topthree();
@@ -39,7 +40,7 @@ class Similarity_Finder {
     return intersectionSet.length / 5;
   }
 
-  Future<List<Similar_Instance>> getsimilarcategories(
+  Future<List<Article>> getsimilarcategories(
     int id,
     String givenAuthor,
     String givenTitle,
@@ -50,7 +51,7 @@ class Similarity_Finder {
     );
     List catlist = await topthree.gettopthreecategories();
     List catpref = catlist.map((cat) => cat.name).toList();
-    List<Similar_Instance> recommendedArticles = [];
+    List<Article> recommendedArticles = [];
     List<Map> allRecommendedArticles = [];
 
     List<Author> favauthors = await topthree.gettopthreeauthors();
@@ -75,116 +76,17 @@ class Similarity_Finder {
     allRecommendedArticles = allRecommendedArticles.take(3).toList();
     recommendedArticles = allRecommendedArticles
         .map(
-          (e) => Similar_Instance(
-            title: e['title'],
+          (e) => Article(
+            Article_Title: e['title'],
             author: e['Author'],
-            id: e["related_article_id"],
-            date: e['Date'],
+            Article_ID: e["related_article_id"],
+            Date: e['Date'],
             prevtitle: givenTitle,
             prevauthor: givenAuthor,
+            edition_num: e['edition_num'] ?? 0.0,
           ),
         )
         .toList();
     return recommendedArticles;
-  }
-}
-
-class Similar_Instance {
-  String title;
-  String author;
-  String prevtitle;
-  String prevauthor;
-  String date;
-  int id;
-  Similar_Instance({
-    required this.author,
-    required this.id,
-    required this.title,
-    required this.prevtitle,
-    required this.prevauthor,
-    required this.date,
-  });
-}
-
-class SimilarCard extends StatelessWidget {
-  final Similar_Instance similar_instance;
-  final VoidCallback onleave;
-  const SimilarCard({
-    super.key,
-    required this.similar_instance,
-    required this.onleave,
-  });
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Card(
-        elevation: 10,
-        shadowColor: const Color.fromARGB(255, 116, 127, 149),
-        color: const Color.fromARGB(255, 46, 48, 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: const BorderSide(
-            color: Color.fromARGB(255, 204, 214, 219),
-            width: 5,
-          ),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          splashColor: Colors.white,
-          highlightColor: Colors.blueGrey,
-          onTap: () async {
-            await Future.delayed(const Duration(milliseconds: 350));
-            onleave();
-            Navigator.pushReplacementNamed(
-              context,
-              '/loading',
-              arguments: {
-                'title': similar_instance.title,
-                'author': similar_instance.author,
-                'recommended': true,
-                'prevauthor': similar_instance.prevauthor,
-                'prevtitle': similar_instance.prevtitle,
-              },
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-                Text(
-                  similar_instance.title,
-                  style: const TextStyle(
-                    fontSize: 25,
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  similar_instance.author,
-                  style: const TextStyle(
-                    fontStyle: FontStyle.italic,
-                    fontSize: 14,
-                    color: Color.fromARGB(255, 220, 220, 220),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  similar_instance.date,
-                  style: const TextStyle(
-                    fontStyle: FontStyle.italic,
-                    fontSize: 10,
-                    color: Color.fromARGB(255, 190, 190, 190),
-                  ),
-                ),
-                const SizedBox(height: 10),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }

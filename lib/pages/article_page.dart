@@ -8,8 +8,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import '/services/stats/Articlestorage.dart';
 import '/services/appbartext.dart';
 import '/services/back_from_rec.dart';
+import 'package:apitest_2/services/cache.dart';
+import 'package:apitest_2/services/globals.dart';
+import '../services/cardclass.dart';
+import 'package:apitest_2/services/cardbuilder.dart';
 
 class Article_Page extends StatefulWidget {
+  // shows the actual article
   final int tab_index;
   final RouteObserver<ModalRoute<void>> observer;
   const Article_Page({
@@ -23,14 +28,15 @@ class Article_Page extends StatefulWidget {
 }
 
 class Article_PageState extends State<Article_Page> with RouteAware {
-  bool _isRouteVisible = false;
-  bool _isTabVisible = false;
-  Storedata storedata = Storedata();
+  CacheManager cacheManager = CacheManager();
+  bool _isRouteVisible = false; // is on current tab?
+  bool _isTabVisible = false; // is on current screen?
+  Storedata storedata = Storedata(); // class for data storage
   Textconfigure textconfigure = Textconfigure();
   TextStyle appbartextStyle = const TextStyle(
     fontSize: 18,
     height: 1.2,
-    color: Color.fromARGB(255, 79, 123, 184),
+    color: Color.fromARGB(255, 25, 38, 56),
   );
   bool firstbuild = true;
   List categories = [];
@@ -39,28 +45,33 @@ class Article_PageState extends State<Article_Page> with RouteAware {
   String authors = '';
   Similarity_Finder similar = Similarity_Finder();
   int id = 0;
-  late Future<List<Similar_Instance>> recs;
+  late Future<List<Article>> recs;
   bool _initialized = false;
-  String prevauthor = '';
-  String prevtitle = '';
+  String prevauthor = ''; // init
+  String prevtitle = ''; // init
   bool recommended =
       false; //note this variable is only used to determine if the current article was pushed by an recommend button, in which case we create a way for the reader to go back
   Map data = {};
   late Future followed_authors;
+  late List<ArticleWithReadStatus> processedArticles;
+  late Set readarticles;
 
   @override
   initState() {
     super.initState();
-    followed_authors = storedata.followed_author_reader();
-    storedata.updatearticleread();
+    final cached = cacheManager.get("read_articles") ?? []; //gets read articles
+    readarticles = cached.toSet();
+    followed_authors = storedata
+        .followed_author_reader(); // gets followed authors
+    storedata.updatearticleread(); // +1 to articles read
     stopwatch.start();
     firstbuild = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final args = ModalRoute.of(context)?.settings.arguments;
       if (args != null && args is Map) {
         categories = args['category'] ?? [];
-        storedata.categorywriter(categories);
-        storedata.past10update(ListQueue.from(categories));
+        storedata.categorywriter(categories); // updates categories
+        storedata.past10update(ListQueue.from(categories)); // updates recents
         if (args['recommended'] == true) {
           setState(() {
             recommended = true;
@@ -83,18 +94,23 @@ class Article_PageState extends State<Article_Page> with RouteAware {
       final args = ModalRoute.of(context)?.settings.arguments;
       if (args != null && args is Map) {
         data = args;
-        categories = args['category'] ?? [];
+        categories = args['category'] ?? []; // redundant but idk
         authors = args['author'];
         authorslist = authors.split(RegExp(r',\s*|\s+and\s+'));
-        storedata.authorwriter(authorslist);
+        storedata.authorwriter(authorslist); // writes authors to data
         id = args['id'];
-        recs = similar.getsimilarcategories(id, authors, args['title']);
+        recs = similar.getsimilarcategories(
+          id,
+          authors,
+          args['title'],
+        ); // builds recommend cards
+        register_article();
       }
-      _initialized = true;
+      _initialized = true; // ensures only called once per lifecycle
     }
   }
 
-  @override
+  @override // all are checks to see if visibility changes
   void dispose() {
     widget.observer.unsubscribe(this);
     super.dispose();
@@ -141,12 +157,25 @@ class Article_PageState extends State<Article_Page> with RouteAware {
     stopwatch.stop();
     storedata.durationupdate(stopwatch.elapsed);
     firstbuild = false;
-  }
+  } // adds duration to data
 
-  void onTabVisible() {
+  void onTabVisible() async {
+    final cached =
+        await cacheManager.get("read_articles") ?? []; //gets read articles
+    // just updates follow button and now recs
     setState(() {
       followed_authors = storedata.followed_author_reader();
+      readarticles = cached.toSet();
     });
+  }
+
+  void register_article() async {
+    List articles = await cacheManager.get("read_articles") ?? [];
+    if (articles.contains(id)) {
+    } else {
+      articles.add(id);
+      cacheManager.save("read_articles", articles);
+    }
   }
 
   @override
@@ -155,7 +184,6 @@ class Article_PageState extends State<Article_Page> with RouteAware {
     if (args != null && args is Map) {
       data = args;
     } else {
-      debugPrint('No arguments passed to Article_Page');
       return SpinKitCircle(
         color: const Color.fromARGB(255, 23, 69, 107),
         size: 50.0,
@@ -180,6 +208,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
         }
       },
       child: InteractiveViewer(
+        // interactive viewer kind of works but struggles with scrollview
         panEnabled: false,
         minScale: 1,
         maxScale: 3,
@@ -194,6 +223,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
             actions: [
               if (recommended == true)
                 RecommendCard(
+                  // previous sreen button
                   back_from_rec: Back_From_Rec(
                     author: prevauthor,
                     title: prevtitle,
@@ -208,7 +238,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                   softWrap: true,
                   maxLines: null,
                   overflow: TextOverflow.visible,
-                  style: appbartextStyle,
+                  style: appbartextStyle, // TODO : update appbar
                 ),
                 const SizedBox(height: 12),
               ],
@@ -228,8 +258,10 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                       right: true,
                       child: ClipRect(
                         child: CarouselSlider(
+                          // TODO: add dots or somth on bottom of carousel to show number of photos and user position
                           options: CarouselOptions(
-                            viewportFraction: .95,
+                            viewportFraction:
+                                .95, // TODO: find a way to make this smaller with out causing overflow error
                             height: 500,
                             enlargeCenterPage: true,
                             enableInfiniteScroll: true,
@@ -256,21 +288,55 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                                   ],
 
                                   Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: const Color.fromARGB(
-                                          255,
-                                          9,
-                                          8,
-                                          50,
-                                        ),
-                                        width: 5,
-                                      ),
-                                    ),
                                     child: Image.network(
                                       url,
                                       fit: BoxFit.cover,
                                       height: 350,
+                                      loadingBuilder: (context, child, loadingProgress) {
+                                        if (loadingProgress == null)
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: const Color.fromARGB(
+                                                    255,
+                                                    9,
+                                                    8,
+                                                    50,
+                                                  ),
+                                                  width: 5,
+                                                ),
+                                              ),
+                                              child: child,
+                                            ),
+                                          );
+
+                                        return Center(
+                                          child: SizedBox(
+                                            height: 100,
+                                            width: 100,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 10,
+                                              color: Color.fromARGB(
+                                                255,
+                                                9,
+                                                8,
+                                                50,
+                                              ),
+                                              value:
+                                                  loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        loadingProgress
+                                                            .expectedTotalBytes!
+                                                  : null,
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
                                 ],
@@ -281,21 +347,61 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                       ),
                     ), // if there are multiple images, show a carousel
                   if (data['image_urls'] != null &&
-                      (data['image_urls'] as List).length == 1)
+                      (data['image_urls'] as List).length == 1) // one image
                     Column(
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 9, 8, 50),
-                                width: 5,
-                              ),
-                            ),
                             child: Image.network(
                               data['image_urls'][0],
                               fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                    if (loadingProgress == null)
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: const Color.fromARGB(
+                                                255,
+                                                9,
+                                                8,
+                                                50,
+                                              ),
+                                              width: 5,
+                                            ),
+                                          ),
+                                          child: child,
+                                        ),
+                                      );
+
+                                    return Center(
+                                      child: SizedBox(
+                                        height: 100,
+                                        width: 100,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 10,
+                                          color: Color.fromARGB(
+                                            255,
+                                            0,
+                                            75,
+                                            141,
+                                          ),
+                                          value:
+                                              loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                              : null,
+                                        ),
+                                      ),
+                                    );
+                                  },
                             ),
                           ),
                         ),
@@ -311,7 +417,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                               ),
                             ),
                           ),
-                      ],
+                      ], // TODO: add way to zoom into images
                     ),
                   Text(
                     'Authors:',
@@ -342,6 +448,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                               ),
                               const SizedBox(width: 10),
                               Follow_Card(
+                                // follow author button
                                 author: author,
                                 followed: followedAuthors.contains(author),
                                 ontoggle: () {
@@ -363,6 +470,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
 
                   const SizedBox(height: 16),
                   Text(
+                    // actual Text
                     data['date'],
                     style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
                   ),
@@ -382,6 +490,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                   ),
                   const SizedBox(height: 16),
                   Text(
+                    // recs
                     "Recommended Articles",
                     style: TextStyle(
                       fontSize: 25,
@@ -407,10 +516,17 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                           ),
                         );
                       }
-                      List<Similar_Instance> recommendations = snapshot.data;
+                      List<Article> recommendations = snapshot.data;
+                      processedArticles = recommendations.map((article) {
+                        return ArticleWithReadStatus(
+                          article: article,
+                          isRead: readarticles.contains(article.Article_ID),
+                        );
+                      }).toList();
+
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: recommendations.map((recommend) {
+                        children: processedArticles.map((recommend) {
                           return Padding(
                             padding: const EdgeInsetsGeometry.fromLTRB(
                               0,
@@ -418,8 +534,8 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                               0,
                               0,
                             ),
-                            child: SimilarCard(
-                              similar_instance: recommend,
+                            child: CurrentCardbuild(
+                              article: recommend,
                               onleave: onLeave,
                             ),
                           );

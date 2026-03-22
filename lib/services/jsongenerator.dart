@@ -7,30 +7,33 @@ class Getter {
   Future fetchArticleJson() async {
     Map info = await Supabase.instance.client
         .from('Articles')
-        .select('Article_ID , json_article_file, Extra_Article_Room , Image_urls, Image_label')
+        .select(
+          'Article_ID , json_article_file, Extra_Article_Room , Image_urls, Image_label, Extra_Extra_Article_Room',
+        )
         .eq('Author', author)
         .eq('Article_Title', title)
         .single();
     if (info['Image_urls'] != null) {
-      Map infowthimage =  info['json_article_file'];
+      Map infowthimage = info['json_article_file'];
       infowthimage['Image_urls'] = info['Image_urls'];
       if (info['Image_label'] != null) {
         infowthimage['Image_label'] = info['Image_label'];
         info['json_article_file'] = infowthimage;
       }
-      info['json_article_file'] = infowthimage; 
+      info['json_article_file'] = infowthimage;
       info['json_article_file']['id'] = info["Article_ID"];
       return info['json_article_file'];
     }
     if (info['Extra_Article_Room'] == null) {
       info['json_article_file']['id'] = info["Article_ID"];
       return info['json_article_file'];
-    }
-    else{
+    } else {
       final extraInfo = info['Extra_Article_Room'];
+      final extra_extraInfo = info['Extra_Extra_Article_Room'] ?? {};
+      final List listextra_extra = extra_extraInfo['body'] ?? [];
       final List listextra = extraInfo['body'];
       final List mainlist = info['json_article_file']['body'];
-      final combinedList = [...mainlist, ...listextra];
+      final combinedList = [...mainlist, ...listextra, ...listextra_extra];
       info['json_article_file']['body'] = combinedList;
       info['json_article_file']['id'] = info["Article_ID"];
       return info['json_article_file'];

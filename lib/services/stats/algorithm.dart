@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'Articlestorage.dart';
 
 class Topthree {
@@ -12,20 +13,21 @@ class Topthree {
   List recentCategories = [];
 
   Future<List<Category>> gettopthreecategories() async {
-      String state = await catstorage.catstorage.filereader();
-      if (state == 'didnt work') {
-        debugPrint(state);
-        return []; 
-      }
-      else {
-        data = jsonDecode(state);
-        Map<String, int> catcounts = Map<String, int>.from(data);
-        var sortedEntries = catcounts.entries.toList()
-          ..sort((a, b) => b.value.compareTo(a.value));
-        topThree = sortedEntries.take(3).map((e) => Category(name : e.key, count : e.value)).toList();
-        return topThree;
-      }
-  }// return number of articles read
+    String state = await catstorage.catstorage.filereader();
+    if (state == 'didnt work') {
+      return [];
+    } else {
+      data = jsonDecode(state);
+      Map<String, int> catcounts = Map<String, int>.from(data);
+      var sortedEntries = catcounts.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
+      topThree = sortedEntries
+          .take(3)
+          .map((e) => Category(name: e.key, count: e.value))
+          .toList();
+      return topThree;
+    }
+  } // return number of articles read
 
   Future<List<Category>> gettopthreerecentcategories() async {
     recentCategories = await catstorage.past10reader();
@@ -35,7 +37,10 @@ class Topthree {
     }
     var sortedEntries = catcounts.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    topThree = sortedEntries.take(3).map((e) => Category(name : e.key, count : e.value)).toList();
+    topThree = sortedEntries
+        .take(3)
+        .map((e) => Category(name: e.key, count: e.value))
+        .toList();
     return topThree;
   }
 
@@ -43,10 +48,12 @@ class Topthree {
     Map authormap = await catstorage.authorreader();
     var sortedEntries = authormap.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    topThree_a = sortedEntries.take(3).map((e) => Author(name : e.key, count : e.value)).toList();
+    topThree_a = sortedEntries
+        .take(3)
+        .map((e) => Author(name: e.key, count: e.value))
+        .toList();
     return topThree_a;
   }
-  
 }
 
 class Category {
@@ -61,9 +68,7 @@ class Author {
   Author({required this.name, required this.count});
 }
 
-
 class CategoryCard extends StatelessWidget {
-
   final Category category;
   const CategoryCard({super.key, required this.category});
 
@@ -73,8 +78,18 @@ class CategoryCard extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
       child: Card(
         child: ListTile(
-          title: Text(category.name),
-          trailing: Text(category.count.toString()),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadiusGeometry.all(Radius.circular(12)),
+          ),
+          tileColor: Color.fromARGB(255, 0, 75, 141),
+          title: Text(
+            category.name,
+            style: GoogleFonts.inter(color: Colors.white, fontSize: 25),
+          ),
+          trailing: Text(
+            category.count.toString(),
+            style: GoogleFonts.inter(color: Colors.white, fontSize: 25),
+          ),
         ),
       ),
     );
@@ -82,7 +97,6 @@ class CategoryCard extends StatelessWidget {
 }
 
 class AuthorCard extends StatelessWidget {
-
   final Author author;
   const AuthorCard({super.key, required this.author});
 
@@ -92,8 +106,18 @@ class AuthorCard extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
       child: Card(
         child: ListTile(
-          title: Text(author.name),
-          trailing: Text(author.count.toString()),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadiusGeometry.all(Radius.circular(12)),
+          ),
+          tileColor: Color.fromARGB(255, 0, 75, 141),
+          title: Text(
+            author.name,
+            style: GoogleFonts.inter(color: Colors.white, fontSize: 25),
+          ),
+          trailing: Text(
+            author.count.toString(),
+            style: GoogleFonts.inter(color: Colors.white, fontSize: 25),
+          ),
         ),
       ),
     );

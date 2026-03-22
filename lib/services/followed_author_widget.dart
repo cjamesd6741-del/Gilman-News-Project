@@ -19,12 +19,15 @@ class Followed_Author_Card extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        color: Color.fromARGB(255, 0, 75, 141),
       ),
       child: ListTile(
-        title: Text(item),
-        trailing: IconButton(onPressed: onClicked, icon: Icon(Icons.remove)),
+        title: Text(item, style: TextStyle(color: Colors.white)),
+        trailing: IconButton(
+          onPressed: onClicked,
+          icon: Icon(Icons.remove, color: Colors.white),
+        ),
       ),
     );
   }

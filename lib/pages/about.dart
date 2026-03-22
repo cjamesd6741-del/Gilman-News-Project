@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AboutPage extends StatelessWidget {
+  // About Page Stateless
   const AboutPage({super.key});
 
   @override

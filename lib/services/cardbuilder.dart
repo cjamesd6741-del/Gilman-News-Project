@@ -2,57 +2,72 @@ import 'package:apitest_2/services/cardclass.dart';
 import 'package:flutter/material.dart';
 
 class Cardbuild extends StatelessWidget {
-  final Cardclass cardclass;
-  const Cardbuild({super.key, required this.cardclass});
+  final ArticleWithReadStatus article;
+  const Cardbuild({super.key, required this.article});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 10,
-      shadowColor: const Color.fromARGB(255, 116, 127, 149),
-      color: const Color.fromARGB(255, 46, 48, 50),
-      shape: RoundedRectangleBorder(
+    final isUnread = !article.isRead;
+    return Container(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        side: const BorderSide(
-          color: Color.fromARGB(255, 80, 83, 87),
-          width: 4,
-        ),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        splashColor: Colors.white,
-        highlightColor: Colors.blueGrey,
-        onTap: () async {
-          await Future.delayed(const Duration(milliseconds: 350));
-          Navigator.of(context).pushNamed(
-            '/loading',
-            arguments: {
-              'title': cardclass.articleTitle,
-              'author': cardclass.author,
-            },
-          );
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              Text(
-                cardclass.articleTitle,
-                style: const TextStyle(fontSize: 25, color: Colors.white),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                cardclass.author,
-                style: const TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontSize: 14,
-                  color: Color.fromARGB(255, 220, 220, 220),
+        boxShadow: isUnread
+            ? [
+                BoxShadow(
+                  color: Colors.blue.withValues(alpha: .6),
+                  blurRadius: 20,
+                  spreadRadius: 2,
                 ),
-              ),
-              const SizedBox(height: 10),
-            ],
+              ]
+            : [],
+      ),
+      child: Card(
+        elevation: 10,
+        shadowColor: const Color.fromARGB(255, 116, 127, 149),
+        color: const Color.fromARGB(255, 46, 48, 50),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(
+            color: Color.fromARGB(255, 80, 83, 87),
+            width: 4,
+          ),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          splashColor: Colors.white,
+          highlightColor: Colors.blueGrey,
+          onTap: () async {
+            await Future.delayed(const Duration(milliseconds: 350));
+            Navigator.of(context).pushNamed(
+              '/loading',
+              arguments: {
+                'title': article.article.Article_Title,
+                'author': article.article.author,
+              },
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
+                Text(
+                  article.article.Article_Title,
+                  style: const TextStyle(fontSize: 25, color: Colors.white),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  article.article.author,
+                  style: const TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 14,
+                    color: Color.fromARGB(255, 220, 220, 220),
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
           ),
         ),
       ),
@@ -61,68 +76,101 @@ class Cardbuild extends StatelessWidget {
 }
 
 class CurrentCardbuild extends StatelessWidget {
-  final CurrentCardclass currentcardclass;
-  const CurrentCardbuild({super.key, required this.currentcardclass});
+  final ArticleWithReadStatus article;
+  final VoidCallback? onleave;
+  const CurrentCardbuild({super.key, required this.article, this.onleave});
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 10,
-      shadowColor: const Color.fromARGB(255, 116, 127, 149),
-      color: const Color.fromARGB(255, 46, 48, 50),
-      shape: RoundedRectangleBorder(
+    final isUnread = !article.isRead;
+
+    return Container(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        side: const BorderSide(
-          color: Color.fromARGB(255, 80, 83, 87),
-          width: 4,
-        ),
+        boxShadow: isUnread
+            ? [
+                BoxShadow(
+                  color: Colors.blue.withValues(alpha: .55),
+                  blurRadius: 20,
+                  spreadRadius: 2,
+                ),
+              ]
+            : [],
       ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        splashColor: Colors.white,
-        highlightColor: Colors.blueGrey,
-        onTap: () async {
-          await Future.delayed(const Duration(milliseconds: 350));
-          Navigator.of(context).pushNamed(
-            '/loading',
-            arguments: {
-              'title': currentcardclass.articleTitle,
-              'author': currentcardclass.author,
+      child: SizedBox(
+        width: double.infinity,
+        child: Card(
+          elevation: 10,
+          shadowColor: const Color.fromARGB(255, 116, 127, 149),
+          color: const Color.fromARGB(255, 46, 48, 50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(
+              color: const Color.fromARGB(255, 80, 83, 87),
+              width: isUnread ? 5 : 4,
+            ),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            splashColor: Colors.white,
+            highlightColor: Colors.blueGrey,
+            onTap: () async {
+              if (article.article.prevauthor == null) {
+                await Future.delayed(const Duration(milliseconds: 350));
+                Navigator.of(context).pushNamed(
+                  '/loading',
+                  arguments: {
+                    'title': article.article.Article_Title,
+                    'author': article.article.author,
+                  },
+                );
+              } else {
+                await Future.delayed(const Duration(milliseconds: 350));
+                onleave!();
+                Navigator.pushReplacementNamed(
+                  context,
+                  '/loading',
+                  arguments: {
+                    'title': article.article.Article_Title,
+                    'author': article.article.author,
+                    'recommended': true,
+                    'prevauthor': article.article.prevauthor,
+                    'prevtitle': article.article.prevtitle,
+                  },
+                );
+              }
             },
-          );
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              Text(
-                currentcardclass.articleTitle,
-                style: const TextStyle(
-                  fontSize: 25,
-                  color: Color.fromARGB(255, 255, 255, 255),
-                ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    article.article.Article_Title,
+                    style: const TextStyle(fontSize: 25, color: Colors.white),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    article.article.author,
+                    style: const TextStyle(
+                      fontStyle: FontStyle.italic,
+                      fontSize: 14,
+                      color: Color.fromARGB(255, 220, 220, 220),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    article.article.Date,
+                    style: const TextStyle(
+                      fontStyle: FontStyle.italic,
+                      fontSize: 11,
+                      color: Color.fromARGB(255, 190, 190, 190),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                ],
               ),
-              const SizedBox(height: 10),
-              Text(
-                currentcardclass.author,
-                style: const TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontSize: 14,
-                  color: Color.fromARGB(255, 220, 220, 220),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                currentcardclass.date,
-                style: const TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontSize: 11,
-                  color: Color.fromARGB(255, 190, 190, 190),
-                ),
-              ),
-              const SizedBox(height: 10),
-            ],
+            ),
           ),
         ),
       ),
@@ -131,8 +179,8 @@ class CurrentCardbuild extends StatelessWidget {
 }
 
 class FollowCardbuild extends StatelessWidget {
-  final FollowCardclass followcardclass;
-  const FollowCardbuild({super.key, required this.followcardclass});
+  final ArticleWithReadStatus article;
+  const FollowCardbuild({super.key, required this.article});
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -155,8 +203,8 @@ class FollowCardbuild extends StatelessWidget {
           Navigator.of(context).pushNamed(
             '/loading',
             arguments: {
-              'title': followcardclass.articleTitle,
-              'author': followcardclass.author,
+              'title': article.article.Article_Title,
+              'author': article.article.author,
             },
           );
         },
@@ -167,7 +215,7 @@ class FollowCardbuild extends StatelessWidget {
             children: [
               const SizedBox(height: 10),
               Text(
-                followcardclass.articleTitle,
+                article.article.Article_Title,
                 style: const TextStyle(
                   fontSize: 25,
                   color: Color.fromARGB(255, 255, 255, 255),
@@ -175,7 +223,7 @@ class FollowCardbuild extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                followcardclass.author,
+                article.article.author,
                 style: const TextStyle(
                   fontStyle: FontStyle.italic,
                   fontSize: 14,
@@ -184,7 +232,7 @@ class FollowCardbuild extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                followcardclass.date,
+                article.article.Date,
                 style: const TextStyle(
                   fontStyle: FontStyle.italic,
                   fontSize: 14,

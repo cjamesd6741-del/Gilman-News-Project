@@ -7,6 +7,7 @@ class Back_From_Rec {
 }
 
 class RecommendCard extends StatelessWidget {
+  // TODO: update design of button
   final Back_From_Rec back_from_rec;
   const RecommendCard({super.key, required this.back_from_rec});
   @override
