@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../services/cardbuilder.dart';
 import '../services/cardclass.dart';
 import '../pages/articlesearch.dart';
-import '../services/searchclass.dart';
+import 'package:apitest_2/services/globals.dart';
 
 class AllArticlesPage extends StatefulWidget {
   final int tab_index;
@@ -19,7 +19,7 @@ class AllArticlesPage extends StatefulWidget {
 }
 
 class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
-  List<Searchclass> articles = [];
+  List<Article> articles = [];
   CacheManager cacheManager = CacheManager();
   late List<ArticleWithReadStatus> processedArticles;
   late Set readarticles;
@@ -28,6 +28,7 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
   late Future _future;
   bool _isRouteVisible = false; // is on current tab?
   bool _isTabVisible = false; // is on current screen?
+  ValueNotifier<Set<int>> readArticlesNotifier = ValueNotifier({});
 
   @override // all are checks to see if visibility changes
   void dispose() {
@@ -67,7 +68,7 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
   }
 
   void _checkIfShouldRefresh() {
-    if (_isRouteVisible && _isTabVisible) {
+    if (_isTabVisible) {
       onTabVisible();
     }
   }
@@ -85,6 +86,7 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
   initState() {
     super.initState();
     final cached = cacheManager.get("read_articles") ?? [];
+    readArticlesNotifier = ValueNotifier(Set<int>.from(cached));
     readarticles = cached.toSet();
     _future = datagenerator();
   }
@@ -119,10 +121,12 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
   }
 
   void refreshPage() async {
+    debugPrint('called');
     final cached = await cacheManager.get("read_articles") ?? [];
-    readarticles = Set<int>.from(cached);
+    readarticles = cached.toSet();
+    Globals.globalReadArticlesNotifier.value = Set<int>.from(cached);
     setState(() {
-      _future = datagenerator(); // 🔥 refetch data
+      _future = datagenerator();
     });
   }
 
@@ -225,14 +229,15 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
               );
             }).toList();
 
-            articles = instruments.map<Searchclass>((instrument) {
-              return Searchclass(
-                searcharticletitle: instrument['Article_Title'],
-                searchauthor: instrument['Author'],
-                searchdate: instrument['Date'],
-                edition_num: instrument['edition_num'],
-              );
-            }).toList();
+            // articles = instruments.map<Article>((instrument) {
+            //   return Article(
+            //     Article_Title: instrument['Article_Title'],
+            //     author: instrument['Author'],
+            //     Date: instrument['Date'],
+            //     edition_num: instrument['edition_num'],
+            //     Article_ID: instrument["Article_ID"]
+            //   );
+            // }).toList();
             processedArticles = articlelist.map((article) {
               return ArticleWithReadStatus(
                 article: article,
@@ -253,7 +258,8 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                           showSearch(
                             context: context,
                             delegate: AllArticleSearch(
-                              articles: articles,
+                              articles: processedArticles,
+                              readnotifier: Globals.globalReadArticlesNotifier,
                             ), //not even remotely confusing lol
                           );
                         },

@@ -2,7 +2,7 @@
 
 Basic App in development for local school newspaper. Currently has ability to interface with online database to display articles, images, and authors. Basic Search Functionality has been implemented, although you cannot yet sort by date. User Stats have been implemented and store information on local device for simplicity.
 
-Most Recent Update 3/21/26: Caching for article views and. Now can see if article is read or unread for all cards except for searching (will do next update). Clear read articles. Redisigned stats page. Main update is on the database where around ~150 new articles and images added. Also redid categories. Also, All cards except search cards (tbd) use same carbuild class for easier code readability!
+Most Recent Update 3/22/26: Small Bug Fix. Read/Unread now works for Searching. Search Delegate signifigantly optimized.
 
 To view the code, got to lib/pages or lib/services.
 

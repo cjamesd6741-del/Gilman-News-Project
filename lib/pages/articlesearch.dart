@@ -1,9 +1,17 @@
+import 'package:apitest_2/services/cardbuilder.dart';
+import 'package:apitest_2/services/cardclass.dart';
 import 'package:flutter/material.dart';
-import '../services/searchclass.dart';
+import 'dart:async';
+import 'package:apitest_2/services/globals.dart';
+import 'package:apitest_2/services/cache.dart';
 
 class AllArticleSearch extends SearchDelegate {
-  List<Searchclass> articles;
-  AllArticleSearch({required this.articles});
+  List<ArticleWithReadStatus> articles;
+  ValueNotifier<Set<int>> readnotifier;
+  AllArticleSearch({required this.articles, required this.readnotifier});
+
+  Timer? _debounce;
+  String _debouncedQuery = '';
 
   String _normalize(String s) {
     return s
@@ -14,6 +22,21 @@ class AllArticleSearch extends SearchDelegate {
         .replaceAll('”', '"')
         .replaceAll(RegExp(r'\s+'), ' ')
         .trim();
+  }
+
+  void _onQueryChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      _debouncedQuery = query;
+      query = query;
+    });
+  }
+
+  @override
+  void close(BuildContext context, result) {
+    _debounce?.cancel();
+    super.close(context, result);
   }
 
   @override
@@ -40,42 +63,81 @@ class AllArticleSearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    final q = _normalize(query);
-    final matches = articles.where((article) {
-      final title = _normalize(article.searcharticletitle);
-      final author = _normalize(article.searchauthor);
-      final date = _normalize(article.searchdate);
-      return title.contains(q) || author.contains(q) || date.contains(q);
-    }).toList();
+    return ValueListenableBuilder<Set<int>>(
+      valueListenable: Globals.globalReadArticlesNotifier,
+      builder: (context, readArticles, _) {
+        final q = _normalize(_debouncedQuery);
 
-    matches.sort((a, b) {
-      return b.searchdate.compareTo(a.searchdate);
-    });
+        final matches = articles
+            .where((article) {
+              final title = article.article.all;
+              return title.contains(q);
+            })
+            .map((article) {
+              return ArticleWithReadStatus(
+                article: article.article,
+                isRead: readArticles.contains(article.article.Article_ID),
+              );
+            })
+            .toList();
 
-    return ListView.builder(
-      itemCount: matches.length,
-      itemBuilder: (context, index) {
-        var article = matches[index];
-        return SearchCard(searchclass: article);
+        matches.sort((a, b) {
+          return b.article.Date.compareTo(a.article.Date);
+        });
+
+        return ListView.builder(
+          itemCount: matches.length,
+          itemBuilder: (context, index) {
+            return CurrentCardbuild(
+              article: matches[index],
+              onReturn: () async {
+                final currentReads = Set<int>.from(readnotifier.value);
+                if (!currentReads.contains(matches[index].article.Article_ID)) {
+                  currentReads.add(matches[index].article.Article_ID);
+                }
+                readnotifier.value = currentReads;
+              },
+            );
+          },
+        );
       },
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final q = _normalize(query);
-    final matches = articles.where((article) {
-      final title = _normalize(article.searcharticletitle);
-      final author = _normalize(article.searchauthor);
-      final date = _normalize(article.searchdate);
-      return title.contains(q) || author.contains(q) || date.contains(q);
-    }).toList();
+    _onQueryChanged(query);
+    return ValueListenableBuilder<Set<int>>(
+      valueListenable: readnotifier,
+      builder: (context, readArticles, _) {
+        final q = _normalize(_debouncedQuery);
 
-    return ListView.builder(
-      itemCount: matches.length,
-      itemBuilder: (context, index) {
-        var article = matches[index];
-        return SearchCard(searchclass: article);
+        final matches = articles.where((article) {
+          final title = article.article.all;
+          return title.contains(q);
+        }).toList();
+
+        return ListView.builder(
+          itemCount: matches.length,
+          itemBuilder: (context, index) {
+            final article = matches[index].article;
+            debugPrint(readArticles.contains(article.Article_ID).toString());
+
+            return CurrentCardbuild(
+              article: ArticleWithReadStatus(
+                article: article,
+                isRead: readArticles.contains(article.Article_ID),
+              ),
+              onReturn: () async {
+                final currentReads = Set<int>.from(readnotifier.value);
+                if (!currentReads.contains(matches[index].article.Article_ID)) {
+                  currentReads.add(matches[index].article.Article_ID);
+                }
+                readnotifier.value = currentReads;
+              },
+            );
+          },
+        );
       },
     );
   }

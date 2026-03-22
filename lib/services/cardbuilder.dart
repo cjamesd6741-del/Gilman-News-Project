@@ -78,7 +78,13 @@ class Cardbuild extends StatelessWidget {
 class CurrentCardbuild extends StatelessWidget {
   final ArticleWithReadStatus article;
   final VoidCallback? onleave;
-  const CurrentCardbuild({super.key, required this.article, this.onleave});
+  final VoidCallback? onReturn;
+  const CurrentCardbuild({
+    super.key,
+    required this.article,
+    this.onleave,
+    this.onReturn,
+  });
   @override
   Widget build(BuildContext context) {
     final isUnread = !article.isRead;
@@ -114,6 +120,7 @@ class CurrentCardbuild extends StatelessWidget {
             splashColor: Colors.white,
             highlightColor: Colors.blueGrey,
             onTap: () async {
+              onReturn?.call();
               if (article.article.prevauthor == null) {
                 await Future.delayed(const Duration(milliseconds: 350));
                 Navigator.of(context).pushNamed(
@@ -125,7 +132,6 @@ class CurrentCardbuild extends StatelessWidget {
                 );
               } else {
                 await Future.delayed(const Duration(milliseconds: 350));
-                onleave!();
                 Navigator.pushReplacementNamed(
                   context,
                   '/loading',

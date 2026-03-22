@@ -174,7 +174,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
     if (articles.contains(id)) {
     } else {
       articles.add(id);
-      cacheManager.save("read_articles", articles);
+      await cacheManager.save("read_articles", articles);
     }
   }
 
