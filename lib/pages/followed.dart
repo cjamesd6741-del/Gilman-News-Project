@@ -53,7 +53,7 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
   }
 
   void _checkIfShouldRefresh() {
-    if (_isRouteVisible && _isTabVisible) {
+    if (_isRouteVisible) {
       onTabVisible();
     }
   }
@@ -100,9 +100,11 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
   void refreshPage() async {
     final cached = await cacheManager.get("read_articles") ?? [];
     readarticles = Set<int>.from(cached);
+    debugPrint("called");
     setState(() {
       width = MediaQuery.of(context).size.width;
-      finalcards = datagenerator(); // 🔥 refetch data
+      finalcards = datagenerator();
+      readarticles = readarticles;
     });
   }
 

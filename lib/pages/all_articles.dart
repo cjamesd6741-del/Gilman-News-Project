@@ -1,10 +1,13 @@
 import 'package:apitest_2/services/cache.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../services/cardbuilder.dart';
 import '../services/cardclass.dart';
 import '../pages/articlesearch.dart';
 import 'package:apitest_2/services/globals.dart';
+import 'package:dice_icons/dice_icons.dart';
+import 'dart:math';
 
 class AllArticlesPage extends StatefulWidget {
   final int tab_index;
@@ -29,6 +32,7 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
   bool _isRouteVisible = false; // is on current tab?
   bool _isTabVisible = false; // is on current screen?
   ValueNotifier<Set<int>> readArticlesNotifier = ValueNotifier({});
+  Random rand = Random();
 
   @override // all are checks to see if visibility changes
   void dispose() {
@@ -229,15 +233,6 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
               );
             }).toList();
 
-            // articles = instruments.map<Article>((instrument) {
-            //   return Article(
-            //     Article_Title: instrument['Article_Title'],
-            //     author: instrument['Author'],
-            //     Date: instrument['Date'],
-            //     edition_num: instrument['edition_num'],
-            //     Article_ID: instrument["Article_ID"]
-            //   );
-            // }).toList();
             processedArticles = articlelist.map((article) {
               return ArticleWithReadStatus(
                 article: article,
@@ -247,7 +242,7 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
 
             return ListView.builder(
               // called instrument because I originally used tutorial to build this page
-              itemCount: instruments.length + 1,
+              itemCount: instruments.length + 2,
               itemBuilder: ((context, index) {
                 if (index == 0) {
                   return Padding(
@@ -268,7 +263,75 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                     ),
                   );
                 } // End of index button\
-                final instrument = processedArticles[index - 1];
+                if (index == 1) {
+                  int random_item_index = rand.nextInt(
+                    processedArticles.length,
+                  );
+                  Article randomarticle = articlelist[random_item_index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Center(
+                      child: InkWell(
+                        child: SizedBox(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 17, 49, 103),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(255, 73, 81, 95),
+                                  blurRadius: 6,
+                                  offset: Offset.fromDirection(2, 5),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(width: 10),
+                                Text(
+                                  "Random Article",
+                                  style: GoogleFonts.lora(
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                  ),
+                                ),
+                                SizedBox(width: 30),
+                                Icon(
+                                  DiceIcons.dice6,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                                SizedBox(width: 10),
+                              ],
+                            ),
+                          ),
+                        ),
+                        onTap: () async {
+                          if (Globals.clicked == false) {
+                            Globals.clicked = true;
+                            await Future.delayed(
+                              const Duration(milliseconds: 350),
+                            );
+                            Navigator.pushNamed(
+                              context,
+                              '/loading',
+                              arguments: {
+                                'title': randomarticle.Article_Title,
+                                'author': randomarticle.author,
+                                'recommended': true,
+                                'prevauthor': randomarticle.prevauthor,
+                                'prevtitle': randomarticle.prevtitle,
+                              },
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  );
+                }
+                final instrument = processedArticles[index - 2];
                 return ListTile(title: CurrentCardbuild(article: instrument));
               }),
             );

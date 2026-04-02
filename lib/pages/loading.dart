@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../services/jsongenerator.dart';
+import 'package:apitest_2/services/globals.dart';
 
 class Loading extends StatefulWidget {
   const Loading({super.key});
@@ -46,6 +47,7 @@ class _LoadingState extends State<Loading> {
   @override
   void initState() {
     super.initState();
+    Globals.clicked = false;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final args = ModalRoute.of(context)?.settings.arguments;
       if (args != null && args is Map) {

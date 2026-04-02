@@ -268,32 +268,58 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                             autoPlay: false,
                             clipBehavior: Clip.hardEdge,
                           ),
-                          items: List.generate(
-                            (data['image_urls'] as List).length,
-                            (index) {
-                              final url = data['image_urls'][index];
-                              final labels = data['image_labels'] as List?;
-                              return Column(
-                                children: [
-                                  if (labels != null &&
-                                      index < labels.length) ...[
-                                    Text(
-                                      labels[index] ?? "",
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                          items: List.generate((data['image_urls'] as List).length, (
+                            index,
+                          ) {
+                            final url = data['image_urls'][index];
+                            final labels = data['image_labels'] as List?;
+                            return Column(
+                              children: [
+                                if (labels != null &&
+                                    index < labels.length) ...[
+                                  Text(
+                                    labels[index] ?? "",
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    const SizedBox(height: 8),
-                                  ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                ],
 
-                                  Container(
-                                    child: Image.network(
-                                      url,
-                                      fit: BoxFit.cover,
-                                      height: 350,
-                                      loadingBuilder: (context, child, loadingProgress) {
-                                        if (loadingProgress == null)
+                                Container(
+                                  child: Image.network(
+                                    url,
+                                    fit: BoxFit.cover,
+                                    height: 350,
+                                    frameBuilder:
+                                        (
+                                          context,
+                                          child,
+                                          frame,
+                                          wasSynchronouslyLoaded,
+                                        ) {
+                                          if (frame == null) {
+                                            return Container(
+                                              height: 350,
+                                              child: const Center(
+                                                child: SizedBox(
+                                                  height: 100,
+                                                  width: 100,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 10,
+                                                        color: Color.fromARGB(
+                                                          255,
+                                                          9,
+                                                          8,
+                                                          50,
+                                                        ),
+                                                      ),
+                                                ),
+                                              ),
+                                            );
+                                          }
                                           return Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Container(
@@ -311,14 +337,21 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                                               child: child,
                                             ),
                                           );
+                                        },
+                                    loadingBuilder: (context, child, loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      }
 
-                                        return Center(
+                                      return Container(
+                                        height: 350,
+                                        child: Center(
                                           child: SizedBox(
                                             height: 100,
                                             width: 100,
                                             child: CircularProgressIndicator(
                                               strokeWidth: 10,
-                                              color: Color.fromARGB(
+                                              color: const Color.fromARGB(
                                                 255,
                                                 9,
                                                 8,
@@ -335,14 +368,14 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                                                   : null,
                                             ),
                                           ),
-                                        );
-                                      },
-                                    ),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                ],
-                              );
-                            },
-                          ),
+                                ),
+                              ],
+                            );
+                          }),
                         ),
                       ),
                     ), // if there are multiple images, show a carousel
@@ -356,6 +389,51 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                             child: Image.network(
                               data['image_urls'][0],
                               fit: BoxFit.cover,
+                              frameBuilder:
+                                  (
+                                    context,
+                                    child,
+                                    frame,
+                                    wasSynchronouslyLoaded,
+                                  ) {
+                                    if (frame == null) {
+                                      return Container(
+                                        height: 350,
+                                        child: const Center(
+                                          child: SizedBox(
+                                            height: 100,
+                                            width: 100,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 10,
+                                              color: Color.fromARGB(
+                                                255,
+                                                9,
+                                                8,
+                                                50,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: const Color.fromARGB(
+                                              255,
+                                              9,
+                                              8,
+                                              50,
+                                            ),
+                                            width: 5,
+                                          ),
+                                        ),
+                                        child: child,
+                                      ),
+                                    );
+                                  },
                               loadingBuilder:
                                   (context, child, loadingProgress) {
                                     if (loadingProgress == null)

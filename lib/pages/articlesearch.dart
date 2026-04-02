@@ -27,7 +27,7 @@ class AllArticleSearch extends SearchDelegate {
   void _onQueryChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(const Duration(milliseconds: 300), () {
+    _debounce = Timer(const Duration(milliseconds: 100), () {
       _debouncedQuery = query;
       query = query;
     });

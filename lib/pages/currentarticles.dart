@@ -42,6 +42,7 @@ class CurrentArticlesState extends State<CurrentArticles> with RouteAware {
   @override
   void didPopNext() {
     _isRouteVisible = true;
+    refreshPage();
     _checkIfShouldRefresh();
   }
 
@@ -65,7 +66,7 @@ class CurrentArticlesState extends State<CurrentArticles> with RouteAware {
   }
 
   void _checkIfShouldRefresh() {
-    if (_isRouteVisible && _isTabVisible) {
+    if (_isTabVisible) {
       onTabVisible();
     }
   }

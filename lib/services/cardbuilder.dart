@@ -1,5 +1,6 @@
 import 'package:apitest_2/services/cardclass.dart';
 import 'package:flutter/material.dart';
+import 'package:apitest_2/services/globals.dart';
 
 class Cardbuild extends StatelessWidget {
   final ArticleWithReadStatus article;
@@ -37,14 +38,18 @@ class Cardbuild extends StatelessWidget {
           splashColor: Colors.white,
           highlightColor: Colors.blueGrey,
           onTap: () async {
-            await Future.delayed(const Duration(milliseconds: 350));
-            Navigator.of(context).pushNamed(
-              '/loading',
-              arguments: {
-                'title': article.article.Article_Title,
-                'author': article.article.author,
-              },
-            );
+            if (Globals.clicked == false) {
+              Globals.clicked = true;
+              await Future.delayed(const Duration(milliseconds: 350));
+              Navigator.of(context).pushNamed(
+                '/loading',
+                arguments: {
+                  'title': article.article.Article_Title,
+                  'author': article.article.author,
+                },
+              );
+            }
+            ;
           },
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -95,7 +100,7 @@ class CurrentCardbuild extends StatelessWidget {
         boxShadow: isUnread
             ? [
                 BoxShadow(
-                  color: Colors.blue.withValues(alpha: .55),
+                  color: Colors.blue.withValues(alpha: .85),
                   blurRadius: 20,
                   spreadRadius: 2,
                 ),
@@ -120,29 +125,32 @@ class CurrentCardbuild extends StatelessWidget {
             splashColor: Colors.white,
             highlightColor: Colors.blueGrey,
             onTap: () async {
-              onReturn?.call();
-              if (article.article.prevauthor == null) {
-                await Future.delayed(const Duration(milliseconds: 350));
-                Navigator.of(context).pushNamed(
-                  '/loading',
-                  arguments: {
-                    'title': article.article.Article_Title,
-                    'author': article.article.author,
-                  },
-                );
-              } else {
-                await Future.delayed(const Duration(milliseconds: 350));
-                Navigator.pushReplacementNamed(
-                  context,
-                  '/loading',
-                  arguments: {
-                    'title': article.article.Article_Title,
-                    'author': article.article.author,
-                    'recommended': true,
-                    'prevauthor': article.article.prevauthor,
-                    'prevtitle': article.article.prevtitle,
-                  },
-                );
+              if (Globals.clicked == false) {
+                Globals.clicked = true;
+                onReturn?.call();
+                if (article.article.prevauthor == null) {
+                  await Future.delayed(const Duration(milliseconds: 350));
+                  Navigator.of(context).pushNamed(
+                    '/loading',
+                    arguments: {
+                      'title': article.article.Article_Title,
+                      'author': article.article.author,
+                    },
+                  );
+                } else {
+                  await Future.delayed(const Duration(milliseconds: 350));
+                  Navigator.pushReplacementNamed(
+                    context,
+                    '/loading',
+                    arguments: {
+                      'title': article.article.Article_Title,
+                      'author': article.article.author,
+                      'recommended': true,
+                      'prevauthor': article.article.prevauthor,
+                      'prevtitle': article.article.prevtitle,
+                    },
+                  );
+                }
               }
             },
             child: Padding(
