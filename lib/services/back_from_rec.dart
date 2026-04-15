@@ -3,23 +3,30 @@ import 'package:flutter/material.dart';
 class Back_From_Rec {
   String title;
   String author;
-  Back_From_Rec({required this.author, required this.title});
+  int ID;
+  Back_From_Rec({required this.author, required this.title, required this.ID});
 }
 
 class RecommendCard extends StatelessWidget {
-  // TODO: update design of button
   final Back_From_Rec back_from_rec;
-  const RecommendCard({super.key, required this.back_from_rec});
+  final VoidCallback onleave;
+  const RecommendCard({
+    super.key,
+    required this.back_from_rec,
+    required this.onleave,
+  });
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
+        onleave();
         Navigator.pushReplacementNamed(
           context,
           '/loading',
           arguments: {
             'title': back_from_rec.title,
             'author': back_from_rec.author,
+            'ID': back_from_rec.ID,
           },
         );
       },

@@ -13,13 +13,9 @@ class Loading extends StatefulWidget {
 class _LoadingState extends State<Loading> {
   Map data = {};
   bool recommended = false;
-  Future<void> getData(String author, String title) async {
-    final articlejsonjson = await Getter(
-      author: author,
-      title: title,
-    ).fetchArticleJson();
+  Future<void> getData(String author, String title, int id) async {
+    final articlejsonjson = await Getter(id: id).fetchArticleJson();
     Map ajstring = articlejsonjson;
-
     final articlejson = ajstring;
     push(articlejson, author, title);
   }
@@ -40,6 +36,7 @@ class _LoadingState extends State<Loading> {
         'recommended': recommended,
         'prevauthor': data["prevauthor"],
         'prevtitle': data["prevtitle"],
+        'prevID': data['prevID'],
       },
     );
   }
@@ -53,7 +50,11 @@ class _LoadingState extends State<Loading> {
       if (args != null && args is Map) {
         data = args;
         recommended = data["recommended"] ?? false;
-        getData(data['author'] as String, data['title'] as String);
+        getData(
+          data['author'] as String,
+          data['title'] as String,
+          data['ID'] as int,
+        );
       }
     });
   }

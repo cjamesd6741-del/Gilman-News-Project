@@ -15,6 +15,7 @@ class Article {
   final int Article_ID;
   final String? prevtitle;
   final String? prevauthor;
+  final int? previd;
 
   final String all;
   Article({
@@ -25,6 +26,7 @@ class Article {
     required this.edition_num,
     this.prevauthor,
     this.prevtitle,
+    this.previd,
   }) : all = normalize("$Article_Title $author $Date");
 }
 

@@ -189,12 +189,12 @@ class _Route_ManagerState extends State<Route_Manager> {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: GNav(
             selectedIndex: page_index,
-            gap: 6,
+            gap: 4,
             backgroundColor: const Color.fromARGB(255, 10, 62, 105),
             color: const Color.fromARGB(255, 135, 135, 135),
             tabBackgroundColor: const Color.fromARGB(255, 14, 90, 152),
-            textStyle: TextStyle(fontSize: 19, color: Colors.white),
-            iconSize: 25,
+            textStyle: TextStyle(fontSize: 16, color: Colors.white),
+            iconSize: 20,
             onTabChange: (index) {
               setState(() {
                 page_index = index;

@@ -147,7 +147,7 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
               shadowColor: Colors.black,
               elevation: 4.0,
               backgroundColor: const Color.fromARGB(255, 34, 72, 92),
-              expandedHeight: 180,
+              expandedHeight: 120,
               collapsedHeight: 90,
               pinned: true,
               floating: true,
@@ -177,24 +177,24 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                             children: [
                               AnimatedDefaultTextStyle(
                                 duration: const Duration(milliseconds: 100),
-                                style: TextStyle(
+                                style: GoogleFonts.libreCaslonText(
                                   fontSize: 26,
                                   fontWeight: FontWeight.bold,
                                   color: innerBoxIsScrolled
                                       ? Colors.white
-                                      : Color.fromARGB(255, 34, 72, 92),
+                                      : Color.fromARGB(255, 26, 56, 72),
                                 ),
 
                                 child: Text('Gilman News'),
                               ),
                               AnimatedDefaultTextStyle(
                                 duration: const Duration(milliseconds: 100),
-                                style: TextStyle(
+                                style: GoogleFonts.libreCaslonText(
                                   fontSize: 26,
                                   fontWeight: FontWeight.bold,
                                   color: innerBoxIsScrolled
                                       ? Colors.white
-                                      : Color.fromARGB(255, 34, 72, 92),
+                                      : Color.fromARGB(255, 26, 56, 72),
                                 ),
                                 child: Text('All Articles'),
                               ),
@@ -320,9 +320,7 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                               arguments: {
                                 'title': randomarticle.Article_Title,
                                 'author': randomarticle.author,
-                                'recommended': true,
-                                'prevauthor': randomarticle.prevauthor,
-                                'prevtitle': randomarticle.prevtitle,
+                                'ID': randomarticle.Article_ID,
                               },
                             );
                           }

@@ -33,7 +33,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
   bool _isTabVisible = false; // is on current screen?
   Storedata storedata = Storedata(); // class for data storage
   Textconfigure textconfigure = Textconfigure();
-  TextStyle appbartextStyle = const TextStyle(
+  TextStyle appbartextStyle = GoogleFonts.lora(
     fontSize: 18,
     height: 1.2,
     color: Color.fromARGB(255, 25, 38, 56),
@@ -49,6 +49,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
   bool _initialized = false;
   String prevauthor = ''; // init
   String prevtitle = ''; // init
+  int previd = 0;
   bool recommended =
       false; //note this variable is only used to determine if the current article was pushed by an recommend button, in which case we create a way for the reader to go back
   Map data = {};
@@ -73,10 +74,12 @@ class Article_PageState extends State<Article_Page> with RouteAware {
         storedata.categorywriter(categories); // updates categories
         storedata.past10update(ListQueue.from(categories)); // updates recents
         if (args['recommended'] == true) {
+          debugPrint("true");
           setState(() {
             recommended = true;
-            prevauthor = args['prevauthor'];
-            prevtitle = args['prevtitle'];
+            prevauthor = args['prevauthor'] ?? "";
+            prevtitle = args['prevtitle'] ?? "";
+            previd = args['prevID'] ?? 0;
           });
         }
       }
@@ -154,6 +157,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
   }
 
   void onLeave() {
+    debugPrint("six");
     stopwatch.stop();
     storedata.durationupdate(stopwatch.elapsed);
     firstbuild = false;
@@ -189,16 +193,18 @@ class Article_PageState extends State<Article_Page> with RouteAware {
         size: 50.0,
       );
     }
-    final textStyle = appbartextStyle;
-    final width = MediaQuery.of(context).size.width - 72;
+    double width = MediaQuery.of(context).size.width - 72;
+    if (recommended == true) {
+      width = MediaQuery.of(context).size.width - 102;
+    }
     final double height = textconfigure.textHeight(
       width,
       data['title'] ?? 'Article',
-      textStyle,
+      appbartextStyle,
     );
     if (firstbuild == true) {
       categories = data['category'] ?? [];
-      if (categories.isNotEmpty) {}
+      if (categories.isNotEmpty) {} //ehhh
     }
     return PopScope(
       canPop: true,
@@ -222,17 +228,23 @@ class Article_PageState extends State<Article_Page> with RouteAware {
             toolbarHeight: height + 50,
             actions: [
               if (recommended == true)
-                RecommendCard(
-                  // previous sreen button
-                  back_from_rec: Back_From_Rec(
-                    author: prevauthor,
-                    title: prevtitle,
+                Padding(
+                  padding: EdgeInsetsGeometry.fromLTRB(10, 0, 10, 0),
+                  child: RecommendCard(
+                    // previous sreen button
+                    back_from_rec: Back_From_Rec(
+                      author: prevauthor,
+                      title: prevtitle,
+                      ID: previd,
+                    ),
+                    onleave: onLeave,
                   ),
                 ),
             ],
             title: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(height: 10),
                 Text(
                   data['title'] ?? 'Article',
                   softWrap: true,
@@ -439,20 +451,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                                     if (loadingProgress == null)
                                       return Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: const Color.fromARGB(
-                                                255,
-                                                9,
-                                                8,
-                                                50,
-                                              ),
-                                              width: 5,
-                                            ),
-                                          ),
-                                          child: child,
-                                        ),
+                                        child: child,
                                       );
 
                                     return Center(
@@ -605,6 +604,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: processedArticles.map((recommend) {
+                          debugPrint(recommend.article.Article_ID.toString());
                           return Padding(
                             padding: const EdgeInsetsGeometry.fromLTRB(
                               0,

@@ -15,35 +15,29 @@ class HierarchyTree extends StatelessWidget {
   Widget build(BuildContext context) {
     int stafflength = staff.length;
     if (stafflength != 0) {
-      return Stack(
-        children: [
-          CustomPaint(size: Size(screenwidth, 500), painter: LinePainter()),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: stafflength,
-              itemBuilder: (context, index) {
-                final person = staff[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 160,
-                        child: Text(
-                          person['role'],
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(child: Text(person['name'])),
-                    ],
+      return ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: stafflength,
+        itemBuilder: (context, index) {
+          final person = staff[index];
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 160,
+                  child: Text(
+                    person['role'],
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                );
-              },
+                ),
+                SizedBox(width: 10),
+                Expanded(child: Text(person['name'])),
+              ],
             ),
-          ),
-        ],
+          );
+        },
       );
     }
     return Text("No Data");
@@ -60,7 +54,7 @@ class LinePainter extends CustomPainter {
       Offset(size.width * 4 / 5, size.height / 2),
       paint,
     );
-  }
+  } // TODO : Family Tree
 
   @override
   bool shouldRepaint(covariant CustomPainter oldPainter) {

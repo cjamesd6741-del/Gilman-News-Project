@@ -82,6 +82,7 @@ class Similarity_Finder {
             Article_ID: e["related_article_id"],
             Date: e['Date'],
             prevtitle: givenTitle,
+            previd: id,
             prevauthor: givenAuthor,
             edition_num: e['edition_num'] ?? 0.0,
           ),

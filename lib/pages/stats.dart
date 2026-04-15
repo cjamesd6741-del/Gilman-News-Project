@@ -118,7 +118,7 @@ class StatsState extends State<Stats> with RouteAware {
               shadowColor: Colors.black,
               elevation: 4.0,
               backgroundColor: const Color.fromARGB(255, 34, 72, 92),
-              expandedHeight: 180,
+              expandedHeight: 130,
               collapsedHeight: 80,
               pinned: true,
               flexibleSpace: Stack(

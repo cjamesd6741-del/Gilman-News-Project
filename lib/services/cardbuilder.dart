@@ -46,6 +46,7 @@ class Cardbuild extends StatelessWidget {
                 arguments: {
                   'title': article.article.Article_Title,
                   'author': article.article.author,
+                  'ID': article.article.Article_ID,
                 },
               );
             }
@@ -127,6 +128,7 @@ class CurrentCardbuild extends StatelessWidget {
             onTap: () async {
               if (Globals.clicked == false) {
                 Globals.clicked = true;
+                onleave?.call();
                 onReturn?.call();
                 if (article.article.prevauthor == null) {
                   await Future.delayed(const Duration(milliseconds: 350));
@@ -135,6 +137,7 @@ class CurrentCardbuild extends StatelessWidget {
                     arguments: {
                       'title': article.article.Article_Title,
                       'author': article.article.author,
+                      'ID': article.article.Article_ID,
                     },
                   );
                 } else {
@@ -148,6 +151,8 @@ class CurrentCardbuild extends StatelessWidget {
                       'recommended': true,
                       'prevauthor': article.article.prevauthor,
                       'prevtitle': article.article.prevtitle,
+                      'prevID': article.article.previd,
+                      'ID': article.article.Article_ID,
                     },
                   );
                 }
@@ -219,6 +224,7 @@ class FollowCardbuild extends StatelessWidget {
             arguments: {
               'title': article.article.Article_Title,
               'author': article.article.author,
+              'ID': article.article.Article_ID,
             },
           );
         },

@@ -10,7 +10,7 @@ class Home_Page extends StatefulWidget {
 }
 
 class _Home_PageState extends State<Home_Page> {
-  TextStyle appbartextStyle = const TextStyle(fontSize: 30, height: 1.5);
+  TextStyle appbartextStyle = const TextStyle(fontSize: 40, height: 1.5);
   Textconfigure textconfigure = Textconfigure();
   @override
   Widget build(BuildContext context) {
@@ -29,12 +29,12 @@ class _Home_PageState extends State<Home_Page> {
               forceElevated: true,
               elevation: 4.0,
               shadowColor: Colors.black,
-              toolbarHeight: height + 100,
+              toolbarHeight: height + 20,
               flexibleSpace: Center(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(30, 20, 10, 30),
                   child: Text(
-                    "Welcome to the News!",
+                    "Welcome to The News!",
                     softWrap: true,
                     maxLines: null,
                     style: GoogleFonts.lora(fontSize: 40, color: Colors.white),
@@ -67,11 +67,25 @@ class _Home_PageState extends State<Home_Page> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    child: const Center(
-                      child: Text(
-                        "Current Articles",
-                        style: TextStyle(fontSize: 50, color: Colors.white),
-                      ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Current",
+                          style: GoogleFonts.libreCaslonText(
+                            fontSize: 50,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          "Articles",
+                          style: GoogleFonts.libreCaslonText(
+                            fontSize: 50,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -101,11 +115,17 @@ class _Home_PageState extends State<Home_Page> {
                         children: [
                           Text(
                             "Followed Authors",
-                            style: TextStyle(fontSize: 40, color: Colors.white),
+                            style: GoogleFonts.libreCaslonText(
+                              fontSize: 40,
+                              color: Colors.white,
+                            ),
                           ),
                           Text(
                             "Articles",
-                            style: TextStyle(fontSize: 40, color: Colors.white),
+                            style: GoogleFonts.libreCaslonText(
+                              fontSize: 40,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),

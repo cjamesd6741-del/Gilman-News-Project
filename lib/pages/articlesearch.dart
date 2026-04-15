@@ -29,7 +29,6 @@ class AllArticleSearch extends SearchDelegate {
 
     _debounce = Timer(const Duration(milliseconds: 100), () {
       _debouncedQuery = query;
-      query = query;
     });
   }
 
@@ -111,17 +110,27 @@ class AllArticleSearch extends SearchDelegate {
       valueListenable: readnotifier,
       builder: (context, readArticles, _) {
         final q = _normalize(_debouncedQuery);
+        final matches = articles
+            .where((article) {
+              final title = article.article.all;
+              return title.contains(q);
+            })
+            .map((article) {
+              return ArticleWithReadStatus(
+                article: article.article,
+                isRead: readArticles.contains(article.article.Article_ID),
+              );
+            })
+            .toList();
 
-        final matches = articles.where((article) {
-          final title = article.article.all;
-          return title.contains(q);
-        }).toList();
+        matches.sort((a, b) {
+          return b.article.Date.compareTo(a.article.Date);
+        });
 
         return ListView.builder(
           itemCount: matches.length,
           itemBuilder: (context, index) {
             final article = matches[index].article;
-            debugPrint(readArticles.contains(article.Article_ID).toString());
 
             return CurrentCardbuild(
               article: ArticleWithReadStatus(
