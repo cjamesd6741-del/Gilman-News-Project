@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:flame/experimental.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:apitest_2/services/following_system.dart';
 import '/services/similarity.dart';
@@ -10,7 +11,7 @@ import '/services/appbartext.dart';
 import '/services/back_from_rec.dart';
 import 'package:apitest_2/services/cache.dart';
 import 'package:apitest_2/services/globals.dart';
-import '../services/cardclass.dart';
+import '../../services/cardclass.dart';
 import 'package:apitest_2/services/cardbuilder.dart';
 
 class Article_Page extends StatefulWidget {
@@ -45,6 +46,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
   String authors = '';
   Similarity_Finder similar = Similarity_Finder();
   int id = 0;
+  int current_image_index = 0;
   late Future<List<Article>> recs;
   bool _initialized = false;
   String prevauthor = ''; // init
@@ -67,6 +69,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
     storedata.updatearticleread(); // +1 to articles read
     stopwatch.start();
     firstbuild = true;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final args = ModalRoute.of(context)?.settings.arguments;
       if (args != null && args is Map) {
@@ -258,7 +261,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
           ),
           body: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(30.0, 16.0, 30.0, 0),
+              padding: const EdgeInsets.fromLTRB(10.0, 16.0, 10.0, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -272,13 +275,17 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                         child: CarouselSlider(
                           // TODO: add dots or somth on bottom of carousel to show number of photos and user position
                           options: CarouselOptions(
+                            onPageChanged: (index, reason) {
+                              setState(() {
+                                current_image_index = index;
+                              });
+                            },
                             viewportFraction:
-                                .95, // TODO: find a way to make this smaller with out causing overflow error
-                            height: 500,
+                                .80, // TODO: find a way to make this smaller with out causing overflow error
+                            height: 400,
                             enlargeCenterPage: true,
                             enableInfiniteScroll: true,
                             autoPlay: false,
-                            clipBehavior: Clip.hardEdge,
                           ),
                           items: List.generate((data['image_urls'] as List).length, (
                             index,
@@ -290,6 +297,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                                 if (labels != null &&
                                     index < labels.length) ...[
                                   Text(
+                                    textAlign: TextAlign.center,
                                     labels[index] ?? "",
                                     style: const TextStyle(
                                       fontSize: 14,
@@ -299,90 +307,83 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                                   const SizedBox(height: 8),
                                 ],
 
-                                Container(
-                                  child: Image.network(
-                                    url,
-                                    fit: BoxFit.cover,
-                                    height: 350,
-                                    frameBuilder:
-                                        (
-                                          context,
-                                          child,
-                                          frame,
-                                          wasSynchronouslyLoaded,
-                                        ) {
-                                          if (frame == null) {
-                                            return Container(
-                                              height: 350,
-                                              child: const Center(
-                                                child: SizedBox(
-                                                  height: 100,
-                                                  width: 100,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 10,
-                                                        color: Color.fromARGB(
-                                                          255,
-                                                          9,
-                                                          8,
-                                                          50,
-                                                        ),
-                                                      ),
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                          return Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: const Color.fromARGB(
-                                                    255,
-                                                    9,
-                                                    8,
-                                                    50,
-                                                  ),
-                                                  width: 5,
-                                                ),
-                                              ),
-                                              child: child,
-                                            ),
-                                          );
-                                        },
-                                    loadingBuilder: (context, child, loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      }
+                                Expanded(
+                                  child: Center(
+                                    child: Image.network(
+                                      url,
+                                      fit: BoxFit.contain,
 
-                                      return Container(
-                                        height: 350,
-                                        child: Center(
-                                          child: SizedBox(
-                                            height: 100,
-                                            width: 100,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 10,
-                                              color: const Color.fromARGB(
-                                                255,
-                                                9,
-                                                8,
-                                                50,
+                                      frameBuilder:
+                                          (
+                                            context,
+                                            child,
+                                            frame,
+                                            wasSynchronouslyLoaded,
+                                          ) {
+                                            if (frame == null) {
+                                              return Container(
+                                                child: const Center(
+                                                  child: SizedBox(
+                                                    height: 100,
+                                                    width: 100,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                          strokeWidth: 10,
+                                                          color: Color.fromARGB(
+                                                            255,
+                                                            9,
+                                                            8,
+                                                            50,
+                                                          ),
+                                                        ),
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                            return Container(
+                                              child: child,
+                                              foregroundDecoration:
+                                                  BoxDecoration(
+                                                    border: Border.all(
+                                                      width: 5,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                            );
+                                          },
+                                      loadingBuilder: (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+
+                                        return Container(
+                                          child: Center(
+                                            child: SizedBox(
+                                              height: 100,
+                                              width: 100,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 10,
+                                                color: const Color.fromARGB(
+                                                  255,
+                                                  9,
+                                                  8,
+                                                  50,
+                                                ),
+                                                value:
+                                                    loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                              .cumulativeBytesLoaded /
+                                                          loadingProgress
+                                                              .expectedTotalBytes!
+                                                    : null,
                                               ),
-                                              value:
-                                                  loadingProgress
-                                                          .expectedTotalBytes !=
-                                                      null
-                                                  ? loadingProgress
-                                                            .cumulativeBytesLoaded /
-                                                        loadingProgress
-                                                            .expectedTotalBytes!
-                                                  : null,
                                             ),
                                           ),
-                                        ),
-                                      );
-                                    },
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
                               ],
@@ -397,89 +398,80 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            child: Image.network(
-                              data['image_urls'][0],
-                              fit: BoxFit.cover,
-                              frameBuilder:
-                                  (
-                                    context,
-                                    child,
-                                    frame,
-                                    wasSynchronouslyLoaded,
-                                  ) {
-                                    if (frame == null) {
-                                      return Container(
-                                        height: 350,
-                                        child: const Center(
-                                          child: SizedBox(
-                                            height: 100,
-                                            width: 100,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 10,
-                                              color: Color.fromARGB(
-                                                255,
-                                                9,
-                                                8,
-                                                50,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: const Color.fromARGB(
+                          child: Image.network(
+                            data['image_urls'][0],
+                            fit: BoxFit.cover,
+                            frameBuilder:
+                                (
+                                  context,
+                                  child,
+                                  frame,
+                                  wasSynchronouslyLoaded,
+                                ) {
+                                  if (frame == null) {
+                                    return Container(
+                                      height: 350,
+                                      child: const Center(
+                                        child: SizedBox(
+                                          height: 100,
+                                          width: 100,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 10,
+                                            color: Color.fromARGB(
                                               255,
                                               9,
                                               8,
                                               50,
                                             ),
-                                            width: 5,
                                           ),
                                         ),
-                                        child: child,
                                       ),
                                     );
-                                  },
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                    if (loadingProgress == null)
-                                      return Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: child,
-                                      );
-
-                                    return Center(
-                                      child: SizedBox(
-                                        height: 100,
-                                        width: 100,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 10,
-                                          color: Color.fromARGB(
+                                  }
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: const Color.fromARGB(
                                             255,
-                                            0,
-                                            75,
-                                            141,
+                                            9,
+                                            8,
+                                            50,
                                           ),
-                                          value:
-                                              loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes!
-                                              : null,
+                                          width: 5,
                                         ),
                                       ),
-                                    );
-                                  },
-                            ),
+                                      child: child,
+                                    ),
+                                  );
+                                },
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null)
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: child,
+                                );
+
+                              return Center(
+                                child: SizedBox(
+                                  height: 100,
+                                  width: 100,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 10,
+                                    color: Color.fromARGB(255, 0, 75, 141),
+                                    value:
+                                        loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                  .cumulativeBytesLoaded /
+                                              loadingProgress
+                                                  .expectedTotalBytes!
+                                        : null,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                         if (data['image_labels'] != null &&
@@ -496,6 +488,34 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                           ),
                       ], // TODO: add way to zoom into images
                     ),
+                  SizedBox(height: 10),
+                  if (data['image_urls'] != null &&
+                      (data['image_urls'] as List).length > 1)
+                    Row(
+                      spacing: 15,
+                      mainAxisAlignment: MainAxisAlignment.center,
+
+                      children: [
+                        for (
+                          int i = 0;
+                          i < (data['image_urls'] as List).length;
+                          i++
+                        )
+                          AnimatedScale(
+                            scale: (current_image_index == i) ? 2 : 1,
+                            duration: Duration(milliseconds: 300),
+                            child: Icon(
+                              Icons.circle,
+                              key: Key(i.toString()),
+                              size: 20,
+                              color: (current_image_index == i)
+                                  ? Colors.black
+                                  : Colors.white,
+                            ),
+                          ),
+                      ],
+                    ),
+                  SizedBox(height: 10),
                   Text(
                     'Authors:',
                     style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),

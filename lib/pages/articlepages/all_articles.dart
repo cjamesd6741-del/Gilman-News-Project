@@ -2,9 +2,9 @@ import 'package:apitest_2/services/cache.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../services/cardbuilder.dart';
-import '../services/cardclass.dart';
-import '../pages/articlesearch.dart';
+import '../../services/cardbuilder.dart';
+import '../../services/cardclass.dart';
+import 'articlesearch.dart';
 import 'package:apitest_2/services/globals.dart';
 import 'package:dice_icons/dice_icons.dart';
 import 'dart:math';
@@ -147,11 +147,12 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
               shadowColor: Colors.black,
               elevation: 4.0,
               backgroundColor: const Color.fromARGB(255, 34, 72, 92),
-              expandedHeight: 120,
-              collapsedHeight: 90,
+              expandedHeight: MediaQuery.of(context).size.height / 8,
+              collapsedHeight: max(80, MediaQuery.of(context).size.height / 12),
               pinned: true,
               floating: true,
               flexibleSpace: Stack(
+                fit: StackFit.expand,
                 children: [
                   FlexibleSpaceBar(
                     background: Image.asset(
@@ -178,25 +179,31 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                               AnimatedDefaultTextStyle(
                                 duration: const Duration(milliseconds: 100),
                                 style: GoogleFonts.libreCaslonText(
-                                  fontSize: 26,
+                                  fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                   color: innerBoxIsScrolled
                                       ? Colors.white
                                       : Color.fromARGB(255, 26, 56, 72),
                                 ),
 
-                                child: Text('Gilman News'),
+                                child: FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: Text('Gilman News'),
+                                ),
                               ),
                               AnimatedDefaultTextStyle(
                                 duration: const Duration(milliseconds: 100),
                                 style: GoogleFonts.libreCaslonText(
-                                  fontSize: 26,
+                                  fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                   color: innerBoxIsScrolled
                                       ? Colors.white
                                       : Color.fromARGB(255, 26, 56, 72),
                                 ),
-                                child: Text('All Articles'),
+                                child: FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: Text('All Articles'),
+                                ),
                               ),
                             ],
                           ),
@@ -246,7 +253,7 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
               itemBuilder: ((context, index) {
                 if (index == 0) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    padding: const EdgeInsetsGeometry.fromLTRB(0, 0, 0, 10),
                     child: Center(
                       child: IconButton(
                         onPressed: () {

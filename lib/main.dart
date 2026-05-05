@@ -5,6 +5,7 @@ import 'pages/routmanager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:apitest_2/services/cache.dart';
 
+// TODO : Explain Why
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();

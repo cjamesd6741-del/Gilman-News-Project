@@ -15,11 +15,6 @@ class _Home_PageState extends State<Home_Page> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width - 72;
-    final double height = textconfigure.textHeight(
-      width,
-      "Welcome to the News!",
-      appbartextStyle,
-    );
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 158, 175, 206),
       body: NestedScrollView(
@@ -29,15 +24,21 @@ class _Home_PageState extends State<Home_Page> {
               forceElevated: true,
               elevation: 4.0,
               shadowColor: Colors.black,
-              toolbarHeight: height + 20,
+              toolbarHeight: MediaQuery.of(context).size.height / 8,
               flexibleSpace: Center(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 20, 10, 30),
-                  child: Text(
-                    "Welcome to The News!",
-                    softWrap: true,
-                    maxLines: null,
-                    style: GoogleFonts.lora(fontSize: 40, color: Colors.white),
+                  padding: const EdgeInsets.fromLTRB(30, 50, 10, 30),
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      "Welcome to The News!",
+                      softWrap: true,
+                      maxLines: null,
+                      style: GoogleFonts.lora(
+                        fontSize: 40,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),

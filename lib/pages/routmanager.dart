@@ -1,16 +1,23 @@
-import 'package:apitest_2/pages/about.dart';
-import 'package:apitest_2/pages/masthead_page.dart';
-import 'package:apitest_2/pages/misc_page.dart';
+import 'package:apitest_2/pages/gamespages/connectionloading.dart';
+import 'package:apitest_2/pages/miscpages/about.dart';
+import 'package:apitest_2/pages/miscpages/masthead_page.dart';
+import 'package:apitest_2/pages/miscpages/misc_page.dart';
 import 'package:apitest_2/services/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:apitest_2/pages/article_page.dart';
-import 'package:apitest_2/pages/loading.dart';
-import 'package:apitest_2/pages/all_articles.dart';
-import 'package:apitest_2/pages/currentarticles.dart';
-import 'package:apitest_2/pages/stats.dart';
-import 'package:apitest_2/pages/home_page.dart';
-import 'package:apitest_2/pages/followed.dart';
+import 'package:apitest_2/pages/articlepages/article_page.dart';
+import 'package:apitest_2/pages/articlepages/loading.dart';
+import 'package:apitest_2/pages/articlepages/all_articles.dart';
+import 'package:apitest_2/pages/homepages/currentarticles.dart';
+import 'package:apitest_2/pages/miscpages/stats.dart';
+import 'package:apitest_2/pages/homepages/home_page.dart';
+import 'package:apitest_2/pages/homepages/followed.dart';
+import 'package:apitest_2/pages/gamespages/games.dart';
+import 'package:apitest_2/pages/gamespages/connectiongame.dart';
+import 'package:apitest_2/games/game_components/randomgame/randomgame.dart';
+import 'package:apitest_2/pages/gamespages/connectionsselector.dart';
+import 'package:apitest_2/pages/gamespages/connectionsselector.dart';
+import 'package:apitest_2/games/curling/curling_game.dart';
 
 class Route_Manager extends StatefulWidget {
   const Route_Manager({super.key});
@@ -21,7 +28,6 @@ class Route_Manager extends StatefulWidget {
 
 class _Route_ManagerState extends State<Route_Manager> {
   int page_index = 1;
-  List<Widget> pages = const [Text("Games")];
 
   final _navigatorKeys = [
     GlobalKey<NavigatorState>(),
@@ -113,6 +119,32 @@ class _Route_ManagerState extends State<Route_Manager> {
     }
   }
 
+  Route game_tabroutes(RouteSettings settings) {
+    switch (settings.name) {
+      case '/':
+        return MaterialPageRoute(builder: (_) => const Game());
+      case '/connection':
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => Connections(),
+        );
+      case '/cloading':
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => Connectionloading(),
+        );
+      case '/cselector':
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => Connectionsselector(),
+        );
+      case '/curling':
+        return MaterialPageRoute(builder: (_) => Curling());
+      default:
+        throw Exception('Invalid route: ${settings.name}');
+    }
+  }
+
   Route all_articlesRoutes(RouteSettings settings) {
     switch (settings.name) {
       case '/':
@@ -178,8 +210,7 @@ class _Route_ManagerState extends State<Route_Manager> {
           _buildTabNavigator(
             navigatorKey: _navigatorKeys[3],
             observer: _routeObservers[3],
-            onGenerateRoute: (settings) =>
-                MaterialPageRoute(builder: (_) => const Text("Games")),
+            onGenerateRoute: game_tabroutes,
           ),
         ],
       ),

@@ -2,7 +2,7 @@ import 'package:apitest_2/pages/routmanager.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'home_page.dart';
+import 'homepages/home_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

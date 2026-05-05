@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../services/cardbuilder.dart';
-import '../services/cardclass.dart';
+import '../../services/cardbuilder.dart';
+import '../../services/cardclass.dart';
 import 'package:apitest_2/services/cache.dart';
 
 class CurrentArticles extends StatefulWidget {

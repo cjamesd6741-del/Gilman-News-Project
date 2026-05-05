@@ -14,7 +14,7 @@ class MiscPage extends StatelessWidget {
             SliverAppBar(
               elevation: 10.0,
               backgroundColor: const Color.fromARGB(255, 34, 72, 92),
-              expandedHeight: 130,
+              expandedHeight: MediaQuery.of(context).size.height / 8,
               collapsedHeight: 90,
               pinned: true,
               floating: true,

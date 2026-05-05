@@ -1,0 +1,123 @@
+import 'dart:async';
+import 'dart:math';
+import 'package:apitest_2/games/game_components/randomgame/ball.dart';
+import 'package:apitest_2/games/game_components/randomgame/first_component.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flame/components.dart';
+import 'package:flame/events.dart';
+import 'package:flame/game.dart';
+import 'package:flutter/material.dart';
+import 'package:flame/flame.dart';
+import 'package:apitest_2/games/game_components/randomgame/rectangle.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flame/experimental.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class Game extends StatefulWidget {
+  const Game({super.key});
+
+  @override
+  State<Game> createState() => _GameState();
+}
+
+class _GameState extends State<Game> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 158, 175, 206),
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              pinned: true,
+              title: Text(
+                "Games",
+                style: GoogleFonts.lora(fontSize: 40, color: Colors.white),
+              ),
+              backgroundColor: const Color.fromARGB(255, 8, 53, 90),
+              expandedHeight:
+                  MediaQuery.of(context).size.height / 8, //8 is the standard
+              collapsedHeight: max(MediaQuery.of(context).size.height / 12, 60),
+            ),
+          ];
+        },
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 30),
+              Material(
+                borderRadius: BorderRadius.circular(16),
+                clipBehavior: Clip.hardEdge,
+                elevation: 4,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/cselector');
+                  },
+                  child: Ink(
+                    height: 300,
+                    width: MediaQuery.of(context).size.width - 30,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color.fromARGB(255, 93, 131, 206),
+                          Color.fromARGB(255, 3, 61, 112),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: Center(
+                      child: AutoSizeText(
+                        textAlign: TextAlign.center,
+                        "Gilman Connections",
+                        style: GoogleFonts.lora(
+                          fontSize: 50,
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              Material(
+                borderRadius: BorderRadius.circular(16),
+                clipBehavior: Clip.hardEdge,
+                elevation: 4,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/curling');
+                  },
+                  child: Ink(
+                    height: 300,
+                    width: MediaQuery.of(context).size.width - 30,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color.fromARGB(255, 54, 8, 115),
+                          Color.fromARGB(255, 3, 61, 112),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Curling",
+                        style: GoogleFonts.lora(
+                          fontSize: 50,
+                          color: Color.fromARGB(255, 196, 216, 234),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

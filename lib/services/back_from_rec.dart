@@ -18,6 +18,7 @@ class RecommendCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(),
       onPressed: () {
         onleave();
         Navigator.pushReplacementNamed(

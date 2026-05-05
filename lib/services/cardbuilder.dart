@@ -41,6 +41,8 @@ class Cardbuild extends StatelessWidget {
             if (Globals.clicked == false) {
               Globals.clicked = true;
               await Future.delayed(const Duration(milliseconds: 350));
+              if (!context.mounted) return;
+
               Navigator.of(context).pushNamed(
                 '/loading',
                 arguments: {
@@ -132,6 +134,7 @@ class CurrentCardbuild extends StatelessWidget {
                 onReturn?.call();
                 if (article.article.prevauthor == null) {
                   await Future.delayed(const Duration(milliseconds: 350));
+                  if (!context.mounted) return;
                   Navigator.of(context).pushNamed(
                     '/loading',
                     arguments: {

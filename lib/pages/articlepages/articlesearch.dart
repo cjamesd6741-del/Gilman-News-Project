@@ -12,6 +12,9 @@ class AllArticleSearch extends SearchDelegate {
 
   Timer? _debounce;
   String _debouncedQuery = '';
+  final ValueNotifier<String> _debouncedQueryNotifier = ValueNotifier<String>(
+    '',
+  );
 
   String _normalize(String s) {
     return s
@@ -28,13 +31,14 @@ class AllArticleSearch extends SearchDelegate {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
     _debounce = Timer(const Duration(milliseconds: 100), () {
-      _debouncedQuery = query;
+      _debouncedQueryNotifier.value = query;
     });
   }
 
   @override
   void close(BuildContext context, result) {
     _debounce?.cancel();
+    _debouncedQueryNotifier.dispose();
     super.close(context, result);
   }
 
@@ -65,7 +69,7 @@ class AllArticleSearch extends SearchDelegate {
     return ValueListenableBuilder<Set<int>>(
       valueListenable: Globals.globalReadArticlesNotifier,
       builder: (context, readArticles, _) {
-        final q = _normalize(_debouncedQuery);
+        final q = _normalize(query);
 
         final matches = articles
             .where((article) {
@@ -106,10 +110,12 @@ class AllArticleSearch extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     _onQueryChanged(query);
-    return ValueListenableBuilder<Set<int>>(
-      valueListenable: readnotifier,
-      builder: (context, readArticles, _) {
-        final q = _normalize(_debouncedQuery);
+    return ListenableBuilder(
+      listenable: Listenable.merge([readnotifier, _debouncedQueryNotifier]),
+      builder: (context, _) {
+        final debouncedQueryText = _debouncedQueryNotifier.value;
+        final readArticles = readnotifier.value;
+        final q = _normalize(debouncedQueryText);
         final matches = articles
             .where((article) {
               final title = article.article.all;

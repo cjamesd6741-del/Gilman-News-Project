@@ -46,6 +46,7 @@ dependencies:
   hive_flutter: ^1.1.0
   dice_icons: ^0.1.7
   flame: ^1.37.0
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -57,7 +58,7 @@ flutter_launcher_icons:
   ios: true
   image_path: "lib/images/App_Icon.png"
   remove_alpha_ios: true
-  background_color_ios: "#1D1480"
+  background_color_ios: "#dad9de"
   adaptive_icon_background: "#1D1480"
   min_sdk_android: 21
   web:

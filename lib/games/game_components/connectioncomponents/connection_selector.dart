@@ -1,0 +1,62 @@
+import 'package:apitest_2/services/cardclass.dart';
+import 'package:flutter/material.dart';
+import 'package:apitest_2/services/globals.dart';
+
+class ConnectionSelector {
+  String date;
+  int id;
+  ConnectionSelector({required this.date, required this.id});
+}
+
+class ConnectionSelectorCard extends StatelessWidget {
+  final ConnectionSelector connectioninfo;
+  const ConnectionSelectorCard({super.key, required this.connectioninfo});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+      child: Card(
+        elevation: 10,
+        shadowColor: const Color.fromARGB(255, 116, 127, 149),
+        color: const Color.fromARGB(255, 46, 48, 50),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(
+            color: Color.fromARGB(255, 80, 83, 87),
+            width: 4,
+          ),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          splashColor: Colors.white,
+          highlightColor: Colors.blueGrey,
+          onTap: () async {
+            if (Globals.clicked == false) {
+              Globals.clicked = true;
+              await Future.delayed(const Duration(milliseconds: 350));
+              Navigator.of(
+                context,
+              ).pushNamed('/cloading', arguments: {'id': connectioninfo.id});
+            }
+            ;
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
+                Text(
+                  connectioninfo.date,
+                  style: const TextStyle(fontSize: 25, color: Colors.white),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
