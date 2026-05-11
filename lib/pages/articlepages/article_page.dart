@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'package:flame/experimental.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:apitest_2/services/following_system.dart';
 import '/services/similarity.dart';
@@ -10,7 +9,6 @@ import '/services/stats/Articlestorage.dart';
 import '/services/appbartext.dart';
 import '/services/back_from_rec.dart';
 import 'package:apitest_2/services/cache.dart';
-import 'package:apitest_2/services/globals.dart';
 import '../../services/cardclass.dart';
 import 'package:apitest_2/services/cardbuilder.dart';
 
@@ -196,9 +194,9 @@ class Article_PageState extends State<Article_Page> with RouteAware {
         size: 50.0,
       );
     }
-    double width = MediaQuery.of(context).size.width - 72;
+    double width = MediaQuery.sizeOf(context).width - 72;
     if (recommended == true) {
-      width = MediaQuery.of(context).size.width - 102;
+      width = MediaQuery.sizeOf(context).width - 102;
     }
     final double height = textconfigure.textHeight(
       width,
@@ -228,7 +226,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
             elevation: 10,
             shadowColor: Colors.black,
             backgroundColor: Color.fromARGB(255, 255, 255, 255),
-            toolbarHeight: height + 50,
+            toolbarHeight: (recommended) ? height + 100 : height + 50,
             actions: [
               if (recommended == true)
                 Padding(
@@ -253,7 +251,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                   softWrap: true,
                   maxLines: null,
                   overflow: TextOverflow.visible,
-                  style: appbartextStyle, // TODO : update appbar
+                  style: appbartextStyle,
                 ),
                 const SizedBox(height: 12),
               ],
@@ -273,15 +271,13 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                       right: true,
                       child: ClipRect(
                         child: CarouselSlider(
-                          // TODO: add dots or somth on bottom of carousel to show number of photos and user position
                           options: CarouselOptions(
                             onPageChanged: (index, reason) {
                               setState(() {
                                 current_image_index = index;
                               });
                             },
-                            viewportFraction:
-                                .80, // TODO: find a way to make this smaller with out causing overflow error
+                            viewportFraction: .80,
                             height: 400,
                             enlargeCenterPage: true,
                             enableInfiniteScroll: true,

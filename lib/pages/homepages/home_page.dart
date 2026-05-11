@@ -14,7 +14,7 @@ class _Home_PageState extends State<Home_Page> {
   Textconfigure textconfigure = Textconfigure();
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width - 72;
+    final width = MediaQuery.sizeOf(context).width - 72;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 158, 175, 206),
       body: NestedScrollView(
@@ -22,14 +22,15 @@ class _Home_PageState extends State<Home_Page> {
           return [
             SliverAppBar(
               forceElevated: true,
+              centerTitle: true,
               elevation: 4.0,
               shadowColor: Colors.black,
-              toolbarHeight: MediaQuery.of(context).size.height / 8,
-              flexibleSpace: Center(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 50, 10, 30),
-                  child: FittedBox(
-                    fit: BoxFit.contain,
+              toolbarHeight: MediaQuery.sizeOf(context).height / 8,
+              flexibleSpace: FlexibleSpaceBar(
+                title: FittedBox(
+                  fit: BoxFit.contain,
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.fromLTRB(10, 10, 10, 30),
                     child: Text(
                       "Welcome to The News!",
                       softWrap: true,
@@ -61,7 +62,7 @@ class _Home_PageState extends State<Home_Page> {
                   },
                   child: Ink(
                     height: 300,
-                    width: MediaQuery.of(context).size.width - 30,
+                    width: MediaQuery.sizeOf(context).width - 30,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage("lib/images/gilmanschool2.png"),
@@ -102,7 +103,7 @@ class _Home_PageState extends State<Home_Page> {
                   },
                   child: Ink(
                     height: 300,
-                    width: MediaQuery.of(context).size.width - 30,
+                    width: MediaQuery.sizeOf(context).width - 30,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage("lib/images/Followed_Authors.jpeg"),

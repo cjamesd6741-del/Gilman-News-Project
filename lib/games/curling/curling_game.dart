@@ -5,7 +5,6 @@ import 'package:flame/game.dart';
 import 'dart:async';
 import 'dart:math';
 import "package:flutter/material.dart";
-import 'package:flutter/services.dart';
 import 'package:apitest_2/games/game_components/curling_components/curlingball.dart';
 import 'package:apitest_2/games/game_components/curling_components/vector_arrow.dart';
 import 'package:apitest_2/games/game_components/curling_components/deadball.dart';
@@ -72,10 +71,14 @@ class CurlingGame extends FlameGame with TapCallbacks, DragCallbacks {
   bool in_animation = false;
   bool arrowbool = false;
   bool playing = false;
-  final int num_of_tries = 5; //5 is a default can change through settings
+  bool vectors = true;
+  bool machine_gun = false;
+  bool update_requested_after_round = false;
+  int num_of_tries = 5; //5 is a default can change through settings
   int tries_remaining =
       0; // this measures actively number of tries left whereas other one sets the number of tries per game
   int score = 0;
+  double launch_constant = .35;
   late TextComponent score_component;
   late TextComponent end_text;
   late TextComponent high_score_text;
@@ -113,6 +116,16 @@ class CurlingGame extends FlameGame with TapCallbacks, DragCallbacks {
       print(drag_startpos);
     }
     super.onDragStart(event);
+  }
+
+  @override
+  void onDragUpdate(DragUpdateEvent event) {
+    if (launching && !in_animation && !paused) {
+      drag_endpos += event.canvasDelta;
+      arrow.offset = drag_endpos;
+      print(drag_endpos);
+    }
+    super.onDragUpdate(event);
   }
 
   @override
@@ -194,16 +207,6 @@ class CurlingGame extends FlameGame with TapCallbacks, DragCallbacks {
   }
 
   @override
-  void onDragUpdate(DragUpdateEvent event) {
-    if (launching && !in_animation && !paused) {
-      drag_endpos += event.canvasDelta;
-      arrow.offset = drag_endpos;
-      print(drag_endpos);
-    }
-    super.onDragUpdate(event);
-  }
-
-  @override
   void onDragEnd(DragEndEvent event) {
     if (launching && !in_animation && arrowbool && !paused) {
       launch(drag_endpos);
@@ -271,7 +274,7 @@ class CurlingGame extends FlameGame with TapCallbacks, DragCallbacks {
   }
 
   void launch(Vector2 offset) {
-    mainball.velocity = -offset * .35;
+    mainball.velocity = -offset * launch_constant;
   }
 
   void onballstop(Vector2 death_position) async {
@@ -313,11 +316,21 @@ class CurlingGame extends FlameGame with TapCallbacks, DragCallbacks {
     } catch (e) {}
   }
 
+  void updatetries(int value) {
+    num_of_tries = value;
+  }
+
+  void resethighscore() {
+    highscorecache.save("curling_highscore", 0);
+    highscore = 0;
+    high_score_text.text = "High Score : ${highscore.toString()}";
+  }
+
   void out_of_tries() async {
     calculate_points();
     if (score > highscore) {
       highscorecache.save("curling_highscore", score);
-      high_score_text.text = "High Score : ${highscore.toString()}";
+      high_score_text.text = "New High Score : ${score.toString()}";
       end_text.text = "High Score!!! Click to Play Again!";
     }
     score_component.add(
@@ -363,7 +376,6 @@ class CurlingGame extends FlameGame with TapCallbacks, DragCallbacks {
     score = 0;
     for (int i = 0; i < deadballs.length; i++) {
       final ball = deadballs[i];
-      final int oldscore = score;
       for (int a = 0; a < targets.length; a++) {
         final target = targets[a];
         double delta = (ball.position - target.position).length2;

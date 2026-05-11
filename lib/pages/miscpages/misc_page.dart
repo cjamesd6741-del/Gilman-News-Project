@@ -14,7 +14,7 @@ class MiscPage extends StatelessWidget {
             SliverAppBar(
               elevation: 10.0,
               backgroundColor: const Color.fromARGB(255, 34, 72, 92),
-              expandedHeight: MediaQuery.of(context).size.height / 8,
+              expandedHeight: MediaQuery.sizeOf(context).height / 8,
               collapsedHeight: 90,
               pinned: true,
               floating: true,
@@ -85,7 +85,7 @@ class MiscPage extends StatelessWidget {
                   },
                   child: Ink(
                     height: 300,
-                    width: MediaQuery.of(context).size.width - 30,
+                    width: MediaQuery.sizeOf(context).width - 30,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage("lib/images/Stats.png"),
@@ -115,7 +115,7 @@ class MiscPage extends StatelessWidget {
                   },
                   child: Ink(
                     height: 300,
-                    width: MediaQuery.of(context).size.width - 30,
+                    width: MediaQuery.sizeOf(context).width - 30,
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage("lib/images/Masthead.jpg"),
@@ -145,7 +145,7 @@ class MiscPage extends StatelessWidget {
                   },
                   child: Ink(
                     height: 300,
-                    width: MediaQuery.of(context).size.width - 30,
+                    width: MediaQuery.sizeOf(context).width - 30,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [

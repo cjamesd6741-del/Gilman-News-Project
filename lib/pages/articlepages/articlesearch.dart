@@ -3,7 +3,6 @@ import 'package:apitest_2/services/cardclass.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:apitest_2/services/globals.dart';
-import 'package:apitest_2/services/cache.dart';
 
 class AllArticleSearch extends SearchDelegate {
   List<ArticleWithReadStatus> articles;

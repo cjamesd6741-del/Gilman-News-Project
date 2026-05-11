@@ -1,7 +1,5 @@
-import 'dart:math';
 import 'package:apitest_2/services/globals.dart';
 import 'package:flutter/material.dart';
-import 'package:apitest_2/games/game_components/randomgame/randomgame.dart';
 import 'package:apitest_2/games/game_components/connectioncomponents/cards.dart';
 import 'package:collection/collection.dart';
 import 'package:apitest_2/games/game_components/connectioncomponents/connectionbanner.dart';
@@ -115,8 +113,8 @@ class _ConnectionsState extends State<Connections> {
     ];
     print(objects);
     objects.shuffle();
-    cardheight = MediaQuery.of(context).size.height / 12;
-    cardwidth = MediaQuery.of(context).size.width / 5;
+    cardheight = MediaQuery.sizeOf(context).height / 12;
+    cardwidth = MediaQuery.sizeOf(context).width / 5;
     mapcards();
   }
 
@@ -164,10 +162,6 @@ class _ConnectionsState extends State<Connections> {
         ) &&
         mounted) {
       setState(() {
-        List<int> selectedpos = selected
-            .map((e) => objects.indexOf(e))
-            .toList();
-
         objects.removeWhere((word) => selected.contains(word));
         objects.insertAll(0, selected);
       });
@@ -333,10 +327,6 @@ class _ConnectionsState extends State<Connections> {
                                           ),
                                         )) {
                                           setState(() {
-                                            List<int> selectedpos = selected
-                                                .map((e) => objects.indexOf(e))
-                                                .toList();
-
                                             objects.removeWhere(
                                               (word) => selected.contains(word),
                                             );

@@ -2,7 +2,6 @@ import 'package:apitest_2/pages/gamespages/connectionloading.dart';
 import 'package:apitest_2/pages/miscpages/about.dart';
 import 'package:apitest_2/pages/miscpages/masthead_page.dart';
 import 'package:apitest_2/pages/miscpages/misc_page.dart';
-import 'package:apitest_2/services/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:apitest_2/pages/articlepages/article_page.dart';
@@ -14,8 +13,6 @@ import 'package:apitest_2/pages/homepages/home_page.dart';
 import 'package:apitest_2/pages/homepages/followed.dart';
 import 'package:apitest_2/pages/gamespages/games.dart';
 import 'package:apitest_2/pages/gamespages/connectiongame.dart';
-import 'package:apitest_2/games/game_components/randomgame/randomgame.dart';
-import 'package:apitest_2/pages/gamespages/connectionsselector.dart';
 import 'package:apitest_2/pages/gamespages/connectionsselector.dart';
 import 'package:apitest_2/games/curling/curling_game.dart';
 

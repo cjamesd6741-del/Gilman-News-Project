@@ -1,11 +1,7 @@
 import "dart:async";
 import "dart:math";
 import "dart:ui";
-import 'package:apitest_2/games/game_components/randomgame/rectangle.dart';
-import "package:apitest_2/services/tree.dart";
-import "package:flame/collisions.dart";
 import "package:flame/components.dart";
-import "package:flame/effects.dart";
 import "package:flutter/material.dart";
 
 class VectorArrow extends PositionComponent {

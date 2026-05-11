@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 class ArticleWithReadStatus {
   final Article article;
   final bool isRead;

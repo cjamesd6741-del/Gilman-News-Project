@@ -102,7 +102,7 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
     readarticles = Set<int>.from(cached);
     debugPrint("called");
     setState(() {
-      width = MediaQuery.of(context).size.width;
+      width = MediaQuery.sizeOf(context).width;
       finalcards = datagenerator();
       readarticles = readarticles;
     });

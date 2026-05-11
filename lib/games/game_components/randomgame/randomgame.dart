@@ -1,16 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:apitest_2/games/game_components/randomgame/ball.dart';
-import 'package:apitest_2/games/game_components/randomgame/first_component.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:flame/flame.dart';
 import 'package:apitest_2/games/game_components/randomgame/rectangle.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flame/experimental.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class RandomGameWidget extends StatefulWidget {
   const RandomGameWidget({super.key});

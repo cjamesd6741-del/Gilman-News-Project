@@ -1,4 +1,3 @@
-import 'package:apitest_2/services/cardclass.dart';
 import 'package:flutter/material.dart';
 import 'package:apitest_2/services/globals.dart';
 

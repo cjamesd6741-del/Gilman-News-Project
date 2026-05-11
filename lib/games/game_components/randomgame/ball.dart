@@ -1,12 +1,8 @@
 import "dart:async";
-import "dart:math";
-import "dart:ui";
-import 'package:apitest_2/games/game_components/randomgame/rectangle.dart';
 import "package:flame/collisions.dart";
 import "package:flame/components.dart";
 import "package:flame/effects.dart";
 import "package:flutter/material.dart";
-import "package:supabase_flutter/supabase_flutter.dart";
 
 class BallComponent extends CircleComponent with CollisionCallbacks {
   BallComponent({required this.number, required super.radius})
@@ -45,11 +41,6 @@ class BallComponent extends CircleComponent with CollisionCallbacks {
 
   void hit() {
     print("hello");
-  }
-
-  @override
-  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    super.onCollisionStart(intersectionPoints, other);
   }
 
   @override

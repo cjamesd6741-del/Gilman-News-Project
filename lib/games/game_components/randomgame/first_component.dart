@@ -1,8 +1,6 @@
 import "dart:async";
 import "dart:math";
-import "dart:ui";
 import 'package:apitest_2/games/game_components/randomgame/rectangle.dart';
-import "package:flame/collisions.dart";
 import "package:flame/components.dart";
 import "package:flutter/material.dart";
 

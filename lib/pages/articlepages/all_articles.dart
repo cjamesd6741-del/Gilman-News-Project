@@ -147,8 +147,8 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
               shadowColor: Colors.black,
               elevation: 4.0,
               backgroundColor: const Color.fromARGB(255, 34, 72, 92),
-              expandedHeight: MediaQuery.of(context).size.height / 8,
-              collapsedHeight: max(80, MediaQuery.of(context).size.height / 12),
+              expandedHeight: MediaQuery.sizeOf(context).height / 8,
+              collapsedHeight: max(80, MediaQuery.sizeOf(context).height / 12),
               pinned: true,
               floating: true,
               flexibleSpace: Stack(

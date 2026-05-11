@@ -1,16 +1,6 @@
-import 'dart:async';
 import 'dart:math';
-import 'package:apitest_2/games/game_components/randomgame/ball.dart';
-import 'package:apitest_2/games/game_components/randomgame/first_component.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flame/components.dart';
-import 'package:flame/events.dart';
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:flame/flame.dart';
-import 'package:apitest_2/games/game_components/randomgame/rectangle.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flame/experimental.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Game extends StatefulWidget {
@@ -36,8 +26,8 @@ class _GameState extends State<Game> {
               ),
               backgroundColor: const Color.fromARGB(255, 8, 53, 90),
               expandedHeight:
-                  MediaQuery.of(context).size.height / 8, //8 is the standard
-              collapsedHeight: max(MediaQuery.of(context).size.height / 12, 60),
+                  MediaQuery.sizeOf(context).height / 8, //8 is the standard
+              collapsedHeight: max(MediaQuery.sizeOf(context).height / 12, 60),
             ),
           ];
         },

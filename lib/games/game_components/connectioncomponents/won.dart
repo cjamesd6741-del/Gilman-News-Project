@@ -1,4 +1,3 @@
-import "package:flame/effects.dart";
 import "package:flutter/material.dart";
 
 class WinBanner extends StatefulWidget {

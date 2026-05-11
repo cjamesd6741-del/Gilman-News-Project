@@ -1,15 +1,7 @@
 import "dart:async";
-import "dart:math";
-import "dart:ui";
-import 'package:apitest_2/games/game_components/randomgame/rectangle.dart';
-import "package:apitest_2/services/tree.dart";
-import "package:flame/collisions.dart";
 import "package:flame/components.dart";
-import "package:flame/effects.dart";
-import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import 'package:google_fonts/google_fonts.dart';
-import "package:supabase_flutter/supabase_flutter.dart";
 
 class Target extends CircleComponent {
   int points;

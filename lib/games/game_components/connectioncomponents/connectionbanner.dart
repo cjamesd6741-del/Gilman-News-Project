@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import 'package:apitest_2/services/globals.dart';
 
 class ConnectionBanner extends StatefulWidget {
   String objects;

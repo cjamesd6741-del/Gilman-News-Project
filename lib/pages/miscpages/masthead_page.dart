@@ -68,7 +68,7 @@ class _MastHead_PageState extends State<MastHead_Page> {
 
   void didChangeDependencies() {
     super.didChangeDependencies();
-    screenwidth = MediaQuery.of(context).size.width - 30;
+    screenwidth = MediaQuery.sizeOf(context).width - 30;
   }
 
   Widget build(BuildContext context) {

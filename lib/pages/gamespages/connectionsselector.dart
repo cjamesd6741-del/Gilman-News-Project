@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../services/cardbuilder.dart';
-import '../../services/cardclass.dart';
 import 'package:apitest_2/services/cache.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
@@ -16,8 +14,6 @@ class Connectionsselector extends StatefulWidget {
 
 class _Connectionsselector extends State<Connectionsselector> {
   CacheManager cacheManager = CacheManager();
-  bool _isRouteVisible = false; // is on current tab?
-  bool _isTabVisible = false; // is on current screen?
   int vnum = 0;
   late Future _future;
 
@@ -68,8 +64,8 @@ class _Connectionsselector extends State<Connectionsselector> {
               shadowColor: Colors.black,
               elevation: 4.0,
               backgroundColor: const Color.fromARGB(255, 140, 139, 139),
-              expandedHeight: MediaQuery.of(context).size.height / 8,
-              collapsedHeight: max(80, MediaQuery.of(context).size.height / 12),
+              expandedHeight: MediaQuery.sizeOf(context).height / 8,
+              collapsedHeight: max(80, MediaQuery.sizeOf(context).height / 12),
               pinned: true,
               floating: true,
               flexibleSpace: Stack(

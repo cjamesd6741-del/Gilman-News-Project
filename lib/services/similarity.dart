@@ -1,5 +1,4 @@
 import 'package:apitest_2/services/stats/articlestorage.dart';
-import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '/services/stats/algorithm.dart';
 import 'package:apitest_2/services/cardclass.dart';
