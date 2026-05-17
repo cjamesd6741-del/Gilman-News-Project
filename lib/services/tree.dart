@@ -40,7 +40,7 @@ class HierarchyTree extends StatelessWidget {
         },
       );
     }
-    return Text("No Data");
+    return SizedBox(); //empty invisible box
   }
 }
 

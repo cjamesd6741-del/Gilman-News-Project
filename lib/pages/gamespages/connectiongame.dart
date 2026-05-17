@@ -1,9 +1,9 @@
-import 'package:apitest_2/services/globals.dart';
+import 'package:The_Gilman_News/services/globals.dart';
 import 'package:flutter/material.dart';
-import 'package:apitest_2/games/game_components/connectioncomponents/cards.dart';
+import 'package:The_Gilman_News/games/game_components/connectioncomponents/cards.dart';
 import 'package:collection/collection.dart';
-import 'package:apitest_2/games/game_components/connectioncomponents/connectionbanner.dart';
-import 'package:apitest_2/games/game_components/connectioncomponents/won.dart';
+import 'package:The_Gilman_News/games/game_components/connectioncomponents/connectionbanner.dart';
+import 'package:The_Gilman_News/games/game_components/connectioncomponents/won.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Connections extends StatefulWidget {
@@ -200,7 +200,6 @@ class _ConnectionsState extends State<Connections> {
             .toList();
       });
       if (bannersguessed.length == 4) {
-        print("hurray");
         setState(() {
           won = true;
         });
@@ -218,7 +217,7 @@ class _ConnectionsState extends State<Connections> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: Text("Welcome to Connections")),
+        appBar: AppBar(title: Text("Welcome to Gilman Connections")),
         body: FutureBuilder(
           future: ready,
           builder: (context, asyncSnapshot) {
@@ -263,7 +262,7 @@ class _ConnectionsState extends State<Connections> {
                                 .toList(),
 
                             if (won == true)
-                              WinBanner(
+                              OutcomeBanner(
                                 leave: leave,
                                 removebanner: () {
                                   setState(() {

@@ -6,11 +6,13 @@ import "package:flutter/material.dart";
 class CurlingBall extends CircleComponent with CollisionCallbacks {
   double cf;
   Function stop;
+  bool draw_vector_paint;
   CurlingBall({
     required super.radius,
     required super.position,
     required this.cf,
     required this.stop,
+    required this.draw_vector_paint,
   }) : super(
          anchor: Anchor.center,
          children: [
@@ -21,6 +23,7 @@ class CurlingBall extends CircleComponent with CollisionCallbacks {
        );
   final Paint paint = Paint()..color = Colors.brown;
   Vector2 velocity = Vector2.zero();
+
   double mass = 50;
   late Card testcard;
   final Paint vectorpaint = Paint()
@@ -50,15 +53,21 @@ class CurlingBall extends CircleComponent with CollisionCallbacks {
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    canvas.save();
-    canvas.translate(radius, radius);
-    canvas.drawLine(Offset(0, 0), Offset(velocity.x, velocity.y), vectorpaint);
-    canvas.drawLine(Offset(0, 0), Offset(velocity.x, 0), vectorpaint);
-    canvas.drawLine(
-      Offset(velocity.x, 0),
-      Offset(velocity.x, velocity.y),
-      vectorpaint,
-    );
-    canvas.restore();
+    if (draw_vector_paint) {
+      canvas.save();
+      canvas.translate(radius, radius);
+      canvas.drawLine(
+        Offset(0, 0),
+        Offset(velocity.x, velocity.y),
+        vectorpaint,
+      );
+      canvas.drawLine(Offset(0, 0), Offset(velocity.x, 0), vectorpaint);
+      canvas.drawLine(
+        Offset(velocity.x, 0),
+        Offset(velocity.x, velocity.y),
+        vectorpaint,
+      );
+      canvas.restore();
+    }
   }
 }

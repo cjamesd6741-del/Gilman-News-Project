@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/services/appbartext.dart';
@@ -30,9 +31,9 @@ class _Home_PageState extends State<Home_Page> {
                 title: FittedBox(
                   fit: BoxFit.contain,
                   child: Padding(
-                    padding: EdgeInsetsGeometry.fromLTRB(10, 10, 10, 30),
-                    child: Text(
-                      "Welcome to The News!",
+                    padding: EdgeInsetsGeometry.fromLTRB(20, 10, 20, 30),
+                    child: AutoSizeText(
+                      "The Gilman News",
                       softWrap: true,
                       maxLines: null,
                       style: GoogleFonts.lora(

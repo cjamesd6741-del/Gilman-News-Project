@@ -19,13 +19,13 @@ class _ConnectionBannerState extends State<ConnectionBanner> {
   Color getbannercolor(String diff) {
     switch (diff) {
       case "Easy":
-        return const Color.fromARGB(255, 157, 154, 194);
+        return const Color.fromARGB(255, 137, 192, 134);
       case "Medium":
-        return const Color.fromARGB(255, 60, 57, 145);
+        return const Color.fromARGB(255, 224, 219, 128);
       case "Hard":
-        return const Color.fromARGB(255, 19, 42, 91);
+        return const Color.fromARGB(255, 228, 167, 105);
       case "Very Hard":
-        return const Color.fromARGB(255, 25, 9, 74);
+        return const Color.fromARGB(255, 228, 52, 52);
       default:
         return Colors.grey;
     }
@@ -65,7 +65,7 @@ class _ConnectionBannerState extends State<ConnectionBanner> {
                   fit: BoxFit.contain,
                   child: Text(
                     widget.objects,
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
                 SizedBox(height: 10),
@@ -75,8 +75,16 @@ class _ConnectionBannerState extends State<ConnectionBanner> {
                     widget.category,
                     style: TextStyle(
                       fontStyle: FontStyle.italic,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                FittedBox(
+                  fit: BoxFit.contain,
+                  child: Text(
+                    widget.difficulty,
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
               ],

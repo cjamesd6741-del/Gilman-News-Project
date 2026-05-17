@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:apitest_2/services/cache.dart';
-import 'package:apitest_2/services/masthead_year_selector.dart';
-import 'package:apitest_2/services/tree.dart';
+import 'package:The_Gilman_News/services/cache.dart';
+import 'package:The_Gilman_News/services/masthead_year_selector.dart';
+import 'package:The_Gilman_News/services/tree.dart';
 
 class MastHead_Page extends StatefulWidget {
   const MastHead_Page({super.key});
@@ -133,11 +133,10 @@ class _MastHead_PageState extends State<MastHead_Page> {
             child: FutureBuilder(
               future: data,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return SpinKitChasingDots(
-                    size: 100,
-                    color: const Color.fromARGB(255, 22, 21, 88),
-                  );
+                if (snapshot.connectionState == ConnectionState.waiting ||
+                    snapshot.data == null ||
+                    snapshot.connectionState == ConnectionState.none) {
+                  return SizedBox(); // ce n'est rien
                 }
                 ;
                 if (snapshot.hasError) {
@@ -145,19 +144,13 @@ class _MastHead_PageState extends State<MastHead_Page> {
                 }
                 ;
                 final useddata = snapshot.data;
-                if (useddata == null) {
-                  return SpinKitChasingDots(
-                    size: 100,
-                    color: const Color.fromARGB(255, 22, 21, 88),
-                  );
-                }
                 Map<dynamic, dynamic>? currentdata;
                 try {
                   currentdata = useddata.firstWhere(
                     (map) => map['year'] == year,
                   );
                 } catch (e) {
-                  print(e.toString());
+                  // throws a bas state no element error, so if thats coming up don't worry, in the words of Todd Howard, "It just works."
                   currentdata = null;
                 }
                 late final staff;
@@ -174,8 +167,7 @@ class _MastHead_PageState extends State<MastHead_Page> {
                 }
                 return Column(
                   children: [
-                    if (maxyear == 0)
-                      const Center(child: CircularProgressIndicator()),
+                    if (maxyear == 0) LoadingWidget(),
                     if (maxyear != 0)
                       YearSelector(
                         year: year.toDouble(),
@@ -199,6 +191,23 @@ class _MastHead_PageState extends State<MastHead_Page> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class LoadingWidget extends StatelessWidget {
+  const LoadingWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+      child: SpinKitSpinningLines(
+        size: 200,
+        lineWidth: 7,
+        itemCount: 7,
+        color: const Color.fromARGB(255, 22, 21, 88),
       ),
     );
   }

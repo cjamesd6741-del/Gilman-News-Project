@@ -5,15 +5,16 @@ import 'package:flame/game.dart';
 import 'dart:async';
 import 'dart:math';
 import "package:flutter/material.dart";
-import 'package:apitest_2/games/game_components/curling_components/curlingball.dart';
-import 'package:apitest_2/games/game_components/curling_components/vector_arrow.dart';
-import 'package:apitest_2/games/game_components/curling_components/deadball.dart';
-import 'package:apitest_2/games/game_components/curling_components/targets.dart';
-import 'package:apitest_2/games/game_components/curling_components/settings.dart';
+import 'package:The_Gilman_News/games/game_components/curling_components/curlingball.dart';
+import 'package:The_Gilman_News/games/game_components/curling_components/vector_arrow.dart';
+import 'package:The_Gilman_News/games/game_components/curling_components/deadball.dart';
+import 'package:The_Gilman_News/games/game_components/curling_components/targets.dart';
+import 'package:The_Gilman_News/games/game_components/curling_components/settings.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:apitest_2/services/cache.dart';
+import 'package:The_Gilman_News/services/cache.dart';
 
 class Curling extends StatefulWidget {
+  // TODO: Fix slight text bug in high score when reset but idc rn to do it
   const Curling({super.key});
 
   @override
@@ -26,7 +27,13 @@ class _CurlingState extends State<Curling> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Curling")),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 215, 228, 211),
+        title: Text(
+          "Curling",
+          style: GoogleFonts.play(fontSize: 30, fontWeight: FontWeight.bold),
+        ),
+      ),
       body: Stack(
         children: [
           GameWidget(
@@ -37,21 +44,36 @@ class _CurlingState extends State<Curling> {
             },
           ),
           Positioned(
-            child: IconButton(
-              onPressed: () {
-                if (game.paused) {
-                  game.closesetting();
-                } else {
-                  game.openSettings();
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 70, 70, 70),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusGeometry.circular(12),
+            child: Row(
+              children: [
+                Text(
+                  game.paused ? "Close Settings" : "",
+                  style: GoogleFonts.lora(fontSize: 20, color: Colors.white),
                 ),
-              ),
-              icon: Icon(Icons.settings, size: 40, color: Colors.white),
+                if (game.paused) SizedBox(width: 10),
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      if (game.paused) {
+                        game.closesetting();
+                      } else {
+                        game.openSettings();
+                      }
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 70, 70, 70),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadiusGeometry.circular(12),
+                    ),
+                  ),
+                  icon: Icon(
+                    game.paused ? Icons.exit_to_app : Icons.settings,
+                    size: 40,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
             right: 20,
             bottom: 10,
@@ -63,6 +85,7 @@ class _CurlingState extends State<Curling> {
 }
 
 class CurlingGame extends FlameGame with TapCallbacks, DragCallbacks {
+  // TODO: implement automatic saving of settings
   @override
   Color backgroundColor() => const Color.fromARGB(255, 1, 124, 181);
   Vector2 drag_startpos = Vector2.zero();
@@ -71,8 +94,7 @@ class CurlingGame extends FlameGame with TapCallbacks, DragCallbacks {
   bool in_animation = false;
   bool arrowbool = false;
   bool playing = false;
-  bool vectors = true;
-  bool machine_gun = false;
+  bool vectors = false;
   bool update_requested_after_round = false;
   int num_of_tries = 5; //5 is a default can change through settings
   int tries_remaining =
@@ -90,14 +112,14 @@ class CurlingGame extends FlameGame with TapCallbacks, DragCallbacks {
   List<Target> targets = [];
   List<double> radiuses = [130, 85, 40];
   List<Paint> target_paints = [
-    Paint()..color = const Color.fromARGB(255, 90, 134, 156),
+    Paint()..color = const Color.fromARGB(255, 98, 150, 176),
     Paint()..color = const Color.fromARGB(255, 75, 84, 144),
     Paint()..color = const Color.fromARGB(255, 25, 18, 87),
   ];
   late CurlingBall mainball = CurlingBall(
     radius: 15,
     position: Vector2(size.x / 2, size.y / 1.3),
-
+    draw_vector_paint: vectors,
     cf: cf,
     stop: onballstop,
   );
@@ -284,6 +306,7 @@ class CurlingGame extends FlameGame with TapCallbacks, DragCallbacks {
       radius: 15,
       mass: 20,
       cf: cf,
+      draw_vector_paint: vectors,
     );
     newdeadball.position = mainball.position;
     deadballs.add(newdeadball);
@@ -326,6 +349,14 @@ class CurlingGame extends FlameGame with TapCallbacks, DragCallbacks {
     high_score_text.text = "High Score : ${highscore.toString()}";
   }
 
+  void update_vector_drawing() {
+    vectors = !vectors;
+    for (Deadball d in deadballs) {
+      d.draw_vector_paint = vectors;
+    }
+    mainball.draw_vector_paint = vectors;
+  }
+
   void out_of_tries() async {
     calculate_points();
     if (score > highscore) {
@@ -355,10 +386,11 @@ class CurlingGame extends FlameGame with TapCallbacks, DragCallbacks {
       ScaleEffect.to(
         Vector2(1.5, 1.5),
         EffectController(duration: 2, curve: Curves.easeIn),
+        onComplete: () {
+          add(end_text);
+        },
       ),
     );
-    await Future.delayed(Duration(seconds: 2));
-    add(end_text);
     remove_all();
     playing = false;
     launching = true;

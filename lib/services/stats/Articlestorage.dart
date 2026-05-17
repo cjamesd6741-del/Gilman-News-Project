@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import '/services/stats/storage.dart';
-import 'package:apitest_2/services/globals.dart';
+import 'package:The_Gilman_News/services/globals.dart';
 
 class Storedata {
   // handles all interactions with files

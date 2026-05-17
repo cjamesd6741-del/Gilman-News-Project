@@ -1,11 +1,11 @@
-import 'package:apitest_2/services/cache.dart';
+import 'package:The_Gilman_News/services/cache.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../services/cardbuilder.dart';
 import '../../services/cardclass.dart';
 import 'articlesearch.dart';
-import 'package:apitest_2/services/globals.dart';
+import 'package:The_Gilman_News/services/globals.dart';
 import 'package:dice_icons/dice_icons.dart';
 import 'dart:math';
 
@@ -179,7 +179,7 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                               AnimatedDefaultTextStyle(
                                 duration: const Duration(milliseconds: 100),
                                 style: GoogleFonts.libreCaslonText(
-                                  fontSize: 24,
+                                  fontSize: 30,
                                   fontWeight: FontWeight.bold,
                                   color: innerBoxIsScrolled
                                       ? Colors.white
@@ -195,9 +195,9 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                                 duration: const Duration(milliseconds: 100),
                                 style: GoogleFonts.libreCaslonText(
                                   fontSize: 24,
-                                  fontWeight: FontWeight.bold,
+                                  fontStyle: FontStyle.italic,
                                   color: innerBoxIsScrolled
-                                      ? Colors.white
+                                      ? Color.fromARGB(255, 255, 255, 255)
                                       : Color.fromARGB(255, 26, 56, 72),
                                 ),
                                 child: FittedBox(
@@ -246,6 +246,10 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                 isRead: readarticles.contains(article.Article_ID),
               );
             }).toList();
+
+            processedArticles.sort(
+              (b, a) => a.article.edition_num.compareTo(b.article.edition_num),
+            ); //organized by date
 
             return ListView.builder(
               // called instrument because I originally used tutorial to build this page

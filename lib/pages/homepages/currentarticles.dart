@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../services/cardbuilder.dart';
 import '../../services/cardclass.dart';
-import 'package:apitest_2/services/cache.dart';
+import 'package:The_Gilman_News/services/cache.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CurrentArticles extends StatefulWidget {
   final int tab_index;
@@ -156,24 +157,24 @@ class CurrentArticlesState extends State<CurrentArticles> with RouteAware {
                           : Colors.transparent,
                       child: SafeArea(
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
+                          padding: const EdgeInsets.only(bottom: 5),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
-                            children: const [
+                            children: [
                               Text(
                                 'Gilman News',
-                                style: TextStyle(
-                                  fontSize: 26,
+                                style: GoogleFonts.libreCaslonText(
+                                  fontSize: 30,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
                                 'Current Articles',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white70,
+                                style: GoogleFonts.libreCaslonText(
+                                  fontSize: 24,
+                                  fontStyle: FontStyle.italic,
+                                  color: Color.fromARGB(255, 255, 255, 255),
                                 ),
                               ),
                             ],

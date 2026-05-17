@@ -1,6 +1,6 @@
-import 'package:apitest_2/services/cardclass.dart';
+import 'package:The_Gilman_News/services/cardclass.dart';
 import 'package:flutter/material.dart';
-import 'package:apitest_2/services/globals.dart';
+import 'package:The_Gilman_News/services/globals.dart';
 
 class Cardbuild extends StatelessWidget {
   final ArticleWithReadStatus article;

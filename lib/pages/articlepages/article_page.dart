@@ -1,6 +1,6 @@
 import 'dart:collection';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:apitest_2/services/following_system.dart';
+import 'package:The_Gilman_News/services/following_system.dart';
 import '/services/similarity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -8,9 +8,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import '/services/stats/Articlestorage.dart';
 import '/services/appbartext.dart';
 import '/services/back_from_rec.dart';
-import 'package:apitest_2/services/cache.dart';
+import 'package:The_Gilman_News/services/cache.dart';
 import '../../services/cardclass.dart';
-import 'package:apitest_2/services/cardbuilder.dart';
+import 'package:The_Gilman_News/services/cardbuilder.dart';
 
 class Article_Page extends StatefulWidget {
   // shows the actual article
@@ -36,6 +36,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
     fontSize: 18,
     height: 1.2,
     color: Color.fromARGB(255, 25, 38, 56),
+    fontWeight: FontWeight.bold,
   );
   bool firstbuild = true;
   List categories = [];
@@ -511,11 +512,6 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                           ),
                       ],
                     ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Authors:',
-                    style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
-                  ),
                   const SizedBox(height: 16),
                   FutureBuilder(
                     future: followed_authors,
@@ -567,19 +563,23 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                     data['date'],
                     style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: (data['words'] as List<dynamic>).map<Widget>((
-                      word,
-                    ) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 12.0),
-                        child: Text(
-                          '       ${word.toString()}',
-                          style: GoogleFonts.lora(fontSize: 19, height: 1.5),
-                        ),
-                      );
-                    }).toList(),
+                  SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: (data['words'] as List<dynamic>).map<Widget>((
+                        word,
+                      ) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: Text(
+                            '       ${word.toString()}',
+                            style: GoogleFonts.lora(fontSize: 19, height: 1.5),
+                          ),
+                        );
+                      }).toList(),
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Text(

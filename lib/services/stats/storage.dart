@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:apitest_2/services/cache.dart';
+import 'package:The_Gilman_News/services/cache.dart';
 
 class Storage {
   // writes and reads files

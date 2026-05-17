@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../services/jsongenerator.dart';
-import 'package:apitest_2/services/globals.dart';
+import 'package:The_Gilman_News/services/globals.dart';
 
 class Loading extends StatefulWidget {
   const Loading({super.key});

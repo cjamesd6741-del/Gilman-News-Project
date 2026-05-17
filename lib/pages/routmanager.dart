@@ -1,20 +1,21 @@
-import 'package:apitest_2/pages/gamespages/connectionloading.dart';
-import 'package:apitest_2/pages/miscpages/about.dart';
-import 'package:apitest_2/pages/miscpages/masthead_page.dart';
-import 'package:apitest_2/pages/miscpages/misc_page.dart';
+import 'package:The_Gilman_News/pages/gamespages/connectionloading.dart';
+import 'package:The_Gilman_News/pages/miscpages/about.dart';
+import 'package:The_Gilman_News/pages/miscpages/masthead_page.dart';
+import 'package:The_Gilman_News/pages/miscpages/misc_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:apitest_2/pages/articlepages/article_page.dart';
-import 'package:apitest_2/pages/articlepages/loading.dart';
-import 'package:apitest_2/pages/articlepages/all_articles.dart';
-import 'package:apitest_2/pages/homepages/currentarticles.dart';
-import 'package:apitest_2/pages/miscpages/stats.dart';
-import 'package:apitest_2/pages/homepages/home_page.dart';
-import 'package:apitest_2/pages/homepages/followed.dart';
-import 'package:apitest_2/pages/gamespages/games.dart';
-import 'package:apitest_2/pages/gamespages/connectiongame.dart';
-import 'package:apitest_2/pages/gamespages/connectionsselector.dart';
-import 'package:apitest_2/games/curling/curling_game.dart';
+import 'package:The_Gilman_News/pages/articlepages/article_page.dart';
+import 'package:The_Gilman_News/pages/articlepages/loading.dart';
+import 'package:The_Gilman_News/pages/articlepages/all_articles.dart';
+import 'package:The_Gilman_News/pages/homepages/currentarticles.dart';
+import 'package:The_Gilman_News/pages/miscpages/stats.dart';
+import 'package:The_Gilman_News/pages/homepages/home_page.dart';
+import 'package:The_Gilman_News/pages/homepages/followed.dart';
+import 'package:The_Gilman_News/pages/gamespages/games.dart';
+import 'package:The_Gilman_News/pages/gamespages/connectiongame.dart';
+import 'package:The_Gilman_News/pages/gamespages/connectionsselector.dart';
+import 'package:The_Gilman_News/games/curling/curling_game.dart';
+import 'package:The_Gilman_News/pages/miscpages/credits.dart'; // 6 or 7 imports
 
 class Route_Manager extends StatefulWidget {
   const Route_Manager({super.key});
@@ -178,6 +179,8 @@ class _Route_ManagerState extends State<Route_Manager> {
         return MaterialPageRoute(builder: (_) => AboutPage());
       case '/masthead':
         return MaterialPageRoute(builder: (_) => MastHead_Page());
+      case '/credits':
+        return MaterialPageRoute(builder: (_) => CreditsPage());
       default:
         throw Exception('Invalid route: ${settings.name}');
     }

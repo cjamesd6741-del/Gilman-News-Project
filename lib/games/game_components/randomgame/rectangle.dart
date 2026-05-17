@@ -3,9 +3,10 @@ import "package:flame/collisions.dart";
 import "package:flame/components.dart";
 import "package:flame/effects.dart";
 import "package:flutter/material.dart";
-import 'package:apitest_2/games/game_components/randomgame/randomgame.dart';
-import 'package:apitest_2/games/game_components/randomgame/ball.dart';
+import 'package:The_Gilman_News/games/game_components/randomgame/randomgame.dart';
+import 'package:The_Gilman_News/games/game_components/randomgame/ball.dart';
 
+// Unecessary but might add this game later so keeping it for now
 class SecondRectangle extends RectangleComponent
     with CollisionCallbacks, HasGameReference<RandomGame> {
   SecondRectangle({required super.size, required super.position, super.angle})

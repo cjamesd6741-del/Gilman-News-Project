@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:apitest_2/services/cache.dart';
+import 'package:The_Gilman_News/services/cache.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:apitest_2/games/game_components/connectioncomponents/connection_selector.dart';
+import 'package:The_Gilman_News/games/game_components/connectioncomponents/connection_selector.dart';
 
 class Connectionsselector extends StatefulWidget {
   const Connectionsselector({super.key});
@@ -44,7 +44,7 @@ class _Connectionsselector extends State<Connectionsselector> {
   Future<List> getdata(int vnum) async {
     var data = await Supabase.instance.client
         .from('Connections')
-        .select('id, Date');
+        .select('id, Date, edition_num');
     print(data);
     cacheManager.save('connection_version', vnum);
     cacheManager.save('connection_data', data);
@@ -128,7 +128,10 @@ class _Connectionsselector extends State<Connectionsselector> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SpinKitCubeGrid(size: 50, color: Colors.blueAccent),
+                    SpinKitCircle(
+                      size: 75,
+                      color: const Color.fromARGB(255, 23, 56, 113),
+                    ),
                   ],
                 ),
               );
@@ -136,13 +139,26 @@ class _Connectionsselector extends State<Connectionsselector> {
               var data = snapshot.data as List;
               print(data);
               List<ConnectionSelector> card_data = data
-                  .map((e) => ConnectionSelector(date: e["Date"], id: e["id"]))
+                  .map(
+                    (e) => ConnectionSelector(
+                      date: e["Date"],
+                      id: e["id"],
+                      edition_num: e['edition_num'],
+                    ),
+                  )
                   .toList();
+              card_data.sort(
+                (b, a) => a.edition_num.compareTo(b.edition_num),
+              ); // newest to oldest
               return ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 itemCount: card_data.length,
                 itemBuilder: (context, index) {
-                  return ConnectionSelectorCard(
-                    connectioninfo: card_data[index],
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: ConnectionSelectorCard(
+                      connectioninfo: card_data[index],
+                    ),
                   );
                 },
               );

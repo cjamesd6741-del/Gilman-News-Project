@@ -1,8 +1,8 @@
-import 'package:apitest_2/services/cardbuilder.dart';
-import 'package:apitest_2/services/cardclass.dart';
+import 'package:The_Gilman_News/services/cardbuilder.dart';
+import 'package:The_Gilman_News/services/cardclass.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:apitest_2/services/globals.dart';
+import 'package:The_Gilman_News/services/globals.dart';
 
 class AllArticleSearch extends SearchDelegate {
   List<ArticleWithReadStatus> articles;
@@ -46,7 +46,8 @@ class AllArticleSearch extends SearchDelegate {
     return [
       IconButton(
         onPressed: () {
-          query = '';
+          _debouncedQueryNotifier.value = ''; // resets actual search
+          query = ''; // resets the visual display
         },
         icon: Icon(Icons.clear),
       ),
@@ -84,7 +85,7 @@ class AllArticleSearch extends SearchDelegate {
             .toList();
 
         matches.sort((a, b) {
-          return b.article.Date.compareTo(a.article.Date);
+          return b.article.edition_num.compareTo(a.article.edition_num);
         });
 
         return ListView.builder(
@@ -129,7 +130,7 @@ class AllArticleSearch extends SearchDelegate {
             .toList();
 
         matches.sort((a, b) {
-          return b.article.Date.compareTo(a.article.Date);
+          return b.article.edition_num.compareTo(a.article.edition_num);
         });
 
         return ListView.builder(

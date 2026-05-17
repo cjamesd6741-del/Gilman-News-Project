@@ -6,11 +6,13 @@ import "package:flutter/material.dart";
 class Deadball extends CircleComponent {
   double mass;
   double cf;
+  bool draw_vector_paint;
   Deadball({
     required super.position,
     required super.radius,
     required this.mass,
     required this.cf,
+    required this.draw_vector_paint,
   }) : super(anchor: Anchor.center);
 
   Vector2 velocity = Vector2.zero();
@@ -40,15 +42,21 @@ class Deadball extends CircleComponent {
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    canvas.save();
-    canvas.translate(radius, radius);
-    canvas.drawLine(Offset(0, 0), Offset(velocity.x, velocity.y), vector_paint);
-    canvas.drawLine(Offset(0, 0), Offset(velocity.x, 0), vector_paint);
-    canvas.drawLine(
-      Offset(velocity.x, 0),
-      Offset(velocity.x, velocity.y),
-      vector_paint,
-    );
-    canvas.restore();
+    if (draw_vector_paint) {
+      canvas.save();
+      canvas.translate(radius, radius);
+      canvas.drawLine(
+        Offset(0, 0),
+        Offset(velocity.x, velocity.y),
+        vector_paint,
+      );
+      canvas.drawLine(Offset(0, 0), Offset(velocity.x, 0), vector_paint);
+      canvas.drawLine(
+        Offset(velocity.x, 0),
+        Offset(velocity.x, velocity.y),
+        vector_paint,
+      );
+      canvas.restore();
+    }
   }
 }

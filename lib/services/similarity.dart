@@ -1,7 +1,7 @@
-import 'package:apitest_2/services/stats/articlestorage.dart';
+import 'package:The_Gilman_News/services/stats/articlestorage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '/services/stats/algorithm.dart';
-import 'package:apitest_2/services/cardclass.dart';
+import 'package:The_Gilman_News/services/cardclass.dart';
 
 class Similarity_Finder {
   Topthree topthree = Topthree();

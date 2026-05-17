@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:apitest_2/services/stats/Articlestorage.dart';
+import 'package:The_Gilman_News/services/stats/Articlestorage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:apitest_2/services/cardclass.dart';
-import 'package:apitest_2/services/cardbuilder.dart';
+import 'package:The_Gilman_News/services/cardclass.dart';
+import 'package:The_Gilman_News/services/cardbuilder.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:apitest_2/services/cache.dart';
-import 'package:apitest_2/services/globals.dart';
+import 'package:The_Gilman_News/services/cache.dart';
+import 'package:The_Gilman_News/services/globals.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Followed_Page extends StatefulWidget {
   final int tab_index;
@@ -194,24 +195,18 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
                         : Colors.transparent,
                     child: SafeArea(
                       child: Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Text(
-                              'Followed Author',
-                              style: TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              'Articles',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white70,
+                          children: [
+                            FittedBox(
+                              child: Text(
+                                'Articles By Your Authors You Follow',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromRGBO(255, 255, 255, 1),
+                                ),
                               ),
                             ),
                           ],

@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import 'package:apitest_2/services/globals.dart';
+import 'package:The_Gilman_News/services/globals.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class ConnectionCard extends StatefulWidget {

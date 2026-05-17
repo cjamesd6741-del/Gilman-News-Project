@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:apitest_2/services/stats/Articlestorage.dart';
+import 'package:The_Gilman_News/services/stats/Articlestorage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Follow_Card extends StatelessWidget {

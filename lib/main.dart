@@ -1,9 +1,10 @@
-import 'package:apitest_2/pages/splash.dart';
+import 'package:The_Gilman_News/pages/splash.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'pages/routmanager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:apitest_2/services/cache.dart';
+import 'package:The_Gilman_News/services/cache.dart';
 
 // TODO : Explain Why
 Future<void> main() async {
@@ -17,6 +18,7 @@ Future<void> main() async {
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iemFidmpwbHVmbmNqeWlycmhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgzNTI3MzIsImV4cCI6MjA4MzkyODczMn0.TUpNCVq7GqA2lpKjs7r24093jDjD5MUeyK8oQYeDEls',
   );
+
   runApp(
     MaterialApp(initialRoute: '/', routes: {'/': (context) => SplashScreen()}),
   );

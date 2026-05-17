@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:apitest_2/games/game_components/randomgame/ball.dart';
+import 'package:The_Gilman_News/games/game_components/randomgame/ball.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:apitest_2/games/game_components/randomgame/rectangle.dart';
+import 'package:The_Gilman_News/games/game_components/randomgame/rectangle.dart';
 import 'package:flame/experimental.dart';
 
 class RandomGameWidget extends StatefulWidget {

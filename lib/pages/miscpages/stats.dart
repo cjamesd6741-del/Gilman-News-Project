@@ -1,8 +1,8 @@
-import 'package:apitest_2/services/followed_author_widget.dart';
+import 'package:The_Gilman_News/services/followed_author_widget.dart';
 import 'package:flutter/material.dart';
 import '../../services/stats/articlestorage.dart';
 import '/services/stats/algorithm.dart';
-import 'package:apitest_2/services/routes.dart';
+import 'package:The_Gilman_News/services/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Stats extends StatefulWidget {

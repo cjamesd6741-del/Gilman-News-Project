@@ -35,7 +35,7 @@ class MiscPage extends StatelessWidget {
                       width: double.infinity,
                       height: double.infinity,
                       color: innerBoxIsScrolled
-                          ? const Color.fromARGB(255, 34, 72, 92)
+                          ? const Color.fromARGB(255, 8, 53, 90)
                           : Colors.transparent,
                       child: SafeArea(
                         child: Padding(
@@ -159,6 +159,40 @@ class MiscPage extends StatelessWidget {
                     child: Center(
                       child: Text(
                         "About",
+                        style: GoogleFonts.lora(
+                          fontSize: 50,
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              Material(
+                borderRadius: BorderRadius.circular(16),
+                clipBehavior: Clip.hardEdge,
+                elevation: 4,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/credits');
+                  },
+                  child: Ink(
+                    height: 300,
+                    width: MediaQuery.sizeOf(context).width - 30,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color.fromARGB(255, 118, 119, 120),
+                          Color.fromARGB(255, 78, 77, 77),
+                        ],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Licenses",
                         style: GoogleFonts.lora(
                           fontSize: 50,
                           color: Color.fromARGB(255, 255, 255, 255),
