@@ -57,37 +57,40 @@ class _ConnectionBannerState extends State<ConnectionBanner> {
           ),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 10),
-                FittedBox(
-                  fit: BoxFit.contain,
-                  child: Text(
-                    widget.objects,
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-                SizedBox(height: 10),
-                FittedBox(
-                  fit: BoxFit.contain,
-                  child: Text(
-                    widget.category,
-                    style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.black,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 10),
+                  FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      widget.objects,
+                      style: TextStyle(color: Colors.black),
                     ),
                   ),
-                ),
-                SizedBox(height: 10),
-                FittedBox(
-                  fit: BoxFit.contain,
-                  child: Text(
-                    widget.difficulty,
-                    style: TextStyle(color: Colors.black),
+                  SizedBox(height: 10),
+                  FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      widget.category,
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(height: 10),
+                  FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      widget.difficulty,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

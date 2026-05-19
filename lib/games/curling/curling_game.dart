@@ -104,6 +104,7 @@ class CurlingGame extends FlameGame with TapCallbacks, DragCallbacks {
   late TextComponent score_component;
   late TextComponent end_text;
   late TextComponent high_score_text;
+  late TextComponent start_text;
   CacheManager highscorecache = CacheManager();
   late int highscore;
   double cf = .3;
@@ -164,6 +165,9 @@ class CurlingGame extends FlameGame with TapCallbacks, DragCallbacks {
     tries_remaining = num_of_tries;
     try {
       remove(score_component);
+    } catch (e) {}
+    try {
+      remove(start_text);
     } catch (e) {}
     try {
       remove(end_text);
@@ -422,6 +426,16 @@ class CurlingGame extends FlameGame with TapCallbacks, DragCallbacks {
 
   @override
   FutureOr<void> onLoad() {
+    add(
+      start_text = TextComponent(
+        text: "Tap To Start",
+        anchor: Anchor.center,
+        position: Vector2(size.x / 2, size.y / 2),
+        textRenderer: TextPaint(
+          style: GoogleFonts.play(fontSize: 40, color: Colors.white),
+        ),
+      ),
+    );
     end_text = TextComponent(
       anchor: Anchor.center,
       text: "Game Over, Tap to start again",
