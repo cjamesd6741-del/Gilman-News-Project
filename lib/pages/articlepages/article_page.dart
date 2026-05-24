@@ -293,7 +293,7 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                                 });
                               },
                               url: url,
-                              label: labels![index],
+                              label: labels?[index],
                             );
                           },
                         ),

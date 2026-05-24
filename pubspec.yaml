@@ -47,6 +47,7 @@ dependencies:
   dice_icons: ^0.1.7
   flame: ^1.37.0
   auto_size_text: ^3.0.0
+  notificationapi_flutter_sdk: ^2.2.0
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +80,9 @@ flutter_launcher_icons:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+
+  dependency_overrides:
+    objective_c: 9.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
