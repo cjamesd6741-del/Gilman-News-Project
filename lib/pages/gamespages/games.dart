@@ -24,10 +24,20 @@ class _GameState extends State<Game> {
                 "Games",
                 style: GoogleFonts.lora(fontSize: 40, color: Colors.white),
               ),
-              backgroundColor: const Color.fromARGB(255, 8, 53, 90),
+              backgroundColor: const Color.fromARGB(255, 30, 85, 131),
+              elevation: 5,
+              forceElevated: true,
+              shadowColor: Colors.black,
               expandedHeight:
                   MediaQuery.sizeOf(context).height / 8, //8 is the standard
               collapsedHeight: max(MediaQuery.sizeOf(context).height / 12, 60),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(3),
+                child: Container(
+                  color: const Color.fromARGB(255, 31, 30, 46),
+                  height: 3,
+                ),
+              ),
             ),
           ];
         },
@@ -61,6 +71,7 @@ class _GameState extends State<Game> {
                       child: AutoSizeText(
                         textAlign: TextAlign.center,
                         "Gilman Connections",
+                        wrapWords: true,
                         style: GoogleFonts.lora(
                           fontSize: 50,
                           color: Color.fromARGB(255, 255, 255, 255),
@@ -93,11 +104,14 @@ class _GameState extends State<Game> {
                       ),
                     ),
                     child: Center(
-                      child: Text(
-                        "Curling",
-                        style: GoogleFonts.lora(
-                          fontSize: 50,
-                          color: Color.fromARGB(255, 196, 216, 234),
+                      child: Padding(
+                        padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
+                        child: AutoSizeText(
+                          "Curling",
+                          style: GoogleFonts.lora(
+                            fontSize: 50,
+                            color: Color.fromARGB(255, 196, 216, 234),
+                          ),
                         ),
                       ),
                     ),

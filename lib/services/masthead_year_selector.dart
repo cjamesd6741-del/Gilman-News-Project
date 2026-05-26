@@ -25,6 +25,7 @@ class _YearSelectorState extends State<YearSelector> {
         SizedBox(height: 30),
         Center(
           child: Text(
+            textAlign: TextAlign.center,
             "Viewing : ${currentyear.toInt().toString()}",
             style: GoogleFonts.lora(fontSize: 30, fontWeight: FontWeight.bold),
           ),

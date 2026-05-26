@@ -88,62 +88,68 @@ class _OutcomeBannerState extends State<OutcomeBanner> {
           ),
           actionsAlignment: MainAxisAlignment.center,
           actions: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    widget.leave();
-                  },
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: widget.outcome
-                        ? const Color.fromARGB(255, 70, 89, 200)
-                        : Colors.white,
-                    size: 30,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      widget.leave();
+                    },
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: widget.outcome
+                          ? const Color.fromARGB(255, 70, 89, 200)
+                          : Colors.white,
+                      size: 30,
+                    ),
+                    alignment: Alignment.center,
                   ),
-                  alignment: Alignment.center,
-                ),
-                Text(
-                  "Leave Game",
-                  style: GoogleFonts.lora(
-                    fontSize: 15,
-                    color: widget.outcome
-                        ? const Color.fromARGB(255, 70, 89, 200)
-                        : Colors.white,
+                  Text(
+                    "Leave Game",
+                    style: GoogleFonts.lora(
+                      fontSize: 15,
+                      color: widget.outcome
+                          ? const Color.fromARGB(255, 70, 89, 200)
+                          : Colors.white,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             SizedBox(width: 20),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    widget.removebanner();
-                  },
-                  icon: Icon(
-                    Icons.close,
-                    color: widget.outcome
-                        ? const Color.fromARGB(255, 70, 89, 200)
-                        : Colors.white,
-                    size: 30,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      widget.removebanner();
+                    },
+                    icon: Icon(
+                      Icons.close,
+                      color: widget.outcome
+                          ? const Color.fromARGB(255, 70, 89, 200)
+                          : Colors.white,
+                      size: 30,
+                    ),
+                    alignment: Alignment.center,
                   ),
-                  alignment: Alignment.center,
-                ),
-                Text(
-                  "Close Popup",
-                  style: GoogleFonts.lora(
-                    fontSize: 15,
-                    color: widget.outcome
-                        ? const Color.fromARGB(255, 70, 89, 200)
-                        : Colors.white,
+                  Text(
+                    "Close Popup",
+                    style: GoogleFonts.lora(
+                      fontSize: 15,
+                      color: widget.outcome
+                          ? const Color.fromARGB(255, 70, 89, 200)
+                          : Colors.white,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

@@ -1,4 +1,6 @@
 import 'dart:collection';
+import 'dart:math';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:The_Gilman_News/services/following_system.dart';
 import '/services/similarity.dart';
@@ -62,6 +64,8 @@ class Article_PageState extends State<Article_Page> with RouteAware {
       TransformationController();
   bool _isZoomed = false;
   late dynamic args;
+  late double width;
+  late double height;
 
   @override
   initState() {
@@ -116,6 +120,15 @@ class Article_PageState extends State<Article_Page> with RouteAware {
       }
       _initialized = true; // ensures only called once per lifecycle
     }
+    width = MediaQuery.sizeOf(context).width - 72;
+    if (recommended == true) {
+      width = MediaQuery.sizeOf(context).width - 102;
+    }
+    height = textconfigure.textHeight(
+      width,
+      data['title'] ?? 'Article',
+      appbartextStyle,
+    );
   }
 
   @override // all are checks to see if visibility changes
@@ -187,23 +200,13 @@ class Article_PageState extends State<Article_Page> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    if (args != null && args is Map) {
-      data = args;
-    } else {
+    if (args == null) {
       return SpinKitCircle(
         color: const Color.fromARGB(255, 23, 69, 107),
         size: 50.0,
       );
     }
-    double width = MediaQuery.sizeOf(context).width - 72;
-    if (recommended == true) {
-      width = MediaQuery.sizeOf(context).width - 102;
-    }
-    final double height = textconfigure.textHeight(
-      width,
-      data['title'] ?? 'Article',
-      appbartextStyle,
-    );
+
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
@@ -211,405 +214,450 @@ class Article_PageState extends State<Article_Page> with RouteAware {
           onLeave();
         }
       },
-      child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 218, 222, 226),
-        // actual layout
-        appBar: AppBar(
-          elevation: 10,
-          shadowColor: Colors.black,
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
-          toolbarHeight: (recommended) ? height + 100 : height + 50,
-          actions: [
-            if (recommended == true)
-              Padding(
-                padding: EdgeInsetsGeometry.fromLTRB(10, 0, 10, 0),
-                child: RecommendCard(
-                  // previous sreen button
-                  back_from_rec: Back_From_Rec(
-                    author: prevauthor,
-                    title: prevtitle,
-                    ID: previd,
-                  ),
-                  onleave: onLeave,
-                ),
+      child: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: MediaQuery.of(
+                  context,
+                ).textScaler.clamp(maxScaleFactor: 1.2),
               ),
-          ],
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 10),
-              Text(
-                data['title'] ?? 'Article',
-                softWrap: true,
-                maxLines: null,
-                overflow: TextOverflow.visible,
-                style: appbartextStyle,
-              ),
-              const SizedBox(height: 12),
-            ],
-          ),
-        ),
-        body: SingleChildScrollView(
-          physics: _isZoomed
-              ? const NeverScrollableScrollPhysics()
-              : const BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(10.0, 16.0, 10.0, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
-                if (data['image_urls'] != null &&
-                    (data['image_urls'] as List).length > 1)
-                  SafeArea(
-                    left: true,
-                    right: true,
-                    child: ClipRect(
-                      child: CarouselSlider(
-                        options: CarouselOptions(
-                          scrollPhysics: _isZoomed
-                              ? const NeverScrollableScrollPhysics()
-                              : const BouncingScrollPhysics(),
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              current_image_index = index;
-                            });
-                          },
-                          viewportFraction: .80,
-                          height: 400,
-                          enlargeCenterPage: true,
-                          enableInfiniteScroll: true,
-                          autoPlay: false,
+              child: SliverAppBar(
+                elevation: 10,
+                forceElevated: true,
+                snap: true,
+                floating: true,
+                shadowColor: Colors.black,
+                backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                toolbarHeight: (recommended) ? height + 100 : height + 50,
+                actions: [
+                  if (recommended == true)
+                    Padding(
+                      padding: EdgeInsetsGeometry.fromLTRB(10, 0, 10, 0),
+                      child: RecommendCard(
+                        // previous sreen button
+                        back_from_rec: Back_From_Rec(
+                          author: prevauthor,
+                          title: prevtitle,
+                          ID: previd,
                         ),
-                        items: List.generate(
-                          (data['image_urls'] as List).length,
-                          (index) {
-                            final url = data['image_urls'][index];
-                            final labels = data['image_labels'] as List?;
-                            return CarouselImage(
-                              zoom_update: (bool _zoomed) {
-                                setState(() {
-                                  _isZoomed = _zoomed;
-                                });
-                              },
-                              url: url,
-                              label: labels?[index],
-                            );
-                          },
-                        ),
+                        onleave: onLeave,
                       ),
                     ),
-                  ), // if there are multiple images, show a carousel
-                if (data['image_urls'] != null &&
-                    (data['image_urls'] as List).length == 1) // one image
-                  InteractiveViewer(
-                    minScale: 1,
-                    maxScale: 3,
-                    child: SelectionArea(
-                      child: InteractiveViewer(
-                        minScale: 1,
-                        maxScale: 4,
-                        transformationController: _transformationController,
-                        onInteractionUpdate: (details) {
-                          final double scale = _transformationController.value
-                              .getMaxScaleOnAxis();
+                ],
+                title: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 10),
+                    Text(
+                      data['title'] ?? 'Article',
+                      softWrap: true,
+                      maxLines: null,
+                      overflow: TextOverflow.visible,
+                      style: appbartextStyle,
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                ),
+              ),
+            ),
+          ];
+        },
+        body: MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: MediaQuery.of(
+              context,
+            ).textScaler.clamp(maxScaleFactor: 3),
+          ),
+          child: Scaffold(
+            backgroundColor: const Color.fromARGB(255, 218, 222, 226),
+            // actual layout
+            body: SingleChildScrollView(
+              physics: _isZoomed
+                  ? const NeverScrollableScrollPhysics()
+                  : const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 16.0, 10.0, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 16),
+                    if (data['image_urls'] != null &&
+                        (data['image_urls'] as List).length > 1)
+                      SafeArea(
+                        left: true,
+                        right: true,
+                        child: ClipRect(
+                          child: CarouselSlider(
+                            options: CarouselOptions(
+                              scrollPhysics: _isZoomed
+                                  ? const NeverScrollableScrollPhysics()
+                                  : const BouncingScrollPhysics(),
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  current_image_index = index;
+                                });
+                              },
+                              viewportFraction: .80,
+                              height: 400,
+                              enlargeCenterPage: true,
+                              enableInfiniteScroll: true,
+                              autoPlay: false,
+                            ),
+                            items: List.generate(
+                              (data['image_urls'] as List).length,
+                              (index) {
+                                final url = data['image_urls'][index];
+                                final labels = data['image_labels'] as List?;
+                                return CarouselImage(
+                                  zoom_update: (bool _zoomed) {
+                                    setState(() {
+                                      _isZoomed = _zoomed;
+                                    });
+                                  },
+                                  url: url,
+                                  label: labels?[index],
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ), // if there are multiple images, show a carousel
+                    if (data['image_urls'] != null &&
+                        (data['image_urls'] as List).length == 1) // one image
+                      SelectionArea(
+                        child: InteractiveViewer(
+                          minScale: 1,
+                          maxScale: 4,
+                          transformationController: _transformationController,
+                          onInteractionUpdate: (details) {
+                            final double scale = _transformationController.value
+                                .getMaxScaleOnAxis();
 
-                          if (scale > 1.0 && !_isZoomed) {
-                            setState(() {
-                              _isZoomed = true;
-                            });
-                          } else if (scale <= 1.0 && _isZoomed) {
-                            setState(() {
-                              _isZoomed = false;
-                            });
-                          }
-                        },
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.network(
-                                data['image_urls'][0],
-                                fit: BoxFit.cover,
-                                frameBuilder:
-                                    (
-                                      context,
-                                      child,
-                                      frame,
-                                      wasSynchronouslyLoaded,
-                                    ) {
-                                      if (frame == null) {
-                                        return Container(
-                                          height: 350,
-                                          child: const Center(
-                                            child: SizedBox(
-                                              height: 100,
-                                              width: 100,
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 10,
-                                                color: Color.fromARGB(
+                            if (scale > 1.0 && !_isZoomed) {
+                              setState(() {
+                                _isZoomed = true;
+                              });
+                            } else if (scale <= 1.0 && _isZoomed) {
+                              setState(() {
+                                _isZoomed = false;
+                              });
+                            }
+                          },
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.network(
+                                  data['image_urls'][0],
+                                  fit: BoxFit.cover,
+                                  frameBuilder:
+                                      (
+                                        context,
+                                        child,
+                                        frame,
+                                        wasSynchronouslyLoaded,
+                                      ) {
+                                        if (frame == null) {
+                                          return Container(
+                                            height: 350,
+                                            child: const Center(
+                                              child: SizedBox(
+                                                height: 100,
+                                                width: 100,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                      strokeWidth: 10,
+                                                      color: Color.fromARGB(
+                                                        255,
+                                                        9,
+                                                        8,
+                                                        50,
+                                                      ),
+                                                    ),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: const Color.fromARGB(
                                                   255,
                                                   9,
                                                   8,
                                                   50,
                                                 ),
+                                                width: 5,
                                               ),
                                             ),
+                                            child: child,
                                           ),
                                         );
-                                      }
-                                      return Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: const Color.fromARGB(
-                                                255,
-                                                9,
-                                                8,
-                                                50,
-                                              ),
-                                              width: 5,
-                                            ),
-                                          ),
-                                          child: child,
-                                        ),
-                                      );
-                                    },
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                      if (loadingProgress == null)
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: child,
-                                        );
+                                      },
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                        if (loadingProgress == null)
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: child,
+                                          );
 
-                                      return Center(
-                                        child: SizedBox(
-                                          height: 100,
-                                          width: 100,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 10,
-                                            color: Color.fromARGB(
-                                              255,
-                                              0,
-                                              75,
-                                              141,
+                                        return Center(
+                                          child: SizedBox(
+                                            height: 100,
+                                            width: 100,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 10,
+                                              color: Color.fromARGB(
+                                                255,
+                                                0,
+                                                75,
+                                                141,
+                                              ),
+                                              value:
+                                                  loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        loadingProgress
+                                                            .expectedTotalBytes!
+                                                  : null,
                                             ),
-                                            value:
-                                                loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                          .cumulativeBytesLoaded /
-                                                      loadingProgress
-                                                          .expectedTotalBytes!
-                                                : null,
                                           ),
-                                        ),
-                                      );
-                                    },
+                                        );
+                                      },
+                                ),
                               ),
-                            ),
-                            if (data['image_labels'] != null &&
-                                (data['image_labels'] as List).isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 16.0),
-                                child: Text(
-                                  data['image_labels'][0],
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+                              if (data['image_labels'] != null &&
+                                  (data['image_labels'] as List).isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 16.0),
+                                  child: Text(
+                                    data['image_labels'][0],
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
-                              ),
-                          ], //
-                        ),
-                      ),
-                    ),
-                  ),
-                InteractiveViewer(
-                  minScale: 1,
-                  maxScale: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 10),
-                      if (data['image_urls'] != null &&
-                          (data['image_urls'] as List).length > 1)
-                        Row(
-                          spacing: 15,
-                          mainAxisAlignment: MainAxisAlignment.center,
-
-                          children: [
-                            for (
-                              int i = 0;
-                              i < (data['image_urls'] as List).length;
-                              i++
-                            )
-                              AnimatedScale(
-                                scale: (current_image_index == i) ? 2 : 1,
-                                duration: Duration(milliseconds: 300),
-                                child: Icon(
-                                  Icons.circle,
-                                  key: Key(i.toString()),
-                                  size: 20,
-                                  color: (current_image_index == i)
-                                      ? Colors.black
-                                      : Colors.white,
-                                ),
-                              ),
-                          ],
-                        ),
-                      const SizedBox(height: 16),
-                      FutureBuilder(
-                        future: followed_authors,
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
-                              if (!snapshot.hasData) {
-                                return SpinKitChasingDots(
-                                  size: 75,
-                                  color: const Color.fromARGB(255, 2, 4, 88),
-                                );
-                              }
-                              List followedAuthors = snapshot.data;
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: authorslist.map((author) {
-                                  return Row(
-                                    children: [
-                                      Text(
-                                        author,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Follow_Card(
-                                        // follow author button
-                                        author: author,
-                                        followed: followedAuthors.contains(
-                                          author,
-                                        ),
-                                        ontoggle: () {
-                                          setState(() {
-                                            if (followedAuthors.contains(
-                                              author,
-                                            )) {
-                                              followedAuthors.remove(author);
-                                            } else {
-                                              followedAuthors.add(author);
-                                            }
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                }).toList(),
-                              );
-                            },
-                      ),
-
-                      const SizedBox(height: 16),
-                      Text(
-                        // actual Text
-                        data['date'],
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                      SizedBox(height: 12),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: SelectionArea(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: (data['words'] as List<dynamic>)
-                                .map<Widget>((word) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(
-                                      bottom: 12.0,
-                                    ),
-                                    child: Text(
-                                      '       ${word.toString()}',
-                                      style: GoogleFonts.lora(
-                                        fontSize: 19,
-                                        height: 1.5,
-                                      ),
-                                    ),
-                                  );
-                                })
-                                .toList(),
+                            ], //
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        // recs
-                        "Recommended Articles",
-                        style: TextStyle(
-                          fontSize: 25,
-                          color: const Color.fromARGB(255, 12, 67, 111),
-                        ),
-                      ),
-                      FutureBuilder(
-                        future: recs,
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Center(
-                                  child: SpinKitCubeGrid(
-                                    color: const Color.fromARGB(255, 2, 4, 88),
-                                    size: 75,
-                                  ),
-                                );
-                              }
-                              if (!snapshot.hasData || snapshot.hasError) {
-                                return Center(
-                                  child: SpinKitCubeGrid(
-                                    color: const Color.fromARGB(255, 2, 4, 88),
-                                    size: 75,
-                                  ),
-                                );
-                              }
-                              List<Article> recommendations = snapshot.data;
-                              processedArticles = recommendations.map((
-                                article,
-                              ) {
-                                return ArticleWithReadStatus(
-                                  article: article,
-                                  isRead: readarticles.contains(
-                                    article.Article_ID,
-                                  ),
-                                );
-                              }).toList();
+                    InteractiveViewer(
+                      minScale: 1,
+                      maxScale: 3,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 10),
+                          if (data['image_urls'] != null &&
+                              (data['image_urls'] as List).length > 1)
+                            Row(
+                              spacing: 15,
+                              mainAxisAlignment: MainAxisAlignment.center,
 
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: processedArticles.map((recommend) {
-                                  return Padding(
-                                    padding: const EdgeInsetsGeometry.fromLTRB(
-                                      0,
-                                      15,
-                                      0,
-                                      0,
+                              children: [
+                                for (
+                                  int i = 0;
+                                  i < (data['image_urls'] as List).length;
+                                  i++
+                                )
+                                  AnimatedScale(
+                                    scale: (current_image_index == i) ? 2 : 1,
+                                    duration: Duration(milliseconds: 300),
+                                    child: Icon(
+                                      Icons.circle,
+                                      key: Key(i.toString()),
+                                      size: 20,
+                                      color: (current_image_index == i)
+                                          ? Colors.black
+                                          : Colors.white,
                                     ),
-                                    child: CurrentCardbuild(
-                                      article: recommend,
-                                      onleave: onLeave,
-                                    ),
+                                  ),
+                              ],
+                            ),
+                          const SizedBox(height: 16),
+                          FutureBuilder(
+                            future: followed_authors,
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return SpinKitChasingDots(
+                                      size: 75,
+                                      color: const Color.fromARGB(
+                                        255,
+                                        2,
+                                        4,
+                                        88,
+                                      ),
+                                    );
+                                  }
+                                  List followedAuthors = snapshot.data;
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: authorslist.map((author) {
+                                      return Wrap(
+                                        crossAxisAlignment:
+                                            WrapCrossAlignment.center,
+
+                                        children: [
+                                          Text(
+                                            author,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontStyle: FontStyle.italic,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Follow_Card(
+                                            // follow author button
+                                            author: author,
+                                            followed: followedAuthors.contains(
+                                              author,
+                                            ),
+                                            ontoggle: () {
+                                              setState(() {
+                                                if (followedAuthors.contains(
+                                                  author,
+                                                )) {
+                                                  followedAuthors.remove(
+                                                    author,
+                                                  );
+                                                } else {
+                                                  followedAuthors.add(author);
+                                                }
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    }).toList(),
                                   );
-                                }).toList(),
-                              );
-                            },
+                                },
+                          ),
+
+                          const SizedBox(height: 16),
+                          Text(
+                            // actual Text
+                            data['date'],
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                          SizedBox(height: 12),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: SelectionArea(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: (data['words'] as List<dynamic>)
+                                    .map<Widget>((word) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 12.0,
+                                        ),
+                                        child: Text(
+                                          '       ${word.toString()}',
+                                          style: GoogleFonts.lora(
+                                            fontSize: 19,
+                                            height: 1.5,
+                                          ),
+                                        ),
+                                      );
+                                    })
+                                    .toList(),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            // recs
+                            "Recommended Articles",
+                            style: TextStyle(
+                              fontSize: 25,
+                              color: const Color.fromARGB(255, 12, 67, 111),
+                            ),
+                          ),
+                          FutureBuilder(
+                            future: recs,
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                      child: SpinKitCubeGrid(
+                                        color: const Color.fromARGB(
+                                          255,
+                                          2,
+                                          4,
+                                          88,
+                                        ),
+                                        size: 75,
+                                      ),
+                                    );
+                                  }
+                                  if (!snapshot.hasData || snapshot.hasError) {
+                                    return Center(
+                                      child: SpinKitCubeGrid(
+                                        color: const Color.fromARGB(
+                                          255,
+                                          2,
+                                          4,
+                                          88,
+                                        ),
+                                        size: 75,
+                                      ),
+                                    );
+                                  }
+                                  List<Article> recommendations = snapshot.data;
+                                  processedArticles = recommendations.map((
+                                    article,
+                                  ) {
+                                    return ArticleWithReadStatus(
+                                      article: article,
+                                      isRead: readarticles.contains(
+                                        article.Article_ID,
+                                      ),
+                                    );
+                                  }).toList();
+
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: processedArticles.map((
+                                      recommend,
+                                    ) {
+                                      return Padding(
+                                        padding:
+                                            const EdgeInsetsGeometry.fromLTRB(
+                                              0,
+                                              15,
+                                              0,
+                                              0,
+                                            ),
+                                        child: CurrentCardbuild(
+                                          article: recommend,
+                                          onleave: onLeave,
+                                        ),
+                                      );
+                                    }).toList(),
+                                  );
+                                },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

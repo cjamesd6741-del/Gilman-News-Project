@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
@@ -45,10 +46,21 @@ class _CurlingState extends State<Curling> {
           ),
           Positioned(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  game.paused ? "Close Settings" : "",
-                  style: GoogleFonts.lora(fontSize: 20, color: Colors.white),
+                SizedBox(
+                  width: MediaQuery.sizeOf(context).width - 100,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentGeometry.centerRight,
+                    child: Text(
+                      game.paused ? "Close Settings" : "",
+                      style: GoogleFonts.lora(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
                 if (game.paused) SizedBox(width: 10),
                 IconButton(

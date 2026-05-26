@@ -48,12 +48,18 @@ class CreditsPage extends StatelessWidget {
               backgroundColor: const Color.fromARGB(255, 34, 72, 92),
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
-                titlePadding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                expandedTitleScale: 1.4,
-                title: AutoSizeText(
-                  maxFontSize: 50,
-                  style: GoogleFonts.lora(color: Colors.white, fontSize: 30),
-                  "Licenses",
+                title: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(35, 150, 35, 0),
+                    child: Text(
+                      style: GoogleFonts.lora(
+                        color: Colors.white,
+                        fontSize: 30,
+                      ),
+                      "Licenses",
+                    ),
+                  ),
                 ),
               ),
               floating: true,
@@ -68,39 +74,46 @@ class CreditsPage extends StatelessWidget {
             ),
           ];
         },
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(26, 0, 26, 0),
-          child: FutureBuilder(
-            future: getlicenses(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting ||
-                  snapshot.hasError ||
-                  !snapshot.hasData) {
-                return Center(
-                  child: SpinKitCircle(
-                    color: const Color.fromARGB(255, 7, 56, 80),
-                  ),
-                );
-              }
-              final List<LicenseEntry> licenses = snapshot.data ?? [];
-
-              return ListView.builder(
-                padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
-                itemCount: licenses.length,
-                itemBuilder: (context, object) {
-                  final licencse = licenses[object];
-                  final name = licencse.packages.join(", ");
-                  final paragraph = licencse.paragraphs
-                      .map((p) => p.text)
-                      .join("\n  ");
-                  return ExpansionTile(
-                    title: Text(name),
-                    subtitle: Text("View License"),
-                    children: [Text(paragraph)],
+        body: MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: MediaQuery.of(
+              context,
+            ).textScaler.clamp(minScaleFactor: .5, maxScaleFactor: 2),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(26, 0, 26, 0),
+            child: FutureBuilder(
+              future: getlicenses(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting ||
+                    snapshot.hasError ||
+                    !snapshot.hasData) {
+                  return Center(
+                    child: SpinKitCircle(
+                      color: const Color.fromARGB(255, 7, 56, 80),
+                    ),
                   );
-                },
-              );
-            },
+                }
+                final List<LicenseEntry> licenses = snapshot.data ?? [];
+
+                return ListView.builder(
+                  padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+                  itemCount: licenses.length,
+                  itemBuilder: (context, object) {
+                    final licencse = licenses[object];
+                    final name = licencse.packages.join(", ");
+                    final paragraph = licencse.paragraphs
+                        .map((p) => p.text)
+                        .join("\n  ");
+                    return ExpansionTile(
+                      title: Text(name),
+                      subtitle: Text("View License"),
+                      children: [Text(paragraph)],
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ),
       ),

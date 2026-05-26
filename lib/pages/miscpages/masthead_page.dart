@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -92,24 +93,25 @@ class _MastHead_PageState extends State<MastHead_Page> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 100),
+                      duration: const Duration(milliseconds: 200),
                       width: double.infinity,
                       height: double.infinity,
                       color: innerBoxIsScrolled
                           ? const Color.fromARGB(255, 34, 72, 92)
                           : Colors.transparent,
-                      child: SafeArea(
+                      child: Center(
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: Center(
-                            child: Text(
-                              'Masthead',
-                              style: GoogleFonts.lora(
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 0, 75, 141),
-                              ),
+                          padding: const EdgeInsets.symmetric(horizontal: 35),
+                          child: AnimatedDefaultTextStyle(
+                            duration: Duration(milliseconds: 200),
+                            style: GoogleFonts.lora(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                              color: innerBoxIsScrolled
+                                  ? Colors.white
+                                  : Color.fromARGB(255, 0, 75, 141),
                             ),
+                            child: AutoSizeText('Masthead'),
                           ),
                         ),
                       ),
@@ -127,67 +129,74 @@ class _MastHead_PageState extends State<MastHead_Page> {
             ),
           ];
         },
-        body: InteractiveViewer(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(26, 0, 26, 0),
-            child: FutureBuilder(
-              future: data,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting ||
-                    snapshot.data == null ||
-                    snapshot.connectionState == ConnectionState.none) {
-                  return SizedBox(); // ce n'est rien
-                }
-                ;
-                if (snapshot.hasError) {
-                  return Text(snapshot.error.toString());
-                }
-                ;
-                final useddata = snapshot.data;
-                Map<dynamic, dynamic>? currentdata;
-                try {
-                  currentdata = useddata.firstWhere(
-                    (map) => map['year'] == year,
-                  );
-                } catch (e) {
-                  // throws a bas state no element error, so if thats coming up don't worry, in the words of Todd Howard, "It just works."
-                  currentdata = null;
-                }
-                late final staff;
-                final int stafflength;
-                if (currentdata != null) {
-                  staff = currentdata["masthead_data"]?["staff"] ?? [];
-                  staff.sort(
-                    (a, b) => (a['rank'] as int).compareTo(b['rank'] as int),
-                  );
-                  stafflength = staff.length + 1;
-                } else {
-                  staff = [];
-                  stafflength = 2;
-                }
-                return Column(
-                  children: [
-                    if (maxyear == 0) LoadingWidget(),
-                    if (maxyear != 0)
-                      YearSelector(
-                        year: year.toDouble(),
-                        firstyear: maxyear,
-                        changeyear: (double value) {
-                          setState(() {
-                            year = value.toInt();
-                          });
-                        },
+        body: MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: MediaQuery.of(
+              context,
+            ).textScaler.clamp(minScaleFactor: .5, maxScaleFactor: 2),
+          ),
+          child: InteractiveViewer(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(26, 0, 26, 0),
+              child: FutureBuilder(
+                future: data,
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      snapshot.data == null ||
+                      snapshot.connectionState == ConnectionState.none) {
+                    return SizedBox(); // cela n'est rien
+                  }
+                  ;
+                  if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
+                  }
+                  ;
+                  final useddata = snapshot.data;
+                  Map<dynamic, dynamic>? currentdata;
+                  try {
+                    currentdata = useddata.firstWhere(
+                      (map) => map['year'] == year,
+                    );
+                  } catch (e) {
+                    // throws a bas state no element error, so if thats coming up don't worry, in the words of Todd Howard, "It just works."
+                    currentdata = null;
+                  }
+                  late final staff;
+                  final int stafflength;
+                  if (currentdata != null) {
+                    staff = currentdata["masthead_data"]?["staff"] ?? [];
+                    staff.sort(
+                      (a, b) => (a['rank'] as int).compareTo(b['rank'] as int),
+                    );
+                    stafflength = staff.length + 1;
+                  } else {
+                    staff = [];
+                    stafflength = 2;
+                  }
+                  return Column(
+                    children: [
+                      if (maxyear == 0) LoadingWidget(),
+                      if (maxyear != 0)
+                        YearSelector(
+                          year: year.toDouble(),
+                          firstyear: maxyear,
+                          changeyear: (double value) {
+                            setState(() {
+                              year = value.toInt();
+                            });
+                          },
+                        ),
+                      Expanded(
+                        child: HierarchyTree(
+                          staff: staff,
+                          maxyear: maxyear.toInt(),
+                          screenwidth: screenwidth,
+                        ),
                       ),
-                    Expanded(
-                      child: HierarchyTree(
-                        staff: staff,
-                        maxyear: maxyear.toInt(),
-                        screenwidth: screenwidth,
-                      ),
-                    ),
-                  ],
-                );
-              },
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         ),

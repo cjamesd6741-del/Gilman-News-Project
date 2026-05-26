@@ -218,26 +218,40 @@ class _Route_ManagerState extends State<Route_Manager> {
         color: const Color.fromARGB(255, 10, 62, 105),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: GNav(
-            selectedIndex: page_index,
-            gap: 4,
-            backgroundColor: const Color.fromARGB(255, 10, 62, 105),
-            color: const Color.fromARGB(255, 135, 135, 135),
-            tabBackgroundColor: const Color.fromARGB(255, 14, 90, 152),
-            textStyle: TextStyle(fontSize: 16, color: Colors.white),
-            iconSize: 20,
-            onTabChange: (index) {
-              setState(() {
-                page_index = index;
-                notifyTabVisibility(index);
-              });
-            },
-            tabs: const [
-              GButton(icon: Icons.newspaper, text: "Articles"),
-              GButton(icon: Icons.home, text: "Home"),
-              GButton(icon: Icons.settings, text: "Misc"),
-              GButton(icon: Icons.gamepad_sharp, text: "Games"),
-            ],
+          child: MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: MediaQuery.of(
+                context,
+              ).textScaler.clamp(minScaleFactor: 1.0, maxScaleFactor: 1.5),
+            ), // Prevents over scaling
+            child: MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: MediaQuery.of(
+                  context,
+                ).textScaler.clamp(maxScaleFactor: 1.5),
+              ),
+              child: GNav(
+                selectedIndex: page_index,
+                gap: 4,
+                backgroundColor: const Color.fromARGB(255, 10, 62, 105),
+                color: const Color.fromARGB(255, 135, 135, 135),
+                tabBackgroundColor: const Color.fromARGB(255, 14, 90, 152),
+                textStyle: TextStyle(fontSize: 16, color: Colors.white),
+                iconSize: 20,
+                onTabChange: (index) {
+                  setState(() {
+                    page_index = index;
+                    notifyTabVisibility(index);
+                  });
+                },
+                tabs: const [
+                  GButton(icon: Icons.newspaper, text: "Articles"),
+                  GButton(icon: Icons.home, text: "Home"),
+                  GButton(icon: Icons.settings, text: "Misc"),
+                  GButton(icon: Icons.gamepad_sharp, text: "Games"),
+                ],
+              ),
+            ),
           ),
         ),
       ),

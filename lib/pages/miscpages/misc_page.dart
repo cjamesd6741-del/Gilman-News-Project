@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -13,7 +14,7 @@ class MiscPage extends StatelessWidget {
           return [
             SliverAppBar(
               elevation: 10.0,
-              backgroundColor: const Color.fromARGB(255, 34, 72, 92),
+              backgroundColor: const Color.fromARGB(255, 30, 85, 131),
               expandedHeight: MediaQuery.sizeOf(context).height / 8,
               collapsedHeight: 90,
               pinned: true,
@@ -35,7 +36,7 @@ class MiscPage extends StatelessWidget {
                       width: double.infinity,
                       height: double.infinity,
                       color: innerBoxIsScrolled
-                          ? const Color.fromARGB(255, 8, 53, 90)
+                          ? const Color.fromARGB(255, 30, 85, 131)
                           : Colors.transparent,
                       child: SafeArea(
                         child: Padding(
@@ -50,7 +51,10 @@ class MiscPage extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
-                                child: Text('Miscellaneous'),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text('Miscellaneous'),
+                                ),
                               ),
                             ],
                           ),
@@ -92,12 +96,15 @@ class MiscPage extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    child: Center(
-                      child: Text(
-                        "Stats",
-                        style: GoogleFonts.lora(
-                          fontSize: 50,
-                          color: Color.fromARGB(255, 255, 255, 255),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Center(
+                        child: Text(
+                          "Stats",
+                          style: GoogleFonts.lora(
+                            fontSize: 50,
+                            color: Color.fromARGB(255, 255, 255, 255),
+                          ),
                         ),
                       ),
                     ),
@@ -122,12 +129,18 @@ class MiscPage extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    child: Center(
-                      child: Text(
-                        "Masthead",
-                        style: GoogleFonts.lora(
-                          fontSize: 50,
-                          color: Color.fromARGB(255, 0, 75, 141),
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Center(
+                          child: Text(
+                            "Masthead",
+                            style: GoogleFonts.lora(
+                              fontSize: 50,
+                              color: Color.fromARGB(255, 0, 75, 141),
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -156,12 +169,18 @@ class MiscPage extends StatelessWidget {
                         end: Alignment.bottomRight,
                       ),
                     ),
-                    child: Center(
-                      child: Text(
-                        "About",
-                        style: GoogleFonts.lora(
-                          fontSize: 50,
-                          color: Color.fromARGB(255, 255, 255, 255),
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Center(
+                          child: Text(
+                            "About",
+                            style: GoogleFonts.lora(
+                              fontSize: 50,
+                              color: Color.fromARGB(255, 255, 255, 255),
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -190,12 +209,19 @@ class MiscPage extends StatelessWidget {
                         end: Alignment.centerRight,
                       ),
                     ),
-                    child: Center(
-                      child: Text(
-                        "Licenses",
-                        style: GoogleFonts.lora(
-                          fontSize: 50,
-                          color: Color.fromARGB(255, 255, 255, 255),
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
+                      child: FittedBox(
+                        // praise the fitted box, praise it!
+                        fit: BoxFit.scaleDown,
+                        child: Center(
+                          child: Text(
+                            "Licenses",
+                            style: GoogleFonts.lora(
+                              fontSize: 50,
+                              color: Color.fromARGB(255, 255, 255, 255),
+                            ),
+                          ),
                         ),
                       ),
                     ),

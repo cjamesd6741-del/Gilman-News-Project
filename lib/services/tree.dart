@@ -16,6 +16,7 @@ class HierarchyTree extends StatelessWidget {
     int stafflength = staff.length;
     if (stafflength != 0) {
       return ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.all(16),
         itemCount: stafflength,
         itemBuilder: (context, index) {

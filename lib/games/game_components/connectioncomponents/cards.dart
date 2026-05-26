@@ -83,7 +83,7 @@ class _ConnectionCardState extends State<ConnectionCard> {
               maxLines: 2,
               wrapWords: false,
               minFontSize:
-                  10, // It will wrap first, then shrink if it still doesn't fit
+                  3, // It will wrap first, then shrink if it still doesn't fit
             ),
           ),
         ),

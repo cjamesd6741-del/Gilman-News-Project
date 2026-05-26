@@ -97,9 +97,17 @@ class _Connectionsselector extends State<Connectionsselector> {
                                       : Color.fromARGB(255, 26, 56, 72),
                                 ),
 
-                                child: FittedBox(
-                                  fit: BoxFit.contain,
-                                  child: Text('Gilman Connections'),
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    45,
+                                    10,
+                                    45,
+                                    0,
+                                  ),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text('Gilman Connections'),
+                                  ),
                                 ),
                               ),
                             ],

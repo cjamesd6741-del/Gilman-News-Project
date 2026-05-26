@@ -217,7 +217,12 @@ class _ConnectionsState extends State<Connections> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: Text("Welcome to Gilman Connections")),
+        appBar: AppBar(
+          title: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text("Welcome to Gilman Connections"),
+          ),
+        ),
         body: FutureBuilder(
           future: ready,
           builder: (context, asyncSnapshot) {
@@ -261,18 +266,6 @@ class _ConnectionsState extends State<Connections> {
                                 )
                                 .toList(),
 
-                            if (won == true)
-                              OutcomeBanner(
-                                leave: leave,
-                                removebanner: () {
-                                  setState(() {
-                                    won = false;
-                                  });
-                                },
-                                height: cheight * 4,
-                                width: constraints.maxWidth,
-                                outcome: lost,
-                              ),
                             for (int i = 0; i < guesses; i++)
                               AnimatedPositioned(
                                 top: cheight * 5,
@@ -300,6 +293,24 @@ class _ConnectionsState extends State<Connections> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadiusGeometry.circular(16),
+                                      ),
+                                      foregroundColor: const Color.fromARGB(
+                                        255,
+                                        0,
+                                        0,
+                                        0,
+                                      ),
+                                      backgroundColor: const Color.fromARGB(
+                                        255,
+                                        180,
+                                        194,
+                                        220,
+                                      ),
+                                    ),
                                     onPressed: () async {
                                       for (int i = 0; i < 1; i++) {
                                         if (!mounted) return;
@@ -316,6 +327,24 @@ class _ConnectionsState extends State<Connections> {
                                   ),
                                   SizedBox(width: 10),
                                   ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadiusGeometry.circular(16),
+                                      ),
+                                      foregroundColor: const Color.fromARGB(
+                                        255,
+                                        0,
+                                        0,
+                                        0,
+                                      ),
+                                      backgroundColor: const Color.fromARGB(
+                                        255,
+                                        180,
+                                        194,
+                                        220,
+                                      ),
+                                    ),
                                     onPressed: () async {
                                       if (selected.length == 4 && !pressed) {
                                         pressed = true;
@@ -404,6 +433,18 @@ class _ConnectionsState extends State<Connections> {
                                 ],
                               ),
                             ),
+                            if (won == true)
+                              OutcomeBanner(
+                                leave: leave,
+                                removebanner: () {
+                                  setState(() {
+                                    won = false;
+                                  });
+                                },
+                                height: cheight * 4,
+                                width: constraints.maxWidth,
+                                outcome: lost,
+                              ),
                           ],
                         );
                       },

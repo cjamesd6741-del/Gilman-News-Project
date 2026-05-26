@@ -39,8 +39,12 @@ class Cardbuild extends StatelessWidget {
           highlightColor: Colors.blueGrey,
           onTap: () async {
             if (Globals.clicked == false) {
+              try {
+                FocusManager.instance.primaryFocus
+                    ?.unfocus(); //unfocuses keyboard to prevent bug where app autocorrects causing mounting error.
+              } catch (_) {}
+              await Future.delayed(const Duration(milliseconds: 150));
               Globals.clicked = true;
-              await Future.delayed(const Duration(milliseconds: 350));
               if (!context.mounted) return;
 
               Navigator.of(context).pushNamed(

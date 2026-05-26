@@ -4,6 +4,7 @@ import '../../services/stats/articlestorage.dart';
 import '/services/stats/algorithm.dart';
 import 'package:The_Gilman_News/services/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Stats extends StatefulWidget {
   final int tab_index;
@@ -134,9 +135,10 @@ class StatsState extends State<Stats> with RouteAware {
                       color: innerBoxIsScrolled
                           ? const Color.fromARGB(255, 34, 72, 92)
                           : Colors.transparent,
-                      child: SafeArea(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
                           child: Center(
                             child: Text(
                               'Stats',
@@ -163,144 +165,233 @@ class StatsState extends State<Stats> with RouteAware {
             ),
           ];
         },
-        body: Center(
-          child: ListView(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 30),
-                  Text(
-                    'Articles Read: $articler',
-                    style: GoogleFonts.ibmPlexSans(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w400,
-                      color: Color.fromARGB(255, 0, 75, 141),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  Text(
-                    'Reading Duration:',
-                    style: GoogleFonts.ibmPlexSans(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w400,
-                      color: Color.fromARGB(255, 0, 75, 141),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Hours : ${shownduration.inHours} , Minutes : ${shownduration.inMinutes.remainder(60)}, Seconds : ${shownduration.inSeconds.remainder(60)}',
-                    style: GoogleFonts.inter(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      color: Color.fromARGB(255, 0, 75, 141),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  Text(
-                    'Top Categories:',
-                    style: GoogleFonts.ibmPlexSans(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w400,
-                      color: Color.fromARGB(255, 0, 75, 141),
-                    ),
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: topthreecategorieslist.length,
-                    itemBuilder: (context, index) {
-                      return CategoryCard(
-                        category: topthreecategorieslist[index],
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 30),
-                  Text(
-                    'Top Recent Categories:',
-                    style: GoogleFonts.ibmPlexSans(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w400,
-                      color: Color.fromARGB(255, 0, 75, 141),
-                    ),
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: recentcategorieslist.length,
-                    itemBuilder: (context, index) {
-                      return CategoryCard(
-                        category: recentcategorieslist[index],
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 30),
-                  Text(
-                    'Favorite Writers',
-                    style: GoogleFonts.ibmPlexSans(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w400,
-                      color: Color.fromARGB(255, 0, 75, 141),
-                    ),
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: topthreeauthorslist.length,
-                    itemBuilder: (context, index) {
-                      return AuthorCard(author: topthreeauthorslist[index]);
-                    },
-                  ),
-                  const SizedBox(height: 30),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 34, 72, 92),
-                      foregroundColor: Colors.white,
-                      elevation: 3,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 28,
-                        vertical: 14,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+        body: MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: MediaQuery.of(context).textScaler.clamp(
+              minScaleFactor: .5,
+              maxScaleFactor:
+                  2, //note this is the general standard for this app
+            ),
+          ),
+          child: Center(
+            child: ListView(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 30),
+                    Center(
+                      child: Text(
+                        'Articles Read: $articler',
+                        style: GoogleFonts.ibmPlexSans(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w400,
+                          color: Color.fromARGB(255, 0, 75, 141),
+                        ),
                       ),
                     ),
-                    onPressed: () {
-                      storedata.clearData.clear();
-                      getdata();
-                    },
-                    child: Text("clear all data"),
-                  ),
-                  const SizedBox(height: 30),
-                  Center(
-                    child: Text(
-                      "Followed Authors",
-                      style: GoogleFonts.ibmPlexSans(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w400,
-                        color: Color.fromARGB(255, 0, 75, 141),
+                    const SizedBox(height: 40),
+                    Center(
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        'Reading Duration:',
+                        style: GoogleFonts.ibmPlexSans(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w400,
+                          color: Color.fromARGB(255, 0, 75, 141),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 30),
-                  if (follow_loaded)
-                    SizedBox(
-                      height: 300,
-                      child: AnimatedList(
+                    const SizedBox(height: 10),
+                    Center(
+                      child: Text(
+                        'Hours : ${shownduration.inHours} , Minutes : ${shownduration.inMinutes.remainder(60)}, Seconds : ${shownduration.inSeconds.remainder(60)}',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          color: Color.fromARGB(255, 0, 75, 141),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                    Center(
+                      child: Text(
+                        'Top Categories:',
+                        style: GoogleFonts.ibmPlexSans(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w400,
+                          color: Color.fromARGB(255, 0, 75, 141),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: ListView.builder(
                         shrinkWrap: true,
-                        key: listKey,
-                        initialItemCount: followed_authors.length,
-                        itemBuilder: (context, index, animation) =>
-                            Followed_Author_Card(
-                              item: followed_authors[index],
-                              animation: AlwaysStoppedAnimation(1.0),
-                              onClicked: () => removeItem(index),
-                            ),
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: topthreecategorieslist.length,
+                        itemBuilder: (context, index) {
+                          return CategoryCard(
+                            category: topthreecategorieslist[index],
+                          );
+                        },
                       ),
                     ),
-                ],
-              ),
-            ],
+                    const SizedBox(height: 40),
+                    Center(
+                      child: Text(
+                        'Top Recent Categories:',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.ibmPlexSans(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w400,
+                          color: Color.fromARGB(255, 0, 75, 141),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: recentcategorieslist.length,
+                        itemBuilder: (context, index) {
+                          return CategoryCard(
+                            category: recentcategorieslist[index],
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    Center(
+                      child: Text(
+                        'Favorite Writers',
+                        style: GoogleFonts.ibmPlexSans(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w400,
+                          color: Color.fromARGB(255, 0, 75, 141),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: topthreeauthorslist.length,
+                        itemBuilder: (context, index) {
+                          return AuthorCard(author: topthreeauthorslist[index]);
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(
+                            255,
+                            34,
+                            72,
+                            92,
+                          ),
+                          foregroundColor: Colors.white,
+                          elevation: 3,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 28,
+                            vertical: 14,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () {
+                          storedata.clearData.clear();
+                          getdata();
+                        },
+                        child: Text("clear data above"),
+                      ),
+                    ),
+                    const SizedBox(height: 50),
+                    Center(
+                      child: Text(
+                        "Followed Authors",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.ibmPlexSans(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w400,
+                          color: Color.fromARGB(255, 0, 75, 141),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    if (follow_loaded)
+                      Center(
+                        child: SizedBox(
+                          height: 300,
+                          child: AnimatedList(
+                            shrinkWrap: true,
+                            key: listKey,
+                            initialItemCount: followed_authors.length,
+                            itemBuilder: (context, index, animation) =>
+                                Followed_Author_Card(
+                                  item: followed_authors[index],
+                                  animation: AlwaysStoppedAnimation(1.0),
+                                  onClicked: () => removeItem(index),
+                                ),
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: 30),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        softWrap: true,
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.inter(
+                          color: Colors.black,
+                          fontSize: 10,
+                        ),
+                        "*The Gilman News cannot access these data.",
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            softWrap: true,
+                            textAlign: TextAlign.left,
+                            style: GoogleFonts.inter(
+                              color: Colors.black,
+                              fontSize: 10,
+                            ),
+                            "View Privacy Policy:",
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              Uri url = Uri.parse(
+                                'https://gist.github.com/cjamesd6741-del/8921cd4d67f43dc785572565f9509d21#file-privacy-policy',
+                              );
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {
+                                throw 'Could not launch $url';
+                              }
+                            },
+                            child: Text(
+                              "Privacy Policy",
+                              style: GoogleFonts.inter(
+                                color: const Color.fromARGB(255, 15, 26, 171),
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

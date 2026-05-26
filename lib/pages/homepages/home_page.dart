@@ -28,23 +28,53 @@ class _Home_PageState extends State<Home_Page> {
               shadowColor: Colors.black,
               toolbarHeight: MediaQuery.sizeOf(context).height / 8,
               flexibleSpace: FlexibleSpaceBar(
-                title: FittedBox(
-                  fit: BoxFit.contain,
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.fromLTRB(20, 10, 20, 30),
-                    child: AutoSizeText(
-                      "The Gilman News",
-                      softWrap: true,
-                      maxLines: null,
-                      style: GoogleFonts.lora(
-                        fontSize: 40,
-                        color: Colors.white,
-                      ),
+                title: Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 40, 8, 0),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      spacing: 2,
+                      children: [
+                        Text(
+                          "The",
+                          softWrap: true,
+                          maxLines: null,
+                          style: GoogleFonts.lora(
+                            fontSize: 80,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(
+                          height:
+                              200, //this is prob temporary. find way to make this more adaptive
+                          width: 200,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image.asset("lib/images/Header.png"),
+                          ),
+                        ),
+                        Text(
+                          "News",
+                          softWrap: true,
+                          maxLines: null,
+                          style: GoogleFonts.lora(
+                            fontSize: 80,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-              backgroundColor: const Color.fromARGB(255, 8, 53, 90),
+              backgroundColor: const Color.fromARGB(255, 30, 85, 131),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(3),
+                child: Container(
+                  color: const Color.fromARGB(255, 31, 30, 46),
+                  height: 3,
+                ),
+              ),
             ),
           ];
         },
@@ -70,25 +100,18 @@ class _Home_PageState extends State<Home_Page> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Current",
-                          style: GoogleFonts.libreCaslonText(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 50),
+                        child: AutoSizeText(
+                          textAlign: TextAlign.center,
+                          "Current Articles",
+                          style: GoogleFonts.lora(
                             fontSize: 50,
                             color: Colors.white,
                           ),
                         ),
-                        Text(
-                          "Articles",
-                          style: GoogleFonts.libreCaslonText(
-                            fontSize: 50,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -112,25 +135,13 @@ class _Home_PageState extends State<Home_Page> {
                       ),
                     ),
                     child: Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Followed Authors",
-                            style: GoogleFonts.libreCaslonText(
-                              fontSize: 40,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            "Articles",
-                            style: GoogleFonts.libreCaslonText(
-                              fontSize: 40,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+                      child: AutoSizeText(
+                        textAlign: TextAlign.center,
+                        "Followed Author Articles",
+                        style: GoogleFonts.lora(
+                          fontSize: 40,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),

@@ -6,7 +6,7 @@ import '../../services/cardbuilder.dart';
 import '../../services/cardclass.dart';
 import 'articlesearch.dart';
 import 'package:The_Gilman_News/services/globals.dart';
-import 'package:dice_icons/dice_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math';
 
 class AllArticlesPage extends StatefulWidget {
@@ -105,7 +105,7 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
     var online_version_number = await Supabase.instance.client
         .from('Version_Numbers')
         .select('Table_Name, Version')
-        .eq('Table_Name,', 'Articles')
+        .eq('Table_Name', 'Articles')
         .single();
     if (online_version_number['Version'] != version_num) {
       return getdata(online_version_number['Version']);
@@ -118,7 +118,9 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
         .instance
         .client // queries supabase for data
         .from('Articles')
-        .select('Author, Article_Title, Date, Article_ID, edition_num');
+        .select(
+          'Author, Article_Title, Date, Article_ID, edition_num, Categories',
+        );
     cacheManager.save('article_version_number', vnum);
     cacheManager.save('article_cards', data);
     return data;
@@ -136,21 +138,21 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 158, 175, 206),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
+    return NestedScrollView(
+      headerSliverBuilder: (context, innerBoxIsScrolled) {
+        return [
+          SliverOverlapAbsorber(
+            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            sliver: SliverAppBar(
               // top bar
               forceElevated: true,
               shadowColor: Colors.black,
               elevation: 4.0,
-              backgroundColor: const Color.fromARGB(255, 34, 72, 92),
+              backgroundColor: const Color.fromARGB(255, 30, 85, 131),
               expandedHeight: MediaQuery.sizeOf(context).height / 8,
               collapsedHeight: max(80, MediaQuery.sizeOf(context).height / 12),
               pinned: true,
-              floating: true,
+              floating: false,
               flexibleSpace: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -164,48 +166,44 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                     // stacked widgets that become transparent to let widgets below them show when inner box is not scrolled
                     alignment: Alignment.bottomCenter,
                     child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 100),
+                      duration: const Duration(milliseconds: 200),
                       width: double.infinity,
                       height: double.infinity,
                       color: innerBoxIsScrolled
-                          ? const Color.fromARGB(255, 34, 72, 92)
+                          ? const Color.fromARGB(255, 30, 85, 131)
                           : Colors.transparent,
                       child: SafeArea(
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 16),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              AnimatedDefaultTextStyle(
-                                duration: const Duration(milliseconds: 100),
-                                style: GoogleFonts.libreCaslonText(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
-                                  color: innerBoxIsScrolled
-                                      ? Colors.white
-                                      : Color.fromARGB(255, 26, 56, 72),
-                                ),
-
-                                child: FittedBox(
-                                  fit: BoxFit.contain,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                AnimatedDefaultTextStyle(
+                                  duration: const Duration(milliseconds: 200),
+                                  style: GoogleFonts.libreCaslonText(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                    color: innerBoxIsScrolled
+                                        ? Color.fromARGB(255, 255, 255, 255)
+                                        : Color.fromARGB(255, 19, 28, 83),
+                                  ),
                                   child: Text('Gilman News'),
                                 ),
-                              ),
-                              AnimatedDefaultTextStyle(
-                                duration: const Duration(milliseconds: 100),
-                                style: GoogleFonts.libreCaslonText(
-                                  fontSize: 24,
-                                  fontStyle: FontStyle.italic,
-                                  color: innerBoxIsScrolled
-                                      ? Color.fromARGB(255, 255, 255, 255)
-                                      : Color.fromARGB(255, 26, 56, 72),
-                                ),
-                                child: FittedBox(
-                                  fit: BoxFit.contain,
+                                AnimatedDefaultTextStyle(
+                                  duration: const Duration(milliseconds: 200),
+                                  style: GoogleFonts.libreCaslonText(
+                                    fontSize: 24,
+                                    fontStyle: FontStyle.italic,
+                                    color: innerBoxIsScrolled
+                                        ? Color.fromARGB(255, 255, 255, 255)
+                                        : Color.fromARGB(255, 19, 28, 83),
+                                  ),
                                   child: Text('All Articles'),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -221,8 +219,11 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                 ),
               ),
             ),
-          ];
-        },
+          ),
+        ];
+      },
+      body: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 158, 175, 206),
         body: FutureBuilder(
           future: _future,
           builder: (context, snapshot) {
@@ -251,13 +252,17 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
               (b, a) => a.article.edition_num.compareTo(b.article.edition_num),
             ); //organized by date
 
-            return ListView.builder(
-              // called instrument because I originally used tutorial to build this page
-              itemCount: instruments.length + 2,
-              itemBuilder: ((context, index) {
-                if (index == 0) {
-                  return Padding(
-                    padding: const EdgeInsetsGeometry.fromLTRB(0, 0, 0, 10),
+            return CustomScrollView(
+              key: const PageStorageKey<String>('all_articles_scroll'),
+              slivers: [
+                SliverOverlapInjector(
+                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                    context,
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.fromLTRB(0, 0, 0, 10),
                     child: Center(
                       child: IconButton(
                         onPressed: () {
@@ -266,41 +271,47 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                             delegate: AllArticleSearch(
                               articles: processedArticles,
                               readnotifier: Globals.globalReadArticlesNotifier,
-                            ), //not even remotely confusing lol
+                            ),
                           );
                         },
-                        icon: Icon(Icons.search_rounded, color: Colors.black),
+                        icon: const Icon(
+                          Icons.search_rounded,
+                          color: Colors.black,
+                          size: 50,
+                        ),
                       ),
                     ),
-                  );
-                } // End of index button\
-                if (index == 1) {
-                  int random_item_index = rand.nextInt(
-                    processedArticles.length,
-                  );
-                  Article randomarticle = articlelist[random_item_index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
+                  ),
+                ),
+
+                // Random Article Button
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 20,
+                      horizontal: 20,
+                    ),
                     child: Center(
                       child: InkWell(
-                        child: SizedBox(
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 17, 49, 103),
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(255, 73, 81, 95),
-                                  blurRadius: 6,
-                                  offset: Offset.fromDirection(2, 5),
-                                ),
-                              ],
-                            ),
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 17, 49, 103),
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color.fromARGB(255, 73, 81, 95),
+                                blurRadius: 6,
+                                offset: Offset.fromDirection(2, 5),
+                              ),
+                            ],
+                          ),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 Text(
                                   "Random Article",
                                   style: GoogleFonts.lora(
@@ -308,13 +319,13 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                                     fontSize: 30,
                                   ),
                                 ),
-                                SizedBox(width: 30),
-                                Icon(
-                                  DiceIcons.dice6,
+                                const SizedBox(width: 30),
+                                const FaIcon(
+                                  FontAwesomeIcons.diceSix,
                                   color: Colors.white,
                                   size: 30,
                                 ),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                               ],
                             ),
                           ),
@@ -325,6 +336,11 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                             await Future.delayed(
                               const Duration(milliseconds: 350),
                             );
+                            int random_item_index = rand.nextInt(
+                              processedArticles.length,
+                            );
+                            Article randomarticle =
+                                articlelist[random_item_index];
                             Navigator.pushNamed(
                               context,
                               '/loading',
@@ -338,11 +354,23 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                         },
                       ),
                     ),
-                  );
-                }
-                final instrument = processedArticles[index - 2];
-                return ListTile(title: CurrentCardbuild(article: instrument));
-              }),
+                  ),
+                ),
+
+                // List
+                SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final instrument = processedArticles[index];
+                    return Padding(
+                      padding: EdgeInsetsGeometry.symmetric(
+                        vertical: 4,
+                        horizontal: 8,
+                      ),
+                      child: CurrentCardbuild(article: instrument),
+                    );
+                  }, childCount: processedArticles.length),
+                ),
+              ],
             );
           },
         ),
