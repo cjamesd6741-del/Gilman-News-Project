@@ -91,7 +91,7 @@ class AllArticleSearch extends SearchDelegate {
         return ListView.builder(
           itemCount: matches.length,
           itemBuilder: (context, index) {
-            return CurrentCardbuild(
+            return Other_Instances_Cardbuild(
               article: matches[index],
               onReturn: () async {
                 final currentReads = Set<int>.from(readnotifier.value);
@@ -138,7 +138,7 @@ class AllArticleSearch extends SearchDelegate {
           itemBuilder: (context, index) {
             final article = matches[index].article;
 
-            return CurrentCardbuild(
+            return Other_Instances_Cardbuild(
               article: ArticleWithReadStatus(
                 article: article,
                 isRead: readArticles.contains(article.Article_ID),

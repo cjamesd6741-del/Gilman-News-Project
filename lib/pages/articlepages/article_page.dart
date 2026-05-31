@@ -629,26 +629,31 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                                     );
                                   }).toList();
 
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: processedArticles.map((
-                                      recommend,
-                                    ) {
-                                      return Padding(
-                                        padding:
-                                            const EdgeInsetsGeometry.fromLTRB(
-                                              0,
-                                              15,
-                                              0,
-                                              0,
-                                            ),
-                                        child: CurrentCardbuild(
-                                          article: recommend,
-                                          onleave: onLeave,
-                                        ),
-                                      );
-                                    }).toList(),
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                      bottom: 30,
+                                    ), // temp fix but there is a slight graphical issue where this column seems to have its side cutoff. fixed by adding padding to make it less apparent but ehh I mean it could be fixed better
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: processedArticles.map((
+                                        recommend,
+                                      ) {
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsetsGeometry.fromLTRB(
+                                                15,
+                                                15,
+                                                15,
+                                                0,
+                                              ),
+                                          child: Other_Instances_Cardbuild(
+                                            article: recommend,
+                                            onleave: onLeave,
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
                                   );
                                 },
                           ),

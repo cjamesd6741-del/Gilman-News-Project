@@ -45,7 +45,7 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
   void didChangeDependencies() {
     super.didChangeDependencies();
     setState(() {
-      width = MediaQuery.of(context).size.width;
+      width = MediaQuery.sizeOf(context).width;
     });
     final route = ModalRoute.of(context);
     if (route is PageRoute) {
@@ -101,9 +101,10 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
   void refreshPage() async {
     final cached = await cacheManager.get("read_articles") ?? [];
     readarticles = Set<int>.from(cached);
-    debugPrint("called");
+    debugPrint(
+      "called",
+    ); // to do: add check to make sure we are only recalling if there is a diff between authors before and after page transition (just use global bool to determine if we need to update OR compare old and new set)
     setState(() {
-      width = MediaQuery.sizeOf(context).width;
       finalcards = datagenerator();
       readarticles = readarticles;
     });
@@ -118,20 +119,26 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
     final authors = await followed_authors;
     if (authors.isNotEmpty) {
       if (Globals.followed_changed == false) {
-        debugPrint("local call");
+        // todo: fix double call
         final data = cacheManager.get("followed_articles") ?? [];
         List finaldata = data;
-        List<Article> cards = finaldata
-            .map(
-              (e) => Article(
-                Article_Title: e["Article_Title"],
-                author: e["Author"],
-                Date: e["Date"],
-                edition_num: e["edition_num"],
-                Article_ID: e["Article_ID"],
-              ),
-            )
-            .toList();
+        List<Article> cards = finaldata.map((e) {
+          List<String> tag = [];
+          print(e["Categories"]);
+          try {
+            tag = e["Categories"].cast<String>();
+          } catch (e) {
+            tag = [];
+          }
+          return Article(
+            Article_Title: e["Article_Title"],
+            author: e["Author"],
+            Date: e["Date"],
+            edition_num: e["edition_num"],
+            Article_ID: e["Article_ID"],
+            tags: tag,
+          );
+        }).toList();
         cards.sort((a, b) {
           return b.edition_num.compareTo(a.edition_num);
         });
@@ -143,22 +150,26 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
       );
       List finaldata = data;
       cacheManager.save("followed_articles", data);
-      List<Article> cards = finaldata
-          .map(
-            (e) => Article(
-              Article_Title: e["Article_Title"],
-              author: e["Author"],
-              Date: e["Date"],
-              edition_num: e["edition_num"],
-              Article_ID: e["Article_ID"],
-            ),
-          )
-          .toList();
+      List<Article> cards = finaldata.map((e) {
+        List<String> tag = [];
+        try {
+          tag = e["Categories"].cast<String>();
+        } catch (e) {
+          tag = [];
+        }
+        return Article(
+          Article_Title: e["Article_Title"],
+          author: e["Author"],
+          Date: e["Date"],
+          edition_num: e["edition_num"],
+          Article_ID: e["Article_ID"],
+          tags: tag,
+        );
+      }).toList();
       cards.sort((a, b) {
         return b.edition_num.compareTo(a.edition_num);
       });
       Globals.followed_changed = false;
-      debugPrint("supabase_call");
       return cards;
     }
     return [];
@@ -265,7 +276,7 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
                         width: width * .95,
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 10, top: 10),
-                          child: CurrentCardbuild(
+                          child: Other_Instances_Cardbuild(
                             article: processedArticles[index],
                           ),
                         ),

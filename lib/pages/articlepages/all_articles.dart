@@ -231,13 +231,16 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
               return const Center(child: CircularProgressIndicator());
             }
             final List instruments = snapshot.data as List;
+
             articlelist = instruments.map((article) {
+              final tag = article["Categories"].cast<String>();
               return Article(
                 Article_ID: article['Article_ID'],
                 Article_Title: article['Article_Title'],
                 author: article['Author'],
                 Date: article['Date'],
                 edition_num: article["edition_num"] ?? 0.0,
+                tags: tag,
               );
             }).toList();
 
@@ -366,7 +369,7 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                         vertical: 4,
                         horizontal: 8,
                       ),
-                      child: CurrentCardbuild(article: instrument),
+                      child: Other_Instances_Cardbuild(article: instrument),
                     );
                   }, childCount: processedArticles.length),
                 ),

@@ -73,20 +73,20 @@ class Similarity_Finder {
     allRecommendedArticles = allRecommendedArticles.take(6).toList();
     allRecommendedArticles.shuffle();
     allRecommendedArticles = allRecommendedArticles.take(3).toList();
-    recommendedArticles = allRecommendedArticles
-        .map(
-          (e) => Article(
-            Article_Title: e['title'],
-            author: e['Author'],
-            Article_ID: e["related_article_id"],
-            Date: e['Date'],
-            prevtitle: givenTitle,
-            previd: id,
-            prevauthor: givenAuthor,
-            edition_num: e['edition_num'] ?? 0.0,
-          ),
-        )
-        .toList();
+    recommendedArticles = allRecommendedArticles.map((e) {
+      final tag = e["Categories"].cast<String>();
+      return Article(
+        Article_Title: e['title'],
+        author: e['Author'],
+        Article_ID: e["related_article_id"],
+        Date: e['Date'],
+        prevtitle: givenTitle,
+        previd: id,
+        prevauthor: givenAuthor,
+        edition_num: e['edition_num'] ?? 0.0,
+        tags: tag,
+      );
+    }).toList();
     return recommendedArticles;
   }
 }

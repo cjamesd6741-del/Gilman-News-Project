@@ -13,6 +13,7 @@ class Article {
   final String? prevtitle;
   final String? prevauthor;
   final int? previd;
+  final List<String>? tags;
 
   final String all;
   Article({
@@ -24,6 +25,7 @@ class Article {
     this.prevauthor,
     this.prevtitle,
     this.previd,
+    this.tags,
   }) : all = normalize("$Article_Title $author $Date");
 }
 

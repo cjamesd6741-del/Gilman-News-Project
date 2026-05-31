@@ -117,7 +117,7 @@ class CurrentArticlesState extends State<CurrentArticles> with RouteAware {
   Future<List> getdata(int vnum) async {
     var data = await Supabase.instance.client
         .from('Current_Articles')
-        .select('Author, Article_Title, Date, Article_ID');
+        .select('Author, Article_Title, Date, Article_ID, Categories');
     cacheManager.save('current_article_version_number', vnum);
     cacheManager.save('current_article_cards', data);
     return data;
@@ -203,12 +203,14 @@ class CurrentArticlesState extends State<CurrentArticles> with RouteAware {
             }
             final List instruments = snapshot.data! as List;
             articlelist = instruments.map((article) {
+              final tag = article["Categories"].cast<String>();
               return Article(
                 Article_ID: article['Article_ID'],
                 Article_Title: article['Article_Title'],
                 author: article['Author'],
                 Date: article['Date'],
                 edition_num: article["edition_num"] ?? 0.0,
+                tags: tag,
               );
             }).toList();
             processedArticles = articlelist.map((article) {
@@ -222,7 +224,9 @@ class CurrentArticlesState extends State<CurrentArticles> with RouteAware {
               itemBuilder:
                   ((context, index) {
                     final instrument = processedArticles[index];
-                    return ListTile(title: Cardbuild(article: instrument));
+                    return ListTile(
+                      title: Recent_Article_Cardbuild(article: instrument),
+                    );
                   } // itemBuilder function
                   ), //itembuilder parenthesis,
             );

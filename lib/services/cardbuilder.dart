@@ -1,14 +1,17 @@
 import 'package:The_Gilman_News/services/cardclass.dart';
 import 'package:flutter/material.dart';
 import 'package:The_Gilman_News/services/globals.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class Cardbuild extends StatelessWidget {
+class Recent_Article_Cardbuild extends StatelessWidget {
   final ArticleWithReadStatus article;
-  const Cardbuild({super.key, required this.article});
+  const Recent_Article_Cardbuild({super.key, required this.article});
 
   @override
   Widget build(BuildContext context) {
     final isUnread = !article.isRead;
+    List<String> tags = article.article.tags ?? [];
+    bool show_tags = (tags != []) ? true : false;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -77,6 +80,41 @@ class Cardbuild extends StatelessWidget {
                     color: Color.fromARGB(255, 220, 220, 220),
                   ),
                 ),
+                if (show_tags) const SizedBox(height: 10),
+                if (show_tags)
+                  Wrap(
+                    // note: didn't just use article.article.tags because map doesnt work with nullable variables
+                    children: tags
+                        .map(
+                          (e) => Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                side: BorderSide(
+                                  color: Colors.blueGrey,
+                                  width: 2,
+                                ),
+                              ),
+                              color: const Color.fromARGB(255, 27, 81, 126),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 5.0,
+                                  horizontal: 7,
+                                ),
+                                child: Text(
+                                  e,
+                                  style: GoogleFonts.lora(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
                 const SizedBox(height: 10),
               ],
             ),
@@ -87,11 +125,11 @@ class Cardbuild extends StatelessWidget {
   }
 }
 
-class CurrentCardbuild extends StatelessWidget {
+class Other_Instances_Cardbuild extends StatelessWidget {
   final ArticleWithReadStatus article;
   final VoidCallback? onleave;
   final VoidCallback? onReturn;
-  const CurrentCardbuild({
+  const Other_Instances_Cardbuild({
     super.key,
     required this.article,
     this.onleave,
@@ -100,6 +138,8 @@ class CurrentCardbuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isUnread = !article.isRead;
+    List<String> tags = article.article.tags ?? [];
+    bool show_tags = (tags != []) ? true : false;
 
     return Container(
       decoration: BoxDecoration(
@@ -184,6 +224,41 @@ class CurrentCardbuild extends StatelessWidget {
                       color: Color.fromARGB(255, 220, 220, 220),
                     ),
                   ),
+                  if (show_tags) const SizedBox(height: 10),
+                  if (show_tags)
+                    Wrap(
+                      // note: didn't just use article.article.tags because map doesnt work with nullable variables
+                      children: tags
+                          .map(
+                            (e) => Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  side: BorderSide(
+                                    color: Colors.blueGrey,
+                                    width: 2,
+                                  ),
+                                ),
+                                color: const Color.fromARGB(255, 27, 81, 126),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 5.0,
+                                    horizontal: 7,
+                                  ),
+                                  child: Text(
+                                    e,
+                                    style: GoogleFonts.lora(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
                   const SizedBox(height: 10),
                   Text(
                     article.article.Date,
