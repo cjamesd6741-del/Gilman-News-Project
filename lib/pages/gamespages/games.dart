@@ -20,9 +20,11 @@ class _GameState extends State<Game> {
           return [
             SliverAppBar(
               pinned: true,
-              title: Text(
-                "Games",
-                style: GoogleFonts.lora(fontSize: 40, color: Colors.white),
+              title: Center(
+                child: Text(
+                  "Games",
+                  style: GoogleFonts.lora(fontSize: 40, color: Colors.white),
+                ),
               ),
               backgroundColor: const Color.fromARGB(255, 30, 85, 131),
               elevation: 5,

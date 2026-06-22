@@ -25,48 +25,55 @@ class _Home_PageState extends State<Home_Page> {
               forceElevated: true,
               centerTitle: true,
               elevation: 4.0,
+              automaticallyImplyLeading: false,
+              leadingWidth: 0,
               shadowColor: Colors.black,
               toolbarHeight: MediaQuery.sizeOf(context).height / 8,
-              flexibleSpace: FlexibleSpaceBar(
-                title: Padding(
-                  padding: const EdgeInsets.fromLTRB(8.0, 40, 8, 0),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Row(
-                      spacing: 2,
-                      children: [
-                        Text(
-                          "The",
-                          softWrap: true,
-                          maxLines: null,
-                          style: GoogleFonts.lora(
-                            fontSize: 80,
-                            color: Colors.white,
-                          ),
+              title: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 12, 0),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    spacing: 10,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        height:
+                            65, //this is prob temporary. find way to make this more adaptive
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Image.asset("lib/images/Header.png"),
                         ),
-                        SizedBox(
-                          height:
-                              200, //this is prob temporary. find way to make this more adaptive
-                          width: 200,
-                          child: FittedBox(
-                            fit: BoxFit.contain,
-                            child: Image.asset("lib/images/Header.png"),
-                          ),
+                      ),
+                      Text(
+                        "The",
+                        softWrap: true,
+                        maxLines: null,
+                        style: GoogleFonts.cormorantGaramond(
+                          fontSize: 65,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
                         ),
-                        Text(
-                          "News",
-                          softWrap: true,
-                          maxLines: null,
-                          style: GoogleFonts.lora(
-                            fontSize: 80,
-                            color: Colors.white,
-                          ),
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        "News",
+                        softWrap: true,
+                        maxLines: null,
+                        style: GoogleFonts.cormorantGaramond(
+                          fontSize: 65,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
+
               backgroundColor: const Color.fromARGB(255, 30, 85, 131),
               bottom: PreferredSize(
                 preferredSize: Size.fromHeight(3),
@@ -148,6 +155,36 @@ class _Home_PageState extends State<Home_Page> {
                 ),
               ),
               const SizedBox(height: 30),
+              Material(
+                borderRadius: BorderRadius.circular(16),
+                clipBehavior: Clip.hardEdge,
+                elevation: 4,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/author_catalogue');
+                  },
+                  child: Ink(
+                    height: 300,
+                    width: MediaQuery.sizeOf(context).width - 30,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("lib/images/Author_Catalogue.png"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Center(
+                      child: AutoSizeText(
+                        textAlign: TextAlign.center,
+                        "Author Catalogue",
+                        style: GoogleFonts.lora(
+                          fontSize: 40,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

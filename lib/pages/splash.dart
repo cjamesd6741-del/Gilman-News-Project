@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void init_app() async {
-    final minimumDisplayTime = Future.delayed(const Duration(seconds: 2));
+    final minimumDisplayTime = Future.delayed(const Duration(seconds: 1));
 
     await minimumDisplayTime;
 

@@ -21,7 +21,7 @@ class Article {
     required this.Article_ID,
     required this.Date,
     required this.Article_Title,
-    required this.edition_num,
+    required this.edition_num, //completely vestigial, might remove
     this.prevauthor,
     this.prevtitle,
     this.previd,

@@ -2,17 +2,25 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
 
 class Getter {
-  int id;
-  Getter({required this.id});
-  Future fetchArticleJson() async {
+  const Getter();
+  Future fetchAuthorJson(String author) async {
     Map info = await Supabase.instance.client
-        .from('Articles')
-        .select(
-          'Article_ID , json_article_file, Extra_Article_Room , Image_urls, Image_label, Extra_Extra_Article_Room',
-        )
-        .eq('Article_ID', id)
+        .from("Exploded_Author_List")
+        .select()
+        .eq('Author', author)
         .single();
+
+    print(info);
+    return info;
+  }
+
+  Future fetchArticleJson(int id) async {
+    Map info = await Supabase.instance.client.rpc(
+      'get_article',
+      params: {'id': id},
+    );
     if (info['Image_urls'] != null) {
+      // this is a mess I need to clean up soon
       Map infowthimage = info['json_article_file'];
       infowthimage['Image_urls'] = info['Image_urls'];
       if (info['Image_label'] != null) {

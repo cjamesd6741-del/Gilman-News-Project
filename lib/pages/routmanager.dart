@@ -16,6 +16,8 @@ import 'package:The_Gilman_News/pages/gamespages/connectiongame.dart';
 import 'package:The_Gilman_News/pages/gamespages/connectionsselector.dart';
 import 'package:The_Gilman_News/games/curling/curling_game.dart';
 import 'package:The_Gilman_News/pages/miscpages/credits.dart'; // 6 or 7 imports
+import 'package:The_Gilman_News/pages/homepages/author_catalogue.dart';
+import 'package:The_Gilman_News/pages/homepages/author_profile_page.dart';
 
 class Route_Manager extends StatefulWidget {
   const Route_Manager({super.key});
@@ -78,6 +80,14 @@ class _Route_ManagerState extends State<Route_Manager> {
             .findAncestorStateOfType<CurrentArticlesState>();
         currentarticleState?.onTabVisibilityChanged(i == index);
 
+        final authorcatState = element
+            .findAncestorStateOfType<AuthorCatState>();
+        authorcatState?.onTabVisibilityChanged(i == index);
+
+        final authorprogileState = element
+            .findAncestorStateOfType<AuthorProfilePageState>();
+        authorcatState?.onTabVisibilityChanged(i == index);
+
         element.visitChildren(checkElement);
       }
 
@@ -94,6 +104,18 @@ class _Route_ManagerState extends State<Route_Manager> {
         return MaterialPageRoute(
           builder: (_) =>
               CurrentArticles(tab_index: 1, observer: _routeObservers[1]),
+        );
+
+      case '/author_catalogue':
+        return MaterialPageRoute(
+          builder: (_) => AuthorCat(tab_index: 1, observer: _routeObservers[1]),
+        );
+
+      case '/author_profile_page':
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) =>
+              AuthorProfilePage(tab_index: 1, observer: _routeObservers[1]),
         );
 
       case '/followed_articles':
@@ -233,6 +255,7 @@ class _Route_ManagerState extends State<Route_Manager> {
               child: GNav(
                 selectedIndex: page_index,
                 gap: 4,
+                duration: Duration(milliseconds: 200),
                 backgroundColor: const Color.fromARGB(255, 10, 62, 105),
                 color: const Color.fromARGB(255, 135, 135, 135),
                 tabBackgroundColor: const Color.fromARGB(255, 14, 90, 152),

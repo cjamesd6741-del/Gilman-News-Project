@@ -16,6 +16,7 @@ Future<void> main() async {
 
   await OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   await OneSignal.initialize("bf389e28-ff57-44a9-b92a-fa781eeab0e0");
+  await OneSignal.Location.setShared(false); // stops geotracking by onesignal
   await OneSignal.Notifications.requestPermission(false);
 
   await Supabase.initialize(

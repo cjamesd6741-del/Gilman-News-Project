@@ -25,6 +25,8 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
   CacheManager cacheManager = CacheManager();
   bool _isRouteVisible = false;
   bool _isTabVisible = false;
+  ScrollController _scrollController = ScrollController();
+  bool show_to_top = false;
   late Future<List> followed_authors;
   late Future<List<Article>> finalcards;
   late List<ArticleWithReadStatus> processedArticles;
@@ -175,12 +177,28 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
     return [];
   }
 
+  void scroll_to_top() {
+    _scrollController.animateTo(
+      0,
+      duration: Duration(seconds: 1, milliseconds: 200),
+      curve: Curves.easeInOut,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return NestedScrollView(
+      controller: _scrollController,
       headerSliverBuilder: (context, innerBoxIsScrolled) {
         return [
           SliverAppBar(
+            leading: BackButton(
+              //adds backbutton. you wont see this in all pages because flutter already does this by default, the only reason it is here is because the button should be white to stand out
+              color: Colors.white,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
             forceElevated: true,
             shadowColor: Colors.black,
             elevation: 4.0,
@@ -238,9 +256,35 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
           ),
         ];
       },
-      body: Center(
-        child: Container(
-          color: const Color.fromARGB(255, 158, 175, 206),
+      body: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 158, 175, 206),
+        floatingActionButton: AnimatedOpacity(
+          opacity: show_to_top ? 1 : 0,
+          duration: Duration(milliseconds: 500),
+          child: FloatingActionButton(
+            onPressed: scroll_to_top,
+            backgroundColor: const Color.fromARGB(255, 16, 75, 124),
+            foregroundColor: Colors.white,
+            child: Icon(Icons.arrow_upward, size: 30),
+          ),
+        ),
+        body: NotificationListener<ScrollNotification>(
+          onNotification: (scrollnotification) {
+            if (scrollnotification is ScrollUpdateNotification) {
+              double offset = scrollnotification.metrics.pixels;
+              if (offset > 300 && !show_to_top) {
+                setState(() {
+                  show_to_top = true;
+                });
+              }
+              if (offset < 300 && show_to_top) {
+                setState(() {
+                  show_to_top = false;
+                });
+              }
+            }
+            return true;
+          },
           child: FutureBuilder<List<Article>>(
             future: finalcards,
             builder: (context, snapshot) {

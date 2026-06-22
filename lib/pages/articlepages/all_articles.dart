@@ -24,6 +24,8 @@ class AllArticlesPage extends StatefulWidget {
 class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
   List<Article> articles = [];
   CacheManager cacheManager = CacheManager();
+  ScrollController _scrollController = ScrollController();
+  bool show_to_top = false;
   late List<ArticleWithReadStatus> processedArticles;
   late Set readarticles;
   List<Article> articlelist = [];
@@ -136,9 +138,18 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
     });
   }
 
+  void scroll_to_top() {
+    _scrollController.animateTo(
+      0,
+      duration: Duration(seconds: 1, milliseconds: 200),
+      curve: Curves.easeInOut,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return NestedScrollView(
+      controller: _scrollController,
       headerSliverBuilder: (context, innerBoxIsScrolled) {
         return [
           SliverOverlapAbsorber(
@@ -224,158 +235,191 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
       },
       body: Scaffold(
         backgroundColor: const Color.fromARGB(255, 158, 175, 206),
-        body: FutureBuilder(
-          future: _future,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
+        body: NotificationListener<ScrollNotification>(
+          onNotification: (scrollnotification) {
+            if (scrollnotification is ScrollUpdateNotification) {
+              double currentOffset = scrollnotification.metrics.pixels;
+              if (currentOffset > 200 && !show_to_top) {
+                setState(() {
+                  show_to_top = true;
+                });
+              } else if (currentOffset < 200 && show_to_top) {
+                setState(() {
+                  show_to_top = false;
+                });
+              }
             }
-            final List instruments = snapshot.data as List;
+            return true;
+          },
+          child: FutureBuilder(
+            future: _future,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              final List instruments = snapshot.data as List;
 
-            articlelist = instruments.map((article) {
-              final tag = article["Categories"].cast<String>();
-              return Article(
-                Article_ID: article['Article_ID'],
-                Article_Title: article['Article_Title'],
-                author: article['Author'],
-                Date: article['Date'],
-                edition_num: article["edition_num"] ?? 0.0,
-                tags: tag,
-              );
-            }).toList();
+              articlelist = instruments.map((article) {
+                List<String> tag = [];
+                try {
+                  tag = article["Categories"].cast<String>();
+                } catch (_) {}
 
-            processedArticles = articlelist.map((article) {
-              return ArticleWithReadStatus(
-                article: article,
-                isRead: readarticles.contains(article.Article_ID),
-              );
-            }).toList();
+                return Article(
+                  Article_ID: article['Article_ID'],
+                  Article_Title: article['Article_Title'],
+                  author: article['Author'],
+                  Date: article['Date'],
+                  edition_num: article["edition_num"] ?? 0.0,
+                  tags: tag,
+                );
+              }).toList();
 
-            processedArticles.sort(
-              (b, a) => a.article.edition_num.compareTo(b.article.edition_num),
-            ); //organized by date
+              processedArticles = articlelist.map((article) {
+                return ArticleWithReadStatus(
+                  article: article,
+                  isRead: readarticles.contains(article.Article_ID),
+                );
+              }).toList();
 
-            return CustomScrollView(
-              key: const PageStorageKey<String>('all_articles_scroll'),
-              slivers: [
-                SliverOverlapInjector(
-                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                    context,
+              processedArticles.sort(
+                (b, a) =>
+                    a.article.edition_num.compareTo(b.article.edition_num),
+              ); //organized by date
+
+              return CustomScrollView(
+                key: const PageStorageKey<String>('all_articles_scroll'),
+                slivers: [
+                  SliverOverlapInjector(
+                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                      context,
+                    ),
                   ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.fromLTRB(0, 0, 0, 10),
-                    child: Center(
-                      child: IconButton(
-                        onPressed: () {
-                          showSearch(
-                            context: context,
-                            delegate: AllArticleSearch(
-                              articles: processedArticles,
-                              readnotifier: Globals.globalReadArticlesNotifier,
-                            ),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.search_rounded,
-                          color: Colors.black,
-                          size: 50,
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.fromLTRB(0, 0, 0, 10),
+                      child: Center(
+                        child: IconButton(
+                          onPressed: () {
+                            showSearch(
+                              context: context,
+                              delegate: AllArticleSearch(
+                                articles: processedArticles,
+                                readnotifier:
+                                    Globals.globalReadArticlesNotifier,
+                              ),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.search_rounded,
+                            color: Colors.black,
+                            size: 50,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
 
-                // Random Article Button
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 20,
-                      horizontal: 20,
-                    ),
-                    child: Center(
-                      child: InkWell(
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 17, 49, 103),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color.fromARGB(255, 73, 81, 95),
-                                blurRadius: 6,
-                                offset: Offset.fromDirection(2, 5),
-                              ),
-                            ],
-                          ),
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const SizedBox(width: 10),
-                                Text(
-                                  "Random Article",
-                                  style: GoogleFonts.lora(
-                                    color: Colors.white,
-                                    fontSize: 30,
-                                  ),
+                  // Random Article Button
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 20,
+                      ),
+                      child: Center(
+                        child: InkWell(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 17, 49, 103),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(255, 73, 81, 95),
+                                  blurRadius: 6,
+                                  offset: Offset.fromDirection(2, 5),
                                 ),
-                                const SizedBox(width: 30),
-                                const FaIcon(
-                                  FontAwesomeIcons.diceSix,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                                const SizedBox(width: 10),
                               ],
                             ),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    "Random Article",
+                                    style: GoogleFonts.lora(
+                                      color: Colors.white,
+                                      fontSize: 30,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 30),
+                                  const FaIcon(
+                                    FontAwesomeIcons.diceSix,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                  const SizedBox(width: 10),
+                                ],
+                              ),
+                            ),
                           ),
+                          onTap: () async {
+                            if (Globals.clicked == false) {
+                              Globals.clicked = true;
+                              await Future.delayed(
+                                const Duration(milliseconds: 350),
+                              );
+                              int random_item_index = rand.nextInt(
+                                processedArticles.length,
+                              );
+                              Article randomarticle =
+                                  articlelist[random_item_index];
+                              Navigator.pushNamed(
+                                context,
+                                '/loading',
+                                arguments: {
+                                  'title': randomarticle.Article_Title,
+                                  'author': randomarticle.author,
+                                  'ID': randomarticle.Article_ID,
+                                },
+                              );
+                            }
+                          },
                         ),
-                        onTap: () async {
-                          if (Globals.clicked == false) {
-                            Globals.clicked = true;
-                            await Future.delayed(
-                              const Duration(milliseconds: 350),
-                            );
-                            int random_item_index = rand.nextInt(
-                              processedArticles.length,
-                            );
-                            Article randomarticle =
-                                articlelist[random_item_index];
-                            Navigator.pushNamed(
-                              context,
-                              '/loading',
-                              arguments: {
-                                'title': randomarticle.Article_Title,
-                                'author': randomarticle.author,
-                                'ID': randomarticle.Article_ID,
-                              },
-                            );
-                          }
-                        },
                       ),
                     ),
                   ),
-                ),
 
-                // List
-                SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    final instrument = processedArticles[index];
-                    return Padding(
-                      padding: EdgeInsetsGeometry.symmetric(
-                        vertical: 4,
-                        horizontal: 8,
-                      ),
-                      child: Other_Instances_Cardbuild(article: instrument),
-                    );
-                  }, childCount: processedArticles.length),
-                ),
-              ],
-            );
-          },
+                  // List
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final instrument = processedArticles[index];
+                      return Padding(
+                        padding: EdgeInsetsGeometry.symmetric(
+                          vertical: 4,
+                          horizontal: 8,
+                        ),
+                        child: Other_Instances_Cardbuild(article: instrument),
+                      );
+                    }, childCount: processedArticles.length),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+        floatingActionButton: AnimatedOpacity(
+          opacity: show_to_top ? 1 : 0,
+          duration: Duration(milliseconds: 500),
+          child: FloatingActionButton(
+            onPressed: scroll_to_top,
+            backgroundColor: const Color.fromARGB(255, 16, 75, 124),
+            foregroundColor: Colors.white,
+            child: Icon(Icons.arrow_upward, size: 30),
+          ),
         ),
       ),
     );
