@@ -84,9 +84,9 @@ class _Route_ManagerState extends State<Route_Manager> {
             .findAncestorStateOfType<AuthorCatState>();
         authorcatState?.onTabVisibilityChanged(i == index);
 
-        final authorprogileState = element
+        final authorprofileState = element
             .findAncestorStateOfType<AuthorProfilePageState>();
-        authorcatState?.onTabVisibilityChanged(i == index);
+        authorprofileState?.onTabVisibilityChanged(i == index);
 
         element.visitChildren(checkElement);
       }

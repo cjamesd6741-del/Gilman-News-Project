@@ -6,6 +6,8 @@ import 'package:The_Gilman_News/services/cache.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:The_Gilman_News/services/author.card.dart';
 import '/services/stats/Articlestorage.dart';
+import 'package:The_Gilman_News/pages/homepages/author_catalogue_search.dart';
+import 'package:The_Gilman_News/services/globals.dart';
 
 class AuthorCat extends StatefulWidget {
   // TODO: Reformat to make Author Catalogue
@@ -79,10 +81,8 @@ class AuthorCatState extends State<AuthorCat> with RouteAware {
     refreshPage();
   }
 
-  void refreshPage() async {
-    setState(() {
-      _future = datagenerator();
-    });
+  void refreshPage() {
+    datarefresher();
   }
 
   @override
@@ -101,9 +101,16 @@ class AuthorCatState extends State<AuthorCat> with RouteAware {
     }
   }
 
+  void datarefresher() async {
+    followed_authors = await storedata.followed_author_reader();
+    setState(() {}); //rebuilds followed widgets
+  }
+
   Future<List> datagenerator() async {
     followed_authors = await storedata.followed_author_reader();
+
     cacheManager.save('author_catalogue_version_number', 0);
+    version_num = 0;
     var online_version_number = await Supabase.instance.client
         .from('Version_Numbers')
         .select('Table_Name, Version')
@@ -113,9 +120,10 @@ class AuthorCatState extends State<AuthorCat> with RouteAware {
       return getdata(online_version_number['Version']);
     }
     return Future.value(cacheManager.get('author_catalogue_cards'));
-  }
+  } // TODO: fix bug where the data is rebuilt upon author profile page popping
 
   Future<List> getdata(int vnum) async {
+    print('supabase call');
     var data = await Supabase.instance.client
         .from('Exploded_Author_List')
         .select('Author')
@@ -232,10 +240,62 @@ class AuthorCatState extends State<AuthorCat> with RouteAware {
                   return true;
                 },
                 child: ListView.builder(
-                  itemCount: instruments.length,
+                  itemCount: instruments.length + 1,
                   itemBuilder:
                       ((context, index) {
-                        final author = authorlist[index];
+                        if (index == 0) {
+                          return Center(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                overlayColor: Colors.blue,
+                                backgroundColor: const Color.fromARGB(
+                                  221,
+                                  44,
+                                  43,
+                                  55,
+                                ),
+                              ),
+                              onPressed: () {
+                                showSearch(
+                                  context: context,
+                                  delegate: Author_Search(
+                                    follow_changes:
+                                        Globals.followedAuthorNotifier,
+                                    authors: authorlist,
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  spacing: 10,
+                                  children: [
+                                    Text(
+                                      'Search',
+                                      style: GoogleFonts.lora(
+                                        fontSize: 30,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.search,
+                                      size: 40,
+                                      color: const Color.fromARGB(
+                                        255,
+                                        255,
+                                        255,
+                                        255,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        final author = authorlist[index - 1];
                         return Padding(
                           padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
                           child: Author_Card(

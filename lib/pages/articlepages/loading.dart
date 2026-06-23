@@ -1,3 +1,5 @@
+import 'package:The_Gilman_News/services/stats/articlestorage.dart';
+import 'package:The_Gilman_News/services/stats/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../services/jsongenerator.dart';
@@ -48,13 +50,16 @@ class _LoadingState extends State<Loading> {
   }
 
   void get_author_data(String author) async {
+    final Storedata _storedata = Storedata();
+    final authorList = await _storedata.followed_author_reader();
+    final bool original_state = authorList.contains(author);
     final author_json = await _getter.fetchAuthorJson(author);
     print(author_json);
     if (_cancelled || !mounted) return;
-    push_to_author_page(author_json);
+    push_to_author_page(author_json, original_state);
   }
 
-  void push_to_author_page(Map input_author_json) {
+  void push_to_author_page(Map input_author_json, bool followed) {
     if (!_cancelled && mounted) {
       Navigator.pushReplacementNamed(
         context,
@@ -66,6 +71,11 @@ class _LoadingState extends State<Loading> {
           'authid': input_author_json['Auth_ID'],
           'first_article': input_author_json['first_article'],
           'last_article': input_author_json['last_article'],
+          'Class': input_author_json['Class'],
+          'bio': input_author_json['bio'],
+          'Image_Url': input_author_json['Image_urls'],
+          'Position': input_author_json['Highest_Position'],
+          'Initial_State': followed,
         },
       );
     }

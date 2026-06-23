@@ -5,7 +5,7 @@ class Getter {
   const Getter();
   Future fetchAuthorJson(String author) async {
     Map info = await Supabase.instance.client
-        .from("Exploded_Author_List")
+        .from("front_end_author_info")
         .select()
         .eq('Author', author)
         .single();

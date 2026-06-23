@@ -5,6 +5,7 @@ import '/services/stats/algorithm.dart';
 import 'package:The_Gilman_News/services/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:The_Gilman_News/services/globals.dart';
 
 class Stats extends StatefulWidget {
   final int tab_index;
@@ -97,7 +98,10 @@ class StatsState extends State<Stats> with RouteAware {
     final removedauthor = followed_authors[index];
     storedata.remove_new_followed_author(removedauthor);
     followed_authors.removeAt(index);
-    listKey.currentState!.removeItem(
+    Globals.followedAuthorNotifier.value = Set.from(
+      Globals.followedAuthorNotifier.value,
+    )..remove(removedauthor);
+    listKey.currentState?.removeItem(
       index,
       (context, animation) => Followed_Author_Card(
         item: removedauthor,
@@ -335,7 +339,9 @@ class StatsState extends State<Stats> with RouteAware {
                                 Followed_Author_Card(
                                   item: followed_authors[index],
                                   animation: AlwaysStoppedAnimation(1.0),
-                                  onClicked: () => removeItem(index),
+                                  onClicked: () {
+                                    removeItem(index);
+                                  },
                                 ),
                           ),
                         ),

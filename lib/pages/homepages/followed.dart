@@ -300,7 +300,16 @@ class Followed_PageState extends State<Followed_Page> with RouteAware {
 
               final data = snapshot.data ?? [];
               if (data.isEmpty) {
-                return const Center(child: Text('No followed articles'));
+                return Center(
+                  child: Text(
+                    'No Followed Author Yet, Go Find Your Favorite Authors and Follow Them!',
+                    style: GoogleFonts.lora(
+                      fontStyle: FontStyle.italic,
+                      fontSize: 20,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                );
               }
               processedArticles = data.map((article) {
                 return ArticleWithReadStatus(

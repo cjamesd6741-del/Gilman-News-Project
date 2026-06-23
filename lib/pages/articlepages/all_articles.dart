@@ -134,7 +134,7 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
     readarticles = cached.toSet();
     Globals.globalReadArticlesNotifier.value = Set<int>.from(cached);
     setState(() {
-      _future = datagenerator();
+      _future = datagenerator(); // why is this called every time, fix
     });
   }
 

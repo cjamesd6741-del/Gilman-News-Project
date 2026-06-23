@@ -29,41 +29,52 @@ class Author_Card extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Wrap(
+        child: Column(
           spacing: 10,
           children: [
             Text(
               author,
               style: const TextStyle(fontSize: 25, color: Colors.white),
             ),
-            Follow_Card(author: author, followed: followed, ontoggle: ontoggle),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-              ),
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  '/loading',
-                  arguments: {
-                    'author': author,
-                    "purpose":
-                        "author", //I know its a bit confusing, reference loading page for some clarity
-                  },
-                );
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 5,
-                children: [
-                  Text(
-                    "Learn More",
-                    style: GoogleFonts.libreCaslonDisplay(color: Colors.white),
+            Wrap(
+              spacing: 15,
+              children: [
+                Follow_Card(
+                  author: author,
+                  followed: followed,
+                  ontoggle: ontoggle,
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
                   ),
-                  Icon(Icons.arrow_right_alt, color: Colors.white),
-                ],
-              ),
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/loading',
+                      arguments: {
+                        'author': author,
+                        "purpose":
+                            "author", //I know its a bit confusing, reference loading page for some clarity
+                      },
+                    );
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 5,
+                    children: [
+                      Text(
+                        "Learn More",
+                        style: GoogleFonts.libreCaslonDisplay(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Icon(Icons.arrow_right_alt, color: Colors.white),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),

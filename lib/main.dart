@@ -6,6 +6,7 @@ import 'pages/routmanager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:The_Gilman_News/services/cache.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:The_Gilman_News/services/globals.dart';
 
 // TODO : Explain Why
 Future<void> main() async {
@@ -18,6 +19,7 @@ Future<void> main() async {
   await OneSignal.initialize("bf389e28-ff57-44a9-b92a-fa781eeab0e0");
   await OneSignal.Location.setShared(false); // stops geotracking by onesignal
   await OneSignal.Notifications.requestPermission(false);
+  await Globals.init();
 
   await Supabase.initialize(
     url: 'https://obzabvjplufncjyirrhk.supabase.co',
