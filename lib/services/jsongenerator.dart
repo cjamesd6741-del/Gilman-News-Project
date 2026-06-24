@@ -15,10 +15,11 @@ class Getter {
   }
 
   Future fetchArticleJson(int id) async {
-    Map info = await Supabase.instance.client.rpc(
+    final info = await Supabase.instance.client.rpc(
       'get_article',
-      params: {'id': id},
+      params: {'target_id': id.toInt()},
     );
+
     if (info['Image_urls'] != null) {
       // this is a mess I need to clean up soon
       Map infowthimage = info['json_article_file'];

@@ -50,7 +50,8 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
 
   @override
   void didPopNext() {
-    _isRouteVisible = true;
+    _isRouteVisible =
+        true; // might want to bring this back into checks for performance later because entire stack is rebuilding right now
     _checkIfShouldRefresh();
   }
 
@@ -205,7 +206,7 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                                 AnimatedDefaultTextStyle(
                                   duration: const Duration(milliseconds: 200),
                                   style: GoogleFonts.libreCaslonText(
-                                    fontSize: 24,
+                                    fontSize: 28,
                                     fontStyle: FontStyle.italic,
                                     color: innerBoxIsScrolled
                                         ? Color.fromARGB(255, 255, 255, 255)
@@ -297,10 +298,54 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                   ),
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsetsGeometry.fromLTRB(0, 0, 0, 10),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 40,
+                      ),
                       child: Center(
-                        child: IconButton(
-                          onPressed: () {
+                        child: InkWell(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 17, 49, 103),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(255, 73, 81, 95),
+                                  blurRadius: 6,
+                                  offset: Offset.fromDirection(2, 5),
+                                ),
+                              ],
+                            ),
+                            child: SizedBox(
+                              width: MediaQuery.sizeOf(context).width / 1.3,
+                              height: MediaQuery.sizeOf(context).height / 18,
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      "Search Lite",
+                                      style: GoogleFonts.lora(
+                                        color: Colors.white,
+                                        fontSize: 35,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 30),
+                                    const Icon(
+                                      Icons.search,
+                                      color: Colors.white,
+                                      size: 35,
+                                    ),
+                                    const SizedBox(width: 10),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          onTap: () {
                             showSearch(
                               context: context,
                               delegate: AllArticleSearch(
@@ -310,11 +355,125 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                               ),
                             );
                           },
-                          icon: const Icon(
-                            Icons.search_rounded,
-                            color: Colors.black,
-                            size: 50,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 40,
+                      ),
+                      child: Center(
+                        child: InkWell(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 17, 49, 103),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(255, 73, 81, 95),
+                                  blurRadius: 6,
+                                  offset: Offset.fromDirection(2, 5),
+                                ),
+                              ],
+                            ),
+                            child: SizedBox(
+                              width: MediaQuery.sizeOf(context).width / 1.3,
+                              height: MediaQuery.sizeOf(context).height / 18,
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      "In-Depth Text Search",
+                                      style: GoogleFonts.lora(
+                                        color: Colors.white,
+                                        fontSize: 35,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 30),
+                                    const FaIcon(
+                                      FontAwesomeIcons.searchengin,
+                                      color: Colors.white,
+                                      size: 35,
+                                    ),
+                                    const SizedBox(width: 10),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
+                          onTap: () {
+                            showSearch(
+                              context: context,
+                              delegate: AllArticleTextSearch(
+                                readnotifier:
+                                    Globals.globalReadArticlesNotifier,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 20,
+                      ),
+                      child: Center(
+                        child: InkWell(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 17, 49, 103),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(255, 73, 81, 95),
+                                  blurRadius: 6,
+                                  offset: Offset.fromDirection(2, 5),
+                                ),
+                              ],
+                            ),
+                            child: SizedBox(
+                              height: MediaQuery.sizeOf(context).height / 18,
+                              width: MediaQuery.sizeOf(context).width / 1.3,
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      "Edition Viewer",
+                                      style: GoogleFonts.lora(
+                                        color: Colors.white,
+                                        fontSize: 35,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 30),
+                                    const FaIcon(
+                                      FontAwesomeIcons.newspaper,
+                                      color: Colors.white,
+                                      size: 35,
+                                    ),
+                                    const SizedBox(width: 10),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/edition_viewer');
+                          },
                         ),
                       ),
                     ),
@@ -341,28 +500,32 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                                 ),
                               ],
                             ),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    "Random Article",
-                                    style: GoogleFonts.lora(
-                                      color: Colors.white,
-                                      fontSize: 30,
+                            child: SizedBox(
+                              width: MediaQuery.sizeOf(context).width / 1.3,
+                              height: MediaQuery.sizeOf(context).height / 18,
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      "Random Article",
+                                      style: GoogleFonts.lora(
+                                        color: Colors.white,
+                                        fontSize: 30,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 30),
-                                  const FaIcon(
-                                    FontAwesomeIcons.diceSix,
-                                    color: Colors.white,
-                                    size: 30,
-                                  ),
-                                  const SizedBox(width: 10),
-                                ],
+                                    const SizedBox(width: 30),
+                                    const FaIcon(
+                                      FontAwesomeIcons.diceSix,
+                                      color: Colors.white,
+                                      size: 30,
+                                    ),
+                                    const SizedBox(width: 10),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -399,7 +562,7 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                       final instrument = processedArticles[index];
                       return Padding(
                         padding: EdgeInsetsGeometry.symmetric(
-                          vertical: 4,
+                          vertical: 12,
                           horizontal: 8,
                         ),
                         child: Other_Instances_Cardbuild(article: instrument),

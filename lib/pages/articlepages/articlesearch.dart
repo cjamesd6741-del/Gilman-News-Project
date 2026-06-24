@@ -3,6 +3,8 @@ import 'package:The_Gilman_News/services/cardclass.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:The_Gilman_News/services/globals.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AllArticleSearch extends SearchDelegate {
   List<ArticleWithReadStatus> articles;
@@ -149,6 +151,259 @@ class AllArticleSearch extends SearchDelegate {
                   currentReads.add(matches[index].article.Article_ID);
                 }
                 readnotifier.value = currentReads;
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class AllArticleTextSearch extends SearchDelegate {
+  ValueNotifier<Set<int>> readnotifier;
+  AllArticleTextSearch({required this.readnotifier});
+
+  Timer? _debounce;
+  Future _future = Future.value();
+  String _debouncedQuery = '';
+  String last_query = '';
+  String clean_query = '';
+  Future? results_future = null;
+  final ValueNotifier<Future?> searched_query = ValueNotifier<Future?>(
+    Future.value(),
+  );
+
+  void _debounceSearch(String textQuery) {
+    final cleanQuery = textQuery.trim();
+    if (cleanQuery == last_query) return; // Skip if query hasn't changed
+
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    if (cleanQuery.isEmpty) {
+      searched_query.value = null;
+      last_query = '';
+      return;
+    }
+
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      last_query = cleanQuery;
+      searched_query.value = suggestion_card_retriever(cleanQuery);
+    });
+  }
+
+  Future suggestion_card_retriever(String squery) async {
+    final data = await Supabase.instance.client.rpc(
+      'text_searcher',
+      params: {'query': _normalize(squery), 'range': 20},
+    );
+    print(data);
+    return data;
+  }
+
+  Future results_card_retriever(String rquery) async {
+    final data = await Supabase.instance.client.rpc(
+      'text_searcher',
+      params: {'query': _normalize(rquery), 'range': 1000},
+    );
+    print("call");
+    return data;
+  }
+
+  String _normalize(String s) {
+    return s
+        .toLowerCase()
+        .replaceAll('’', "'")
+        .replaceAll('‘', "'")
+        .replaceAll('“', '"')
+        .replaceAll('”', '"')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
+  }
+
+  @override
+  void close(BuildContext context, result) {
+    _debounce?.cancel();
+    super.close(context, result);
+  }
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        onPressed: () {
+          query = ''; // resets the visual display
+          _debounceSearch('');
+        },
+        icon: Icon(Icons.clear),
+      ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        close(context, null);
+      },
+      icon: Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final cleanQuery = query.trim();
+    if (query != last_query || results_future == null) {
+      results_future = results_card_retriever(cleanQuery);
+      last_query = cleanQuery;
+    }
+
+    return FutureBuilder(
+      future: results_future,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (!snapshot.hasData) {
+          return SpinKitCircle(color: Colors.black, size: 50);
+        }
+        if (snapshot.hasError) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text('Error: ${snapshot.error}'),
+          );
+        }
+        print(snapshot.data);
+        final List rawdata = snapshot.data;
+        final articlelist = rawdata.map((article) {
+          List<String> tag = [];
+          try {
+            tag = article['categories'].split(',');
+            tag.map((e) {
+              return e.trim();
+            });
+          } catch (_) {}
+          print(tag);
+
+          return Article(
+            Article_ID: article['id_number'],
+            Article_Title: article['title_of_article'],
+            author: article['Author'],
+            Date: article['date'],
+            edition_num: article['edition_num'],
+            tags: tag,
+          );
+        }).toList();
+
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: articlelist.length,
+          itemBuilder: (BuildContext context, int index) {
+            final article = articlelist[index];
+            return ValueListenableBuilder(
+              valueListenable: readnotifier,
+              builder: (context, read_articles, child) {
+                ArticleWithReadStatus processedArticle = ArticleWithReadStatus(
+                  article: article,
+                  isRead: read_articles.contains(article.Article_ID),
+                );
+
+                return Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Other_Instances_Cardbuild(
+                    article: processedArticle,
+                    onReturn: () async {
+                      final currentReads = Set<int>.from(readnotifier.value);
+                      if (!currentReads.contains(
+                        articlelist[index].Article_ID,
+                      )) {
+                        currentReads.add(articlelist[index].Article_ID);
+                      }
+                      readnotifier.value = currentReads;
+                    },
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    _debounceSearch(query);
+    return ValueListenableBuilder(
+      valueListenable: searched_query,
+      builder: (BuildContext context, value, child) {
+        if (value == null) {
+          return SizedBox();
+        }
+
+        return FutureBuilder(
+          future: value,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) {
+              return SpinKitCircle(color: Colors.black, size: 50);
+            }
+            if (snapshot.hasError) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text('Error: ${snapshot.error}'),
+              );
+            }
+            print(snapshot.data);
+            final List rawdata = snapshot.data;
+            final articlelist = rawdata.map((article) {
+              List<String> tag = [];
+              try {
+                tag = article['categories'].split(',');
+                tag.map((e) {
+                  return e.trim();
+                });
+              } catch (_) {}
+
+              return Article(
+                Article_ID: article['id_number'],
+                Article_Title: article['title_of_article'],
+                author: article['Author'],
+                Date: article['date'],
+                edition_num: article['edition_num'],
+                tags: tag,
+              );
+            }).toList();
+
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: articlelist.length,
+              itemBuilder: (BuildContext context, int index) {
+                final article = articlelist[index];
+                return ValueListenableBuilder(
+                  valueListenable: readnotifier,
+                  builder: (context, read_articles, child) {
+                    ArticleWithReadStatus processedArticle =
+                        ArticleWithReadStatus(
+                          article: article,
+                          isRead: read_articles.contains(article.Article_ID),
+                        );
+
+                    return Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Other_Instances_Cardbuild(
+                        article: processedArticle,
+                        onReturn: () async {
+                          final currentReads = Set<int>.from(
+                            readnotifier.value,
+                          );
+                          if (!currentReads.contains(
+                            articlelist[index].Article_ID,
+                          )) {
+                            currentReads.add(articlelist[index].Article_ID);
+                          }
+                          readnotifier.value = currentReads;
+                        },
+                      ),
+                    );
+                  },
+                );
               },
             );
           },

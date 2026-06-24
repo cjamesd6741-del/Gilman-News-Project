@@ -18,6 +18,7 @@ import 'package:The_Gilman_News/games/curling/curling_game.dart';
 import 'package:The_Gilman_News/pages/miscpages/credits.dart'; // 6 or 7 imports
 import 'package:The_Gilman_News/pages/homepages/author_catalogue.dart';
 import 'package:The_Gilman_News/pages/homepages/author_profile_page.dart';
+import 'package:The_Gilman_News/pages/articlepages/edition_viewer.dart';
 
 class Route_Manager extends StatefulWidget {
   const Route_Manager({super.key});
@@ -182,6 +183,13 @@ class _Route_ManagerState extends State<Route_Manager> {
           settings: settings,
           builder: (_) =>
               Article_Page(tab_index: 0, observer: _routeObservers[0]),
+        );
+
+      case '/edition_viewer':
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) =>
+              EditionViewer(tabindex: 0, observer: _routeObservers[0]),
         );
 
       default:
