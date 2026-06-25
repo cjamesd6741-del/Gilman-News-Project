@@ -3,6 +3,7 @@ import 'package:The_Gilman_News/services/cardclass.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:The_Gilman_News/services/globals.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -161,6 +162,7 @@ class AllArticleSearch extends SearchDelegate {
 }
 
 class AllArticleTextSearch extends SearchDelegate {
+  // as you can guess from the name, this moderates text search
   ValueNotifier<Set<int>> readnotifier;
   AllArticleTextSearch({required this.readnotifier});
 
@@ -197,7 +199,6 @@ class AllArticleTextSearch extends SearchDelegate {
       'text_searcher',
       params: {'query': _normalize(squery), 'range': 20},
     );
-    print(data);
     return data;
   }
 
@@ -206,7 +207,6 @@ class AllArticleTextSearch extends SearchDelegate {
       'text_searcher',
       params: {'query': _normalize(rquery), 'range': 1000},
     );
-    print("call");
     return data;
   }
 
@@ -253,14 +253,35 @@ class AllArticleTextSearch extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     final cleanQuery = query.trim();
-    if (query != last_query || results_future == null) {
+    if (cleanQuery != last_query || results_future == null) {
       results_future = results_card_retriever(cleanQuery);
       last_query = cleanQuery;
+    }
+    if (query == '') {
+      return Center(
+        child: Text(
+          'Please Input a Query',
+          style: GoogleFonts.lora(color: Colors.black, fontSize: 30),
+        ),
+      );
     }
 
     return FutureBuilder(
       future: results_future,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        try {
+          if (snapshot.data.isEmpty &&
+              snapshot.connectionState == ConnectionState.done) {
+            return Center(
+              child: Text(
+                'No Results, Sorry',
+                style: GoogleFonts.lora(color: Colors.black, fontSize: 30),
+              ),
+            );
+          }
+        } catch (error) {
+          print(error);
+        }
         if (!snapshot.hasData) {
           return SpinKitCircle(color: Colors.black, size: 50);
         }
@@ -270,7 +291,7 @@ class AllArticleTextSearch extends SearchDelegate {
             child: Text('Error: ${snapshot.error}'),
           );
         }
-        print(snapshot.data);
+
         final List rawdata = snapshot.data;
         final articlelist = rawdata.map((article) {
           List<String> tag = [];
@@ -280,7 +301,6 @@ class AllArticleTextSearch extends SearchDelegate {
               return e.trim();
             });
           } catch (_) {}
-          print(tag);
 
           return Article(
             Article_ID: article['id_number'],
@@ -331,11 +351,20 @@ class AllArticleTextSearch extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     _debounceSearch(query);
+    if (query == '') {
+      // quick check to prevent empty query
+      return Center(
+        child: Text(
+          'Please Input a Query',
+          style: GoogleFonts.lora(color: Colors.black, fontSize: 30),
+        ),
+      );
+    }
     return ValueListenableBuilder(
       valueListenable: searched_query,
       builder: (BuildContext context, value, child) {
         if (value == null) {
-          return SizedBox();
+          return SpinKitCircle(color: Colors.black, size: 50);
         }
 
         return FutureBuilder(
@@ -350,7 +379,7 @@ class AllArticleTextSearch extends SearchDelegate {
                 child: Text('Error: ${snapshot.error}'),
               );
             }
-            print(snapshot.data);
+
             final List rawdata = snapshot.data;
             final articlelist = rawdata.map((article) {
               List<String> tag = [];

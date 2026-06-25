@@ -345,107 +345,111 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                               });
                             }
                           },
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.network(
-                                  data['image_urls'][0],
-                                  fit: BoxFit.cover,
-                                  frameBuilder:
-                                      (
-                                        context,
-                                        child,
-                                        frame,
-                                        wasSynchronouslyLoaded,
-                                      ) {
-                                        if (frame == null) {
-                                          return Container(
-                                            height: 350,
-                                            child: const Center(
-                                              child: SizedBox(
-                                                height: 100,
-                                                width: 100,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      strokeWidth: 10,
-                                                      color: Color.fromARGB(
-                                                        255,
-                                                        9,
-                                                        8,
-                                                        50,
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.network(
+                                    data['image_urls'][0],
+                                    fit: BoxFit.cover,
+                                    frameBuilder:
+                                        (
+                                          context,
+                                          child,
+                                          frame,
+                                          wasSynchronouslyLoaded,
+                                        ) {
+                                          if (frame == null) {
+                                            return Container(
+                                              height: 350,
+                                              child: const Center(
+                                                child: SizedBox(
+                                                  height: 100,
+                                                  width: 100,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 10,
+                                                        color: Color.fromARGB(
+                                                          255,
+                                                          9,
+                                                          8,
+                                                          50,
+                                                        ),
                                                       ),
-                                                    ),
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: const Color.fromARGB(
-                                                  255,
-                                                  9,
-                                                  8,
-                                                  50,
                                                 ),
-                                                width: 5,
                                               ),
-                                            ),
-                                            child: child,
-                                          ),
-                                        );
-                                      },
-                                  loadingBuilder:
-                                      (context, child, loadingProgress) {
-                                        if (loadingProgress == null)
+                                            );
+                                          }
                                           return Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: child,
-                                          );
-
-                                        return Center(
-                                          child: SizedBox(
-                                            height: 100,
-                                            width: 100,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 10,
-                                              color: Color.fromARGB(
-                                                255,
-                                                0,
-                                                75,
-                                                141,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: const Color.fromARGB(
+                                                    255,
+                                                    9,
+                                                    8,
+                                                    50,
+                                                  ),
+                                                  width: 5,
+                                                ),
                                               ),
-                                              value:
-                                                  loadingProgress
-                                                          .expectedTotalBytes !=
-                                                      null
-                                                  ? loadingProgress
-                                                            .cumulativeBytesLoaded /
-                                                        loadingProgress
-                                                            .expectedTotalBytes!
-                                                  : null,
+                                              child: child,
                                             ),
-                                          ),
+                                          );
+                                        },
+                                    loadingBuilder: (context, child, loadingProgress) {
+                                      if (loadingProgress == null)
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: child,
                                         );
-                                      },
-                                ),
-                              ),
-                              if (data['image_labels'] != null &&
-                                  (data['image_labels'] as List).isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 16.0),
-                                  child: Text(
-                                    data['image_labels'][0],
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+
+                                      return Center(
+                                        child: SizedBox(
+                                          height: 100,
+                                          width: 100,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 10,
+                                            color: Color.fromARGB(
+                                              255,
+                                              0,
+                                              75,
+                                              141,
+                                            ),
+                                            value:
+                                                loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      loadingProgress
+                                                          .expectedTotalBytes!
+                                                : null,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
-                            ], //
+                                if (data['image_labels'] != null &&
+                                    (data['image_labels'] as List).isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      bottom: 16.0,
+                                    ),
+                                    child: Text(
+                                      textAlign: TextAlign.center,
+                                      data['image_labels'][0],
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                              ], //
+                            ),
                           ),
                         ),
                       ),

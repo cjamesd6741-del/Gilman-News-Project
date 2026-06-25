@@ -108,9 +108,6 @@ class AuthorCatState extends State<AuthorCat> with RouteAware {
 
   Future<List> datagenerator() async {
     followed_authors = await storedata.followed_author_reader();
-
-    cacheManager.save('author_catalogue_version_number', 0);
-    version_num = 0;
     var online_version_number = await Supabase.instance.client
         .from('Version_Numbers')
         .select('Table_Name, Version')
@@ -247,6 +244,7 @@ class AuthorCatState extends State<AuthorCat> with RouteAware {
                           return Center(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                elevation: 6,
                                 overlayColor: Colors.blue,
                                 backgroundColor: const Color.fromARGB(
                                   221,

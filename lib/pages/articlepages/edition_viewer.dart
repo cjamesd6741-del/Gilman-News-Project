@@ -95,28 +95,32 @@ class _EditionViewerState extends State<EditionViewer> with RouteAware {
   }
 
   Future<List<Map<String, dynamic>>> datagenerator() async {
-    cacheManager.save('editions_version_number', 0);
-    version_num = 0;
     var online_version_number = await Supabase.instance.client
         .from('Version_Numbers')
         .select('Table_Name, Version')
         .eq('Table_Name', 'Articles')
         .single();
+    print(online_version_number['Version']);
     if (online_version_number['Version'] != version_num) {
+      print('true');
       return getdata(online_version_number['Version']);
     }
-    return cacheManager.get(
-      'editions_info',
-    ); // might rework this system into a singleton class to make code a bit shorter
-  } // TODO: fix bug where the data is rebuilt upon author profile page popping
+    var rawCachedData = await cacheManager.get('editions_info');
+    print('Raw Cache Data: $rawCachedData');
+
+    return (rawCachedData as List)
+        .map((item) => Map<String, dynamic>.from(item))
+        .toList();
+  }
 
   Future<List<Map<String, dynamic>>> getdata(int vnum) async {
+    version_num = vnum;
     print('supabase call');
     var data = await Supabase.instance.client
         .from('editions')
         .select('*')
         .order('edition_num', ascending: true);
-    cacheManager.save('editions_version_number', vnum);
+    cacheManager.save('editions_version_number', version_num);
     print(data);
     cacheManager.save('editions_info', data);
     return data.map((item) => Map<String, dynamic>.from(item)).toList();
@@ -132,12 +136,10 @@ class _EditionViewerState extends State<EditionViewer> with RouteAware {
   }
 
   void refreshPage() async {
-    print('called');
     final cached = await cacheManager.get("read_articles") ?? [];
     Globals.globalReadArticlesNotifier.value = Set<int>.from(cached);
     setState(() {
       readarticles = cached.toSet();
-      _future = datagenerator(); // why is this called every time, fix
     });
   }
 
@@ -160,6 +162,15 @@ class _EditionViewerState extends State<EditionViewer> with RouteAware {
       headerSliverBuilder: (context, innerBoxIsScrolled) {
         return [
           SliverAppBar(
+            leading: BackButton(
+              //adds backbutton. you wont see this in all pages because flutter already does this by default, the only reason it is here is because the button should be white to stand out
+              color: innerBoxIsScrolled
+                  ? Color.fromARGB(255, 255, 255, 255)
+                  : const Color.fromARGB(255, 0, 0, 0),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
             forceElevated: true,
             shadowColor: Colors.black,
             elevation: 4.0,
@@ -173,7 +184,7 @@ class _EditionViewerState extends State<EditionViewer> with RouteAware {
               children: [
                 FlexibleSpaceBar(
                   background: Image.asset(
-                    'lib/images/IMG_0425.png',
+                    'lib/images/Editions.png',
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -195,11 +206,11 @@ class _EditionViewerState extends State<EditionViewer> with RouteAware {
                           child: AnimatedDefaultTextStyle(
                             duration: const Duration(milliseconds: 200),
                             style: GoogleFonts.libreCaslonText(
-                              fontSize: 30,
+                              fontSize: 35,
                               fontWeight: FontWeight.bold,
                               color: innerBoxIsScrolled
                                   ? Color.fromARGB(255, 255, 255, 255)
-                                  : Color.fromARGB(255, 19, 28, 83),
+                                  : const Color.fromARGB(255, 0, 0, 0),
                             ),
                             child: Text('Edition Viewer'),
                           ),
