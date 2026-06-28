@@ -1,8 +1,8 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
 class CacheManager {
-  CacheManager._internal();
-  static final CacheManager _instance = CacheManager._internal();
+  CacheManager._privateConstructor();
+  static final CacheManager _instance = CacheManager._privateConstructor();
   factory CacheManager() => _instance;
   late Box box;
   Future<void> init() async {
@@ -15,13 +15,10 @@ class CacheManager {
 
   dynamic get(String key) {
     final data = box.get(key);
-    if (data != null) {
-      return data;
-    }
-    return null;
+    return data;
   }
 
-  void clear(key) {
+  void clear(String key) {
     box.delete(key);
   }
 }

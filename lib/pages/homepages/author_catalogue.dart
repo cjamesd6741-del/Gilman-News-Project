@@ -184,7 +184,7 @@ class AuthorCatState extends State<AuthorCat> with RouteAware {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              'Author Catalogue',
+                              'Author Catalog',
                               style: GoogleFonts.libreCaslonText(
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold,

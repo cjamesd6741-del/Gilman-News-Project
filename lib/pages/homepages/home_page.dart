@@ -168,14 +168,16 @@ class _Home_PageState extends State<Home_Page> {
                     width: MediaQuery.sizeOf(context).width - 30,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage("lib/images/Author_Catalogue.png"),
+                        image: AssetImage(
+                          "lib/images/Author_Catalogue.png",
+                        ), // I know I spelled it wrong now
                         fit: BoxFit.cover,
                       ),
                     ),
                     child: Center(
                       child: AutoSizeText(
                         textAlign: TextAlign.center,
-                        "Author Catalogue",
+                        "Author Catalog",
                         style: GoogleFonts.lora(
                           fontSize: 40,
                           color: Colors.white,

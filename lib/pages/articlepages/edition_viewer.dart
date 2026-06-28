@@ -311,14 +311,31 @@ class _Edition_SingleState extends State<Edition_Single> {
   }
 
   void loading() {
+    // quick note about this function: it will not update if the version number changes. I could add a method in the load cycle for the entire page to wipe all data from the Cache with those numbers in the future but very specific use case so ill refrain
     if (_articlesFuture == null) {
-      // if empty, allows basic cashing, in the future want to add more long term cashing
+      CacheManager _cachemanager = CacheManager();
+
       setState(() {
         double edition_num = widget.edition['edition_num'];
-        _articlesFuture = Supabase.instance.client
-            .from('edition_viewer')
-            .select('*')
-            .eq('edition_num', edition_num);
+        _articlesFuture = () async {
+          String cacheKey = 'edition_articles_$edition_num';
+
+          var cachedvalue = _cachemanager.get(cacheKey);
+          if (cachedvalue != null) {
+            return (cachedvalue as List)
+                .map((item) => Map<String, dynamic>.from(item))
+                .toList();
+          }
+          var data = await Supabase.instance.client
+              .from('edition_viewer')
+              .select('*')
+              .eq('edition_num', edition_num);
+
+          _cachemanager.save(cacheKey, data);
+          return (data as List)
+              .map((item) => Map<String, dynamic>.from(item))
+              .toList();
+        }();
       });
     }
   }
