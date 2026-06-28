@@ -189,7 +189,6 @@ class AllArticleTextSearch extends SearchDelegate {
     }
 
     _debounce = Timer(const Duration(milliseconds: 500), () {
-      last_query = cleanQuery;
       searched_query.value = suggestion_card_retriever(cleanQuery);
     });
   }
@@ -252,8 +251,11 @@ class AllArticleTextSearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
+    print(query);
     final cleanQuery = query.trim();
+    print(last_query);
     if (cleanQuery != last_query || results_future == null) {
+      print("true");
       results_future = results_card_retriever(cleanQuery);
       last_query = cleanQuery;
     }
