@@ -1,4 +1,4 @@
-package com.example.apitest_2
+package com.TheGilmanNews.GilmanNewsApp
 
 import io.flutter.embedding.android.FlutterActivity
 

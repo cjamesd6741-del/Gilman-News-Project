@@ -1,3 +1,15 @@
+import java.util.Properties
+import java.io.FileInputStream
+
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
+
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -5,7 +17,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.apitest_2"
+    namespace = "com.TheGilmanNews.GilmanNewsApp"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -17,7 +29,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.apitest_2"
+        applicationId = "com.TheGilmanNews.GilmanNewsApp"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -25,15 +37,31 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
-
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
-        }
+    signingConfigs {
+    create("release") {
+        keyAlias = keystoreProperties["keyAlias"] as String
+        keyPassword = keystoreProperties["keyPassword"] as String
+        storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+        storePassword = keystoreProperties["storePassword"] as String
     }
 }
+    buildTypes {
+        getByName("release") {
+            // Signing with the release keys
+            signingConfig = signingConfigs.getByName("release")
+            
+            // Kotlin DSL requires "isMinifyEnabled =" instead of just "minifyEnabled"
+            isMinifyEnabled = true 
+            
+            // Kotlin DSL requires parentheses for method calls and double quotes for strings
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+        }
+    }
+    
+}
+
+
+
 
 kotlin {
     compilerOptions {

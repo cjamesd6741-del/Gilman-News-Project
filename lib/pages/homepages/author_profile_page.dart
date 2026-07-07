@@ -359,67 +359,68 @@ class AuthorProfilePageState extends State<AuthorProfilePage> with RouteAware {
                       return SpinKitCircle(color: Colors.black, size: 40);
                     },
                   ),
-                FutureBuilder(
-                  future: collab_articles,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final data =
-                          snapshot.data ??
-                          []; // allows us to bypass nullable constraint because we know it can be null from if statement
-                      List<Article> articlelist = data.map((e) {
-                        return Article(
-                          author: e['Author'],
-                          Article_ID: e['article_id'],
-                          Date: e['date'],
-                          Article_Title: e['Article_Title'],
-                          edition_num: e['edition_num'],
-                          tags: List<String>.from(e['Categories']),
-                        );
-                      }).toList();
-                      List<ArticleWithReadStatus> processed_articles =
-                          articlelist.map((e) {
-                            return ArticleWithReadStatus(
-                              article: e,
-                              isRead: readarticles.contains(e.Article_ID),
-                            );
-                          }).toList();
-                      return Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: ExpansionTile(
-                          expansionAnimationStyle: AnimationStyle(
-                            duration: Duration(seconds: 1),
+                if (numCollabs != 0)
+                  FutureBuilder(
+                    future: collab_articles,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final data =
+                            snapshot.data ??
+                            []; // allows us to bypass nullable constraint because we know it can be null from if statement
+                        List<Article> articlelist = data.map((e) {
+                          return Article(
+                            author: e['Author'],
+                            Article_ID: e['article_id'],
+                            Date: e['date'],
+                            Article_Title: e['Article_Title'],
+                            edition_num: e['edition_num'],
+                            tags: List<String>.from(e['Categories']),
+                          );
+                        }).toList();
+                        List<ArticleWithReadStatus> processed_articles =
+                            articlelist.map((e) {
+                              return ArticleWithReadStatus(
+                                article: e,
+                                isRead: readarticles.contains(e.Article_ID),
+                              );
+                            }).toList();
+                        return Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          title: const Text(
-                            'View Articles Written By this Author in Collaboration with Others',
-                          ),
-                          trailing: const Icon(Icons.keyboard_arrow_down),
-                          children: [
-                            Material(
-                              color: const Color.fromARGB(255, 204, 218, 225),
-                              child: ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: processed_articles.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Other_Instances_Cardbuild(
-                                      article: processed_articles[index],
-                                    ),
-                                  );
-                                },
-                              ),
+                          child: ExpansionTile(
+                            expansionAnimationStyle: AnimationStyle(
+                              duration: Duration(seconds: 1),
                             ),
-                          ],
-                        ),
-                      );
-                    }
-                    return SpinKitCircle(color: Colors.black, size: 40);
-                  },
-                ),
+                            title: const Text(
+                              'View Articles Written By this Author in Collaboration with Others',
+                            ),
+                            trailing: const Icon(Icons.keyboard_arrow_down),
+                            children: [
+                              Material(
+                                color: const Color.fromARGB(255, 204, 218, 225),
+                                child: ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: processed_articles.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Other_Instances_Cardbuild(
+                                        article: processed_articles[index],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                      return SpinKitCircle(color: Colors.black, size: 40);
+                    },
+                  ),
               ],
             ),
           ),
