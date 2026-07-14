@@ -125,7 +125,7 @@ class AuthorProfilePageState extends State<AuthorProfilePage> with RouteAware {
         endDate = data['last_article'];
         bio = data['bio'];
         _class = data['Class'];
-        url = data['Image_Url'];
+        url = data['Image_url'];
         highestPosition = data["Position"];
         followed = data['Initial_State'];
       }
@@ -133,6 +133,7 @@ class AuthorProfilePageState extends State<AuthorProfilePage> with RouteAware {
       sole_articles = solegenerator();
       collab_articles = collabgenerator();
       initialized = true;
+      print(url);
     }
     final route = ModalRoute.of(context);
     if (route is PageRoute) {
