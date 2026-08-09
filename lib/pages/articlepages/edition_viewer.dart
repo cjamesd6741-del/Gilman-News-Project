@@ -120,8 +120,8 @@ class _EditionViewerState extends State<EditionViewer> with RouteAware {
         .from('editions')
         .select('*')
         .order('edition_num', ascending: true);
-    cacheManager.save('editions_version_number', version_num);
     print(data);
+    cacheManager.save('editions_version_number', version_num);
     cacheManager.save('editions_info', data);
     return data.map((item) => Map<String, dynamic>.from(item)).toList();
   }

@@ -219,6 +219,7 @@ class _Route_ManagerState extends State<Route_Manager> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 10, 62, 105),
       body: IndexedStack(
         index: page_index,
         children: [
@@ -266,10 +267,9 @@ class _Route_ManagerState extends State<Route_Manager> {
                   gap: 4,
                   duration: Duration(milliseconds: 200),
                   backgroundColor: const Color.fromARGB(255, 10, 62, 105),
-                  color: const Color.fromARGB(255, 135, 135, 135),
+                  color: const Color.fromARGB(255, 178, 178, 178),
                   tabBackgroundColor: const Color.fromARGB(255, 14, 90, 152),
-                  textStyle: TextStyle(fontSize: 16, color: Colors.white),
-                  iconSize: 20,
+                  iconSize: MediaQuery.sizeOf(context).width / 10,
                   onTabChange: (index) {
                     setState(() {
                       page_index = index;
@@ -277,10 +277,10 @@ class _Route_ManagerState extends State<Route_Manager> {
                     });
                   },
                   tabs: const [
-                    GButton(icon: Icons.newspaper, text: "Articles"),
-                    GButton(icon: Icons.home, text: "Home"),
-                    GButton(icon: Icons.settings, text: "Misc"),
-                    GButton(icon: Icons.gamepad_sharp, text: "Games"),
+                    GButton(icon: Icons.newspaper),
+                    GButton(icon: Icons.home),
+                    GButton(icon: Icons.settings),
+                    GButton(icon: Icons.gamepad_sharp),
                   ],
                 ),
               ),

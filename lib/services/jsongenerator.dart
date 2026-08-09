@@ -19,6 +19,8 @@ class Getter {
       'get_article',
       params: {'target_id': id.toInt()},
     );
+    print(info.keys);
+    print(info['Extra_Article_Room']);
 
     if (info['Image_urls'] != null) {
       // this is a mess I need to clean up soon
@@ -26,7 +28,6 @@ class Getter {
       infowthimage['Image_urls'] = info['Image_urls'];
       if (info['Image_label'] != null) {
         infowthimage['Image_label'] = info['Image_label'];
-        info['json_article_file'] = infowthimage;
       }
       info['json_article_file'] = infowthimage;
       if (info['Extra_Article_Room'] == null) {
@@ -44,6 +45,7 @@ class Getter {
         return info['json_article_file'];
       }
     }
+
     if (info['Extra_Article_Room'] == null) {
       info['json_article_file']['id'] = info["Article_ID"];
       return info['json_article_file'];

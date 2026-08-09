@@ -288,6 +288,8 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                     a.article.edition_num.compareTo(b.article.edition_num),
               ); //organized by date
 
+              double width = min(MediaQuery.sizeOf(context).width / 1.3, 400);
+
               return CustomScrollView(
                 key: const PageStorageKey<String>('all_articles_scroll'),
                 slivers: [
@@ -299,273 +301,273 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        vertical: 20,
-                        horizontal: 40,
+                        vertical: 30,
+                        horizontal: 10,
                       ),
-                      child: Center(
-                        child: InkWell(
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 17, 49, 103),
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(255, 73, 81, 95),
-                                  blurRadius: 6,
-                                  offset: Offset.fromDirection(2, 5),
-                                ),
-                              ],
-                            ),
-                            child: SizedBox(
-                              width: MediaQuery.sizeOf(context).width / 1.3,
-                              height: MediaQuery.sizeOf(context).height / 18,
-                              child: FittedBox(
-                                fit: BoxFit.fitWidth,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      "Search Lite",
-                                      style: GoogleFonts.lora(
-                                        color: Colors.white,
-                                        fontSize: 35,
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 20,
+                        runSpacing: 10,
+                        children: [
+                          InkWell(
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 17, 49, 103),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color.fromARGB(
+                                      255,
+                                      73,
+                                      81,
+                                      95,
+                                    ),
+                                    blurRadius: 6,
+                                    offset: Offset.fromDirection(2, 5),
+                                  ),
+                                ],
+                              ),
+                              child: Container(
+                                width: MediaQuery.sizeOf(context).width / 2.5,
+                                child: FittedBox(
+                                  fit: BoxFit.fitWidth,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        "Search-Lite",
+                                        style: GoogleFonts.lora(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 30),
-                                    const Icon(
-                                      Icons.search,
-                                      color: Colors.white,
-                                      size: 35,
-                                    ),
-                                    const SizedBox(width: 10),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          onTap: () {
-                            showSearch(
-                              context: context,
-                              delegate: AllArticleSearch(
-                                articles: processedArticles,
-                                readnotifier:
-                                    Globals.globalReadArticlesNotifier,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 20,
-                        horizontal: 40,
-                      ),
-                      child: Center(
-                        child: InkWell(
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 17, 49, 103),
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(255, 73, 81, 95),
-                                  blurRadius: 6,
-                                  offset: Offset.fromDirection(2, 5),
-                                ),
-                              ],
-                            ),
-                            child: SizedBox(
-                              width: MediaQuery.sizeOf(context).width / 1.3,
-                              height: MediaQuery.sizeOf(context).height / 18,
-                              child: FittedBox(
-                                fit: BoxFit.fitWidth,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      "In-Depth Text Search",
-                                      style: GoogleFonts.lora(
+                                      const SizedBox(width: 30),
+                                      const Icon(
+                                        Icons.search,
                                         color: Colors.white,
-                                        fontSize: 35,
+                                        size: 20,
                                       ),
-                                    ),
-                                    const SizedBox(width: 30),
-                                    const FaIcon(
-                                      FontAwesomeIcons.searchengin,
-                                      color: Colors.white,
-                                      size: 35,
-                                    ),
-                                    const SizedBox(width: 10),
-                                  ],
+                                      const SizedBox(width: 10),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          onTap: () {
-                            showSearch(
-                              context: context,
-                              delegate: AllArticleTextSearch(
-                                readnotifier:
-                                    Globals.globalReadArticlesNotifier,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 20,
-                        horizontal: 20,
-                      ),
-                      child: Center(
-                        child: InkWell(
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 17, 49, 103),
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(255, 73, 81, 95),
-                                  blurRadius: 6,
-                                  offset: Offset.fromDirection(2, 5),
+                            onTap: () {
+                              showSearch(
+                                context: context,
+                                delegate: AllArticleSearch(
+                                  articles: processedArticles,
+                                  readnotifier:
+                                      Globals.globalReadArticlesNotifier,
                                 ),
-                              ],
-                            ),
-                            child: SizedBox(
-                              height: MediaQuery.sizeOf(context).height / 18,
-                              width: MediaQuery.sizeOf(context).width / 1.3,
-                              child: FittedBox(
-                                fit: BoxFit.fitWidth,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      "Edition Viewer",
-                                      style: GoogleFonts.lora(
-                                        color: Colors.white,
-                                        fontSize: 35,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 30),
-                                    const FaIcon(
-                                      FontAwesomeIcons.newspaper,
-                                      color: Colors.white,
-                                      size: 35,
-                                    ),
-                                    const SizedBox(width: 10),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.of(context).pushNamed('/edition_viewer');
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Random Article Button
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 20,
-                        horizontal: 20,
-                      ),
-                      child: Center(
-                        child: InkWell(
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 17, 49, 103),
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(255, 73, 81, 95),
-                                  blurRadius: 6,
-                                  offset: Offset.fromDirection(2, 5),
-                                ),
-                              ],
-                            ),
-                            child: SizedBox(
-                              width: MediaQuery.sizeOf(context).width / 1.3,
-                              height: MediaQuery.sizeOf(context).height / 18,
-                              child: FittedBox(
-                                fit: BoxFit.fitWidth,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      "Random Article",
-                                      style: GoogleFonts.lora(
-                                        color: Colors.white,
-                                        fontSize: 30,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 30),
-                                    const FaIcon(
-                                      FontAwesomeIcons.diceSix,
-                                      color: Colors.white,
-                                      size: 30,
-                                    ),
-                                    const SizedBox(width: 10),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          onTap: () async {
-                            if (Globals.clicked == false) {
-                              Globals.clicked = true;
-                              await Future.delayed(
-                                const Duration(milliseconds: 350),
                               );
-                              int random_item_index = rand.nextInt(
-                                processedArticles.length,
+                            },
+                          ),
+                          InkWell(
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 17, 49, 103),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color.fromARGB(
+                                      255,
+                                      73,
+                                      81,
+                                      95,
+                                    ),
+                                    blurRadius: 6,
+                                    offset: Offset.fromDirection(2, 5),
+                                  ),
+                                ],
+                              ),
+                              child: SizedBox(
+                                width: MediaQuery.sizeOf(context).width / 2.5,
+                                child: FittedBox(
+                                  fit: BoxFit.fitWidth,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        "Deep Search",
+                                        style: GoogleFonts.lora(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 30),
+                                      const FaIcon(
+                                        FontAwesomeIcons.searchengin,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                      const SizedBox(width: 10),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              showSearch(
+                                context: context,
+                                delegate: AllArticleTextSearch(
+                                  readnotifier:
+                                      Globals.globalReadArticlesNotifier,
+                                ),
                               );
-                              Article randomarticle =
-                                  articlelist[random_item_index];
-                              Navigator.pushNamed(
+                            },
+                          ),
+                          InkWell(
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 17, 49, 103),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color.fromARGB(
+                                      255,
+                                      73,
+                                      81,
+                                      95,
+                                    ),
+                                    blurRadius: 6,
+                                    offset: Offset.fromDirection(2, 5),
+                                  ),
+                                ],
+                              ),
+                              child: SizedBox(
+                                width: MediaQuery.sizeOf(context).width / 2.5,
+                                child: FittedBox(
+                                  fit: BoxFit.fitWidth,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        "Edition Viewer",
+                                        style: GoogleFonts.lora(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 30),
+                                      const FaIcon(
+                                        FontAwesomeIcons.newspaper,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                      const SizedBox(width: 10),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.of(
                                 context,
-                                '/loading',
-                                arguments: {
-                                  'title': randomarticle.Article_Title,
-                                  'author': randomarticle.author,
-                                  'ID': randomarticle.Article_ID,
-                                },
-                              );
-                            }
-                          },
-                        ),
+                              ).pushNamed('/edition_viewer');
+                            },
+                          ),
+                          InkWell(
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 17, 49, 103),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color.fromARGB(
+                                      255,
+                                      73,
+                                      81,
+                                      95,
+                                    ),
+                                    blurRadius: 6,
+                                    offset: Offset.fromDirection(2, 5),
+                                  ),
+                                ],
+                              ),
+                              child: SizedBox(
+                                width: MediaQuery.sizeOf(context).width / 2.5,
+                                child: FittedBox(
+                                  fit: BoxFit.fitWidth,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        "Random Article",
+                                        style: GoogleFonts.lora(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 30),
+                                      const FaIcon(
+                                        FontAwesomeIcons.diceSix,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                      const SizedBox(width: 10),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            onTap: () async {
+                              if (Globals.clicked == false) {
+                                Globals.clicked = true;
+                                await Future.delayed(
+                                  const Duration(milliseconds: 350),
+                                );
+                                int random_item_index = rand.nextInt(
+                                  processedArticles.length,
+                                );
+                                Article randomarticle =
+                                    articlelist[random_item_index];
+                                Navigator.pushNamed(
+                                  context,
+                                  '/loading',
+                                  arguments: {
+                                    'title': randomarticle.Article_Title,
+                                    'author': randomarticle.author,
+                                    'ID': randomarticle.Article_ID,
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
 
-                  // List
-                  SliverList(
+                  SliverGrid(
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent:
+                          (width > MediaQuery.sizeOf(context).width / 2)
+                          ? MediaQuery.sizeOf(context).width
+                          : width,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                      childAspectRatio: 1.6,
+                    ),
                     delegate: SliverChildBuilderDelegate((context, index) {
                       final instrument = processedArticles[index];
-                      return Padding(
-                        padding: EdgeInsetsGeometry.symmetric(
-                          vertical: 12,
-                          horizontal: 8,
-                        ),
-                        child: Other_Instances_Cardbuild(article: instrument),
+                      return Other_Instances_Cardbuild(
+                        article: instrument,
+                        width: (width > MediaQuery.sizeOf(context).width / 2)
+                            ? MediaQuery.sizeOf(context).width
+                            : width,
+                        height: (width > MediaQuery.sizeOf(context).width / 2)
+                            ? MediaQuery.sizeOf(context).width / 1.6
+                            : width / 1.6,
                       );
                     }, childCount: processedArticles.length),
                   ),
