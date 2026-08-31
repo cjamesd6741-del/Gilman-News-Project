@@ -19,6 +19,8 @@ import 'package:The_Gilman_News/pages/miscpages/credits.dart'; // 6 or 7 imports
 import 'package:The_Gilman_News/pages/homepages/author_catalogue.dart';
 import 'package:The_Gilman_News/pages/homepages/author_profile_page.dart';
 import 'package:The_Gilman_News/pages/articlepages/edition_viewer.dart';
+import 'package:The_Gilman_News/pages/homepages/article_of_the_day.dart';
+import 'package:The_Gilman_News/pages/homepages/archived_articles.dart';
 
 class Route_Manager extends StatefulWidget {
   const Route_Manager({super.key});
@@ -73,6 +75,10 @@ class _Route_ManagerState extends State<Route_Manager> {
         final statsState = element.findAncestorStateOfType<StatsState>();
         statsState?.onTabVisibilityChanged(i == index);
 
+        final articleofdayState = element
+            .findAncestorStateOfType<Article_of_the_Day_PageState>();
+        articleofdayState?.onTabVisibilityChanged(i == index);
+
         final allarticleState = element
             .findAncestorStateOfType<AllArticlesPageState>();
         allarticleState?.onTabVisibilityChanged(i == index);
@@ -80,6 +86,10 @@ class _Route_ManagerState extends State<Route_Manager> {
         final currentarticleState = element
             .findAncestorStateOfType<CurrentArticlesState>();
         currentarticleState?.onTabVisibilityChanged(i == index);
+
+        final archivedarticlesstate = element
+            .findAncestorStateOfType<ArchivedArticlesState>();
+        archivedarticlesstate?.onTabVisibilityChanged(i == index);
 
         final authorcatState = element
             .findAncestorStateOfType<AuthorCatState>();
@@ -133,6 +143,22 @@ class _Route_ManagerState extends State<Route_Manager> {
           settings: settings,
           builder: (_) =>
               Article_Page(tab_index: 1, observer: _routeObservers[1]),
+        );
+
+      case '/article_of_the_day':
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => Article_of_the_Day_Page(
+            tab_index: 1,
+            observer: _routeObservers[1],
+          ),
+        );
+
+      case '/archived_articles':
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) =>
+              ArchivedArticles(tab_index: 1, observer: _routeObservers[1]),
         );
 
       default:

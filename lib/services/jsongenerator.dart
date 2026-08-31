@@ -21,7 +21,10 @@ class Getter {
     );
     print(info.keys);
     print(info['Extra_Article_Room']);
+    return json_formatter(info);
+  }
 
+  Map json_formatter(dynamic info) {
     if (info['Image_urls'] != null) {
       // this is a mess I need to clean up soon
       Map infowthimage = info['json_article_file'];
@@ -45,7 +48,6 @@ class Getter {
         return info['json_article_file'];
       }
     }
-
     if (info['Extra_Article_Room'] == null) {
       info['json_article_file']['id'] = info["Article_ID"];
       return info['json_article_file'];
@@ -59,6 +61,21 @@ class Getter {
       info['json_article_file']['body'] = combinedList;
       info['json_article_file']['id'] = info["Article_ID"];
       return info['json_article_file'];
+    }
+  }
+
+  Future<Map<dynamic, dynamic>> fetch_article_of_the_day() async {
+    print("fetching...");
+    final info = await Supabase.instance.client.rpc('get_article_of_the_day');
+    try {
+      Map article = info as Map<dynamic, dynamic>;
+      Map json = json_formatter(article);
+      String title = article['Article_Title'] ?? "Gilman Is The Best";
+      String author = article['Author'] ?? 'John Doe';
+      Map return_object = {'json': json, 'title': title, 'author': author};
+      return return_object;
+    } catch (_) {
+      return Future.error("supabase failed to fetch");
     }
   }
 }

@@ -56,7 +56,8 @@ class _MastHead_PageState extends State<MastHead_Page> {
     cacheManager.save('masthead_version_number', vnum);
     cacheManager.save('MastHeads', onlinedata);
     cacheManager.save('masthead_year', year_data['year']);
-    year = year_data['year'];
+    year =
+        year_data['year']; //sets year to the highest value year in the masthead table (reference first supabase query)
     maxyear = year.toDouble();
     return onlinedata;
   }
@@ -155,7 +156,9 @@ class _MastHead_PageState extends State<MastHead_Page> {
                   Map<dynamic, dynamic>? currentdata;
                   try {
                     currentdata = useddata.firstWhere(
-                      (map) => map['year'] == year,
+                      (map) =>
+                          map['year'] ==
+                          year, // finds first element where the masthead year is equal to the most recent year
                     );
                   } catch (e) {
                     // throws a bas state no element error, so if thats coming up don't worry, in the words of Todd Howard, "It just works."

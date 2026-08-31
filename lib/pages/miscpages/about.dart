@@ -46,8 +46,8 @@ class AboutPage extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox(height: 30),
-                    RichText(
-                      text: TextSpan(
+                    SelectableText.rich(
+                      TextSpan(
                         text: "      The ",
                         style: GoogleFonts.lora(
                           fontSize: 24,
@@ -69,8 +69,8 @@ class AboutPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    RichText(
-                      text: TextSpan(
+                    SelectableText.rich(
+                      TextSpan(
                         text: "      The News ",
                         style: GoogleFonts.lora(
                           fontSize: 24,
@@ -104,8 +104,8 @@ class AboutPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    RichText(
-                      text: TextSpan(
+                    SelectableText.rich(
+                      TextSpan(
                         text: "      Furthermore, ",
                         style: GoogleFonts.lora(
                           fontSize: 24,

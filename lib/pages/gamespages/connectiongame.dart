@@ -229,6 +229,7 @@ class _ConnectionsState extends State<Connections> {
             if (!asyncSnapshot.hasError && asyncSnapshot.hasData) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
                     child: LayoutBuilder(
@@ -247,7 +248,7 @@ class _ConnectionsState extends State<Connections> {
                                 left: e.key % 4 * (cwidth + 8),
                                 top:
                                     e.key ~/ 4 * cheight +
-                                    (numguessed + 1) * cheight,
+                                    (numguessed + .3) * cheight,
                               );
                             }).toList(),
                             ...bannersguessed
@@ -256,7 +257,7 @@ class _ConnectionsState extends State<Connections> {
                                 .map(
                                   (e) => AnimatedPositioned(
                                     key: e.value.key,
-                                    top: 0 + (1 + e.key) * cheight,
+                                    top: 0 + (.3 + e.key) * cheight,
                                     left: 0,
                                     width: constraints.maxWidth,
                                     height: cheight - 8,
@@ -268,7 +269,7 @@ class _ConnectionsState extends State<Connections> {
 
                             for (int i = 0; i < guesses; i++)
                               AnimatedPositioned(
-                                top: cheight * 5,
+                                top: cheight * 4.5,
                                 width:
                                     constraints.maxWidth -
                                     ((guesses - 1 - i) * cwidth / 3) +

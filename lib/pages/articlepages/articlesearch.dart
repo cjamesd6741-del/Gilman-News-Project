@@ -6,6 +6,7 @@ import 'package:The_Gilman_News/services/globals.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'dart:math';
 
 class AllArticleSearch extends SearchDelegate {
   List<ArticleWithReadStatus> articles;
@@ -32,7 +33,7 @@ class AllArticleSearch extends SearchDelegate {
   void _onQueryChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(const Duration(milliseconds: 100), () {
+    _debounce = Timer(const Duration(milliseconds: 500), () {
       _debouncedQueryNotifier.value = query;
     });
   }
@@ -69,6 +70,7 @@ class AllArticleSearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
     return ValueListenableBuilder<Set<int>>(
       valueListenable: Globals.globalReadArticlesNotifier,
       builder: (context, readArticles, _) {
@@ -95,6 +97,8 @@ class AllArticleSearch extends SearchDelegate {
           itemCount: matches.length,
           itemBuilder: (context, index) {
             return Other_Instances_Cardbuild(
+              width: width,
+              height: min(width * .6, 250),
               article: matches[index],
               onReturn: () async {
                 final currentReads = Set<int>.from(readnotifier.value);
@@ -112,6 +116,7 @@ class AllArticleSearch extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
     _onQueryChanged(query);
     return ListenableBuilder(
       listenable: Listenable.merge([readnotifier, _debouncedQueryNotifier]),
@@ -142,6 +147,8 @@ class AllArticleSearch extends SearchDelegate {
             final article = matches[index].article;
 
             return Other_Instances_Cardbuild(
+              width: width,
+              height: min(width * .6, 250),
               article: ArticleWithReadStatus(
                 article: article,
                 isRead: readArticles.contains(article.Article_ID),
@@ -198,6 +205,7 @@ class AllArticleTextSearch extends SearchDelegate {
       'text_searcher',
       params: {'query': _normalize(squery), 'range': 20},
     );
+    print(data);
     return data;
   }
 
@@ -206,6 +214,7 @@ class AllArticleTextSearch extends SearchDelegate {
       'text_searcher',
       params: {'query': _normalize(rquery), 'range': 1000},
     );
+    print(data);
     return data;
   }
 
@@ -251,6 +260,7 @@ class AllArticleTextSearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
     print(query);
     final cleanQuery = query.trim();
     print(last_query);
@@ -330,6 +340,8 @@ class AllArticleTextSearch extends SearchDelegate {
                 return Padding(
                   padding: EdgeInsets.all(8),
                   child: Other_Instances_Cardbuild(
+                    width: width,
+                    height: min(width * .6, 250),
                     article: processedArticle,
                     onReturn: () async {
                       final currentReads = Set<int>.from(readnotifier.value);
@@ -352,6 +364,7 @@ class AllArticleTextSearch extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
     _debounceSearch(query);
     if (query == '') {
       // quick check to prevent empty query
@@ -419,6 +432,8 @@ class AllArticleTextSearch extends SearchDelegate {
                     return Padding(
                       padding: EdgeInsets.all(8),
                       child: Other_Instances_Cardbuild(
+                        width: width,
+                        height: min(width * .6, 250),
                         article: processedArticle,
                         onReturn: () async {
                           final currentReads = Set<int>.from(

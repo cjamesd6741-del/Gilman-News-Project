@@ -6,19 +6,19 @@ import 'package:The_Gilman_News/services/cache.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
 
-class CurrentArticles extends StatefulWidget {
+class ArchivedArticles extends StatefulWidget {
   final int tab_index;
   final RouteObserver<ModalRoute<void>> observer;
-  const CurrentArticles({
+  const ArchivedArticles({
     super.key,
     required this.tab_index,
     required this.observer,
   });
   @override
-  State<CurrentArticles> createState() => CurrentArticlesState();
+  State<ArchivedArticles> createState() => ArchivedArticlesState();
 }
 
-class CurrentArticlesState extends State<CurrentArticles> with RouteAware {
+class ArchivedArticlesState extends State<ArchivedArticles> with RouteAware {
   CacheManager cacheManager = CacheManager();
   bool _isRouteVisible = false; // is on current tab?
   bool _isTabVisible = false; // is on current screen?
@@ -29,7 +29,8 @@ class CurrentArticlesState extends State<CurrentArticles> with RouteAware {
   bool show_to_top = false;
   late Future _future;
   late int version_num =
-      cacheManager.get('current_article_version_number') ?? 0;
+      cacheManager.get('current_article_version_number') ??
+      0; // kept same as current artiicles because in theory this being update would cascade to archived articles
 
   @override // all are checks to see if visibility changes
   void dispose() {
@@ -114,16 +115,18 @@ class CurrentArticlesState extends State<CurrentArticles> with RouteAware {
     if (online_version_number['Version'] != version_num) {
       return getdata(online_version_number['Version']);
     }
-    return Future.value(cacheManager.get('current_article_cards'));
+    return Future.value(cacheManager.get('archived_article_cards'));
   }
 
   Future<List> getdata(int vnum) async {
     var data = await Supabase.instance.client
-        .from('Current_Articles')
-        .select('Author, Article_Title, Date, Article_ID, Categories')
-        .order('Article_Title', ascending: false);
+        .from('Archived_Articles')
+        .select(
+          'Author, Article_Title, Date, Article_ID, edition_num, Categories',
+        )
+        .order('edition_num', ascending: true);
     cacheManager.save('current_article_version_number', vnum);
-    cacheManager.save('current_article_cards', data);
+    cacheManager.save('archived_article_cards', data);
     return data;
   }
 
@@ -141,12 +144,20 @@ class CurrentArticlesState extends State<CurrentArticles> with RouteAware {
     final double expandedHeight = max(screenHeight / 8, 100.0);
     final double collapsedHeight = max(screenHeight / 12, 70.0);
     final width = MediaQuery.sizeOf(context).width - 72;
+
     return NestedScrollView(
       controller: _scrollController,
       floatHeaderSlivers: false,
       headerSliverBuilder: (context, innerBoxIsScrolled) {
         return [
           SliverAppBar(
+            leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+            ),
+
             forceElevated: true,
             shadowColor: Colors.black,
             elevation: 4.0,
@@ -158,7 +169,10 @@ class CurrentArticlesState extends State<CurrentArticles> with RouteAware {
             flexibleSpace: Stack(
               fit: StackFit.expand,
               children: [
-                Image.asset('lib/images/gilmanschool2.png', fit: BoxFit.cover),
+                Image.asset(
+                  'lib/images/Archived_Articles.png',
+                  fit: BoxFit.cover,
+                ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: AnimatedContainer(
@@ -176,27 +190,21 @@ class CurrentArticlesState extends State<CurrentArticles> with RouteAware {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              AnimatedDefaultTextStyle(
-                                duration: Duration(milliseconds: 100),
+                              Text(
+                                'Gilman News',
                                 style: GoogleFonts.libreCaslonText(
-                                  fontSize: 24 + width / 35,
-                                  fontWeight: FontWeight.bold,
-                                  color: innerBoxIsScrolled
-                                      ? Colors.white
-                                      : const Color.fromARGB(255, 9, 43, 62),
-                                ),
-                                child: Text('Gilman News'),
-                              ),
-                              AnimatedDefaultTextStyle(
-                                duration: Duration(milliseconds: 100),
-                                style: GoogleFonts.libreCaslonText(
-                                  fontSize: 18 + width / 50,
+                                  fontSize: 20 + width / 50,
                                   fontStyle: FontStyle.italic,
-                                  color: innerBoxIsScrolled
-                                      ? Colors.white
-                                      : const Color.fromARGB(255, 9, 43, 62),
+                                  color: Colors.white,
                                 ),
-                                child: Text('Current Articles'),
+                              ),
+                              Text(
+                                'Archived Articles',
+                                style: GoogleFonts.libreCaslonText(
+                                  fontSize: 20 + width / 50,
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -279,8 +287,15 @@ class CurrentArticlesState extends State<CurrentArticles> with RouteAware {
                     ((context, index) {
                       final instrument = processedArticles[index];
                       return Padding(
-                        padding: EdgeInsetsGeometry.fromLTRB(12, 10, 12, 10),
-                        child: Recent_Article_Cardbuild(article: instrument),
+                        padding: EdgeInsetsGeometry.symmetric(
+                          horizontal: 5,
+                          vertical: 10,
+                        ),
+                        child: Other_Instances_Cardbuild(
+                          height: min(width * .8, 350),
+                          width: (width - 10),
+                          article: instrument,
+                        ),
                       );
                     } // itemBuilder function
                     ), //itembuilder parenthesis,

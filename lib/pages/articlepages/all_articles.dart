@@ -89,6 +89,11 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
     }
   }
 
+  void onTabVisible() {
+    debugPrint("hello");
+    refreshPage();
+  }
+
   @override
   initState() {
     super.initState();
@@ -96,11 +101,6 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
     readArticlesNotifier = ValueNotifier(Set<int>.from(cached));
     readarticles = cached.toSet();
     _future = datagenerator();
-  }
-
-  void onTabVisible() {
-    debugPrint("hello");
-    refreshPage();
   }
 
   Future<List> datagenerator() async {
@@ -123,7 +123,9 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
         .from('Articles')
         .select(
           'Author, Article_Title, Date, Article_ID, edition_num, Categories',
-        );
+        )
+        .order("edition_num")
+        .limit(300);
     cacheManager.save('article_version_number', vnum);
     cacheManager.save('article_cards', data);
     return data;
@@ -149,6 +151,9 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.sizeOf(context).height;
+    final double expandedHeight = max(screenHeight / 8, 100.0);
+    final double collapsedHeight = max(screenHeight / 12, 70.0);
     return NestedScrollView(
       controller: _scrollController,
       headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -161,8 +166,9 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
               shadowColor: Colors.black,
               elevation: 4.0,
               backgroundColor: const Color.fromARGB(255, 30, 85, 131),
-              expandedHeight: MediaQuery.sizeOf(context).height / 8,
-              collapsedHeight: max(80, MediaQuery.sizeOf(context).height / 12),
+              expandedHeight: expandedHeight,
+              collapsedHeight: collapsedHeight,
+              toolbarHeight: 60,
               pinned: true,
               floating: false,
               flexibleSpace: Stack(
@@ -302,12 +308,12 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: 30,
-                        horizontal: 10,
+                        horizontal: 5,
                       ),
                       child: Wrap(
                         alignment: WrapAlignment.center,
-                        spacing: 20,
-                        runSpacing: 10,
+                        spacing: 15,
+                        runSpacing: 20,
                         children: [
                           InkWell(
                             child: DecoratedBox(
@@ -327,30 +333,36 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                                   ),
                                 ],
                               ),
-                              child: Container(
-                                width: MediaQuery.sizeOf(context).width / 2.5,
-                                child: FittedBox(
-                                  fit: BoxFit.fitWidth,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        "Search-Lite",
-                                        style: GoogleFonts.lora(
-                                          color: Colors.white,
-                                          fontSize: 20,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10,
+                                ),
+                                child: Container(
+                                  width: MediaQuery.sizeOf(context).width / 2.2,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          "Search-Lite",
+                                          style: GoogleFonts.lora(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 30),
-                                      const Icon(
-                                        Icons.search,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 10),
-                                    ],
+                                        const SizedBox(width: 30),
+                                        const Icon(
+                                          Icons.search,
+                                          color: Colors.white,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(width: 10),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -384,30 +396,36 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                                   ),
                                 ],
                               ),
-                              child: SizedBox(
-                                width: MediaQuery.sizeOf(context).width / 2.5,
-                                child: FittedBox(
-                                  fit: BoxFit.fitWidth,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        "Deep Search",
-                                        style: GoogleFonts.lora(
-                                          color: Colors.white,
-                                          fontSize: 20,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10,
+                                ),
+                                child: Container(
+                                  width: MediaQuery.sizeOf(context).width / 2.2,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          "Deep Search",
+                                          style: GoogleFonts.lora(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 30),
-                                      const FaIcon(
-                                        FontAwesomeIcons.searchengin,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 10),
-                                    ],
+                                        const SizedBox(width: 30),
+                                        const FaIcon(
+                                          FontAwesomeIcons.searchengin,
+                                          color: Colors.white,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(width: 10),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -440,30 +458,36 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                                   ),
                                 ],
                               ),
-                              child: SizedBox(
-                                width: MediaQuery.sizeOf(context).width / 2.5,
-                                child: FittedBox(
-                                  fit: BoxFit.fitWidth,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        "Edition Viewer",
-                                        style: GoogleFonts.lora(
-                                          color: Colors.white,
-                                          fontSize: 20,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10,
+                                ),
+                                child: Container(
+                                  width: MediaQuery.sizeOf(context).width / 2.2,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          "Edition Viewer",
+                                          style: GoogleFonts.lora(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 30),
-                                      const FaIcon(
-                                        FontAwesomeIcons.newspaper,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 10),
-                                    ],
+                                        const SizedBox(width: 30),
+                                        const FaIcon(
+                                          FontAwesomeIcons.newspaper,
+                                          color: Colors.white,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(width: 10),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -492,30 +516,36 @@ class AllArticlesPageState extends State<AllArticlesPage> with RouteAware {
                                   ),
                                 ],
                               ),
-                              child: SizedBox(
-                                width: MediaQuery.sizeOf(context).width / 2.5,
-                                child: FittedBox(
-                                  fit: BoxFit.fitWidth,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        "Random Article",
-                                        style: GoogleFonts.lora(
-                                          color: Colors.white,
-                                          fontSize: 20,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10,
+                                ),
+                                child: Container(
+                                  width: MediaQuery.sizeOf(context).width / 2.2,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          "Random Article",
+                                          style: GoogleFonts.lora(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 30),
-                                      const FaIcon(
-                                        FontAwesomeIcons.diceSix,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 10),
-                                    ],
+                                        const SizedBox(width: 30),
+                                        const FaIcon(
+                                          FontAwesomeIcons.diceSix,
+                                          color: Colors.white,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(width: 10),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),

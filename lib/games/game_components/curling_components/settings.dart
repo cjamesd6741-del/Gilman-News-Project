@@ -27,12 +27,10 @@ class _SettingPageState extends State<SettingPage> {
         children: [
           Expanded(
             child: Card(
-              color: const Color.fromARGB(255, 17, 15, 71),
+              color: const Color.fromARGB(255, 50, 45, 45),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                spacing: 5,
                 children: [
-                  SizedBox(height: 15),
                   Center(
                     child: Text(
                       "Settings",
@@ -42,7 +40,6 @@ class _SettingPageState extends State<SettingPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
                   Slider(
                     value: widget.game.cf,
                     onChanged: (value) {
@@ -52,22 +49,23 @@ class _SettingPageState extends State<SettingPage> {
                     },
                     min: 0,
                     max: 5,
+                    activeColor: const Color.fromARGB(255, 186, 188, 190),
                   ),
                   Center(
                     child: Text(
-                      "Coefficient of Friction : ${widget.game.cf.toStringAsFixed(2)}",
+                      "Coefficient Of Friction : ${widget.game.cf.toStringAsFixed(2)}",
                       style: GoogleFonts.libertinusMath(
-                        color: Colors.white,
+                        color: const Color.fromARGB(255, 220, 220, 220),
                         fontSize: 18,
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
                   Slider(
                     value: widget.game.num_of_tries.toDouble(),
                     min: 1,
                     max: 15,
                     divisions: 15,
+                    activeColor: const Color.fromARGB(255, 0, 75, 141),
                     onChanged: (value) {
                       setState(() {
                         widget.game.updatetries(value.toInt());
@@ -75,25 +73,21 @@ class _SettingPageState extends State<SettingPage> {
                     },
                   ),
                   Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "# of Tries : ${widget.game.num_of_tries}",
-                          style: GoogleFonts.libertinusMath(
-                            color: Colors.white,
-                            fontSize: 18,
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          "Note* this only applies after end of current round",
-                          style: GoogleFonts.libertinusMath(
-                            color: const Color.fromARGB(255, 181, 181, 181),
-                            fontSize: 15,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      "# Of Tries : ${widget.game.num_of_tries}",
+                      style: GoogleFonts.libertinusMath(
+                        color: const Color.fromARGB(255, 23, 123, 211),
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      "Note* this only applies after end of current round",
+                      style: GoogleFonts.libertinusMath(
+                        color: const Color.fromARGB(255, 13, 104, 183),
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -106,6 +100,7 @@ class _SettingPageState extends State<SettingPage> {
                         widget.game.launch_constant = value;
                       });
                     },
+                    activeColor: Color.fromARGB(255, 186, 188, 190),
                   ),
                   Center(
                     child: Text(
@@ -127,7 +122,9 @@ class _SettingPageState extends State<SettingPage> {
                           widget.game.resethighscore();
                         },
                         child: Ink(
-                          decoration: BoxDecoration(color: Colors.blue),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 0, 75, 141),
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
@@ -142,9 +139,11 @@ class _SettingPageState extends State<SettingPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
                   Padding(
-                    padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
+                    padding: EdgeInsetsGeometry.symmetric(
+                      horizontal: 5,
+                      vertical: 20,
+                    ),
                     child: SafeArea(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

@@ -1,12 +1,17 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:math';
 
 class MiscPage extends StatelessWidget {
   const MiscPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.sizeOf(context).height;
+    final double expandedHeight = max(screenHeight / 8, 100.0);
+    final double collapsedHeight = max(screenHeight / 12, 70.0);
+    final double width = MediaQuery.sizeOf(context).width;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 158, 175, 206),
       body: NestedScrollView(
@@ -15,8 +20,9 @@ class MiscPage extends StatelessWidget {
             SliverAppBar(
               elevation: 10.0,
               backgroundColor: const Color.fromARGB(255, 30, 85, 131),
-              expandedHeight: MediaQuery.sizeOf(context).height / 8,
-              collapsedHeight: 90,
+              expandedHeight: expandedHeight,
+              collapsedHeight: collapsedHeight,
+              toolbarHeight: collapsedHeight,
               pinned: true,
               floating: true,
               forceElevated: true,
@@ -39,24 +45,22 @@ class MiscPage extends StatelessWidget {
                           ? const Color.fromARGB(255, 30, 85, 131)
                           : Colors.transparent,
                       child: SafeArea(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              AnimatedDefaultTextStyle(
+                        child: Align(
+                          alignment: AlignmentGeometry.center,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 40),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: AnimatedDefaultTextStyle(
                                 duration: const Duration(milliseconds: 100),
                                 style: TextStyle(
-                                  fontSize: 26,
+                                  fontSize: 33,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text('Miscellaneous'),
-                                ),
+                                child: Text('Miscellaneous'),
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
@@ -74,35 +78,37 @@ class MiscPage extends StatelessWidget {
             ),
           ];
         },
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 30),
-              Material(
-                borderRadius: BorderRadius.circular(16),
-                clipBehavior: Clip.hardEdge,
-                elevation: 4,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/stats');
-                  },
-                  child: Ink(
-                    height: 300,
-                    width: MediaQuery.sizeOf(context).width - 30,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("lib/images/Stats.png"),
-                        fit: BoxFit.cover,
-                      ),
+        body: GridView.count(
+          padding: EdgeInsets.fromLTRB(10, 15, 10, 0),
+          crossAxisCount: 2,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
+          children: [
+            Material(
+              borderRadius: BorderRadius.circular(16),
+              clipBehavior: Clip.hardEdge,
+              elevation: 4,
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/stats');
+                },
+                child: Ink(
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("lib/images/Stats.png"),
+                      fit: BoxFit.cover,
                     ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Center(
                         child: Text(
                           "Stats",
                           style: GoogleFonts.lora(
-                            fontSize: 50,
+                            fontSize: 22 + (width / 35),
+                            fontWeight: FontWeight.bold,
                             color: Color.fromARGB(255, 255, 255, 255),
                           ),
                         ),
@@ -111,35 +117,33 @@ class MiscPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
-              Material(
-                borderRadius: BorderRadius.circular(16),
-                clipBehavior: Clip.hardEdge,
-                elevation: 4,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/masthead');
-                  },
-                  child: Ink(
-                    height: 300,
-                    width: MediaQuery.sizeOf(context).width - 30,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("lib/images/Masthead.jpg"),
-                        fit: BoxFit.cover,
-                      ),
+            ),
+            Material(
+              borderRadius: BorderRadius.circular(16),
+              clipBehavior: Clip.hardEdge,
+              elevation: 4,
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/masthead');
+                },
+                child: Ink(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("lib/images/Masthead.jpg"),
+                      fit: BoxFit.cover,
                     ),
-                    child: Padding(
-                      padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Center(
-                          child: Text(
-                            "Masthead",
-                            style: GoogleFonts.lora(
-                              fontSize: 50,
-                              color: Color.fromARGB(255, 0, 75, 141),
-                            ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Center(
+                        child: Text(
+                          "Masthead",
+                          style: GoogleFonts.lora(
+                            fontSize: 22 + (width / 35),
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 0, 75, 141),
                           ),
                         ),
                       ),
@@ -147,39 +151,37 @@ class MiscPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
-              Material(
-                borderRadius: BorderRadius.circular(16),
-                clipBehavior: Clip.hardEdge,
-                elevation: 4,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/about');
-                  },
-                  child: Ink(
-                    height: 300,
-                    width: MediaQuery.sizeOf(context).width - 30,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color.fromARGB(255, 25, 112, 188),
-                          Color.fromARGB(255, 1, 53, 100),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
+            ),
+            Material(
+              borderRadius: BorderRadius.circular(16),
+              clipBehavior: Clip.hardEdge,
+              elevation: 4,
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/about');
+                },
+                child: Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.fromARGB(255, 25, 112, 188),
+                        Color.fromARGB(255, 1, 53, 100),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                    child: Padding(
-                      padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Center(
-                          child: Text(
-                            "About",
-                            style: GoogleFonts.lora(
-                              fontSize: 50,
-                              color: Color.fromARGB(255, 255, 255, 255),
-                            ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Center(
+                        child: Text(
+                          "About",
+                          style: GoogleFonts.lora(
+                            fontSize: 22 + (width / 35),
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 255, 255, 255),
                           ),
                         ),
                       ),
@@ -187,40 +189,38 @@ class MiscPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
-              Material(
-                borderRadius: BorderRadius.circular(16),
-                clipBehavior: Clip.hardEdge,
-                elevation: 4,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/credits');
-                  },
-                  child: Ink(
-                    height: 300,
-                    width: MediaQuery.sizeOf(context).width - 30,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color.fromARGB(255, 118, 119, 120),
-                          Color.fromARGB(255, 78, 77, 77),
-                        ],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
+            ),
+            Material(
+              borderRadius: BorderRadius.circular(16),
+              clipBehavior: Clip.hardEdge,
+              elevation: 4,
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/credits');
+                },
+                child: Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.fromARGB(255, 118, 119, 120),
+                        Color.fromARGB(255, 78, 77, 77),
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
                     ),
-                    child: Padding(
-                      padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
-                      child: FittedBox(
-                        // praise the fitted box, praise it!
-                        fit: BoxFit.scaleDown,
-                        child: Center(
-                          child: Text(
-                            "Licenses",
-                            style: GoogleFonts.lora(
-                              fontSize: 50,
-                              color: Color.fromARGB(255, 255, 255, 255),
-                            ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
+                    child: FittedBox(
+                      // praise the fitted box, praise it!
+                      fit: BoxFit.scaleDown,
+                      child: Center(
+                        child: Text(
+                          "Licenses",
+                          style: GoogleFonts.lora(
+                            fontSize: 22 + (width / 35),
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 255, 255, 255),
                           ),
                         ),
                       ),
@@ -228,8 +228,8 @@ class MiscPage extends StatelessWidget {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

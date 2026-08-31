@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HierarchyTree extends StatelessWidget {
-  List staff;
+  final List staff;
   final int maxyear;
   final double screenwidth;
   HierarchyTree({
@@ -16,32 +18,46 @@ class HierarchyTree extends StatelessWidget {
     int stafflength = staff.length;
     if (stafflength != 0) {
       return ListView.builder(
+        shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.all(16),
         itemCount: stafflength,
         itemBuilder: (context, index) {
           final person = staff[index];
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
+          return Align(
+            alignment: Alignment.topCenter,
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
                   width: 160,
                   child: Text(
                     person['role'],
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: GoogleFonts.lora(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 SizedBox(width: 10),
-                Expanded(child: Text(person['name'])),
+                SizedBox(
+                  width: 160,
+                  child: Text(
+                    person['name'],
+                    style: GoogleFonts.lora(fontSize: 20),
+                  ),
+                ),
               ],
             ),
           );
         },
       );
     }
-    return SizedBox(); //empty invisible box
+    return Text(
+      "No Masthead Given For This Year",
+      style: GoogleFonts.lora(fontSize: 20),
+    ); //empty invisible box
   }
 }
 

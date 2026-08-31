@@ -157,6 +157,7 @@ class _EditionViewerState extends State<EditionViewer> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.sizeOf(context).width;
     return NestedScrollView(
       controller: _scrollController,
       headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -262,6 +263,7 @@ class _EditionViewerState extends State<EditionViewer> with RouteAware {
                 itemBuilder: (BuildContext context, int index) {
                   Map<String, dynamic> edition = listEditions[index];
                   return Edition_Single(
+                    width: width,
                     edition: edition,
                     readArticlesNotifier: Globals.globalReadArticlesNotifier,
                   );
@@ -288,10 +290,12 @@ class _EditionViewerState extends State<EditionViewer> with RouteAware {
 class Edition_Single extends StatefulWidget {
   final Map<String, dynamic> edition;
   final ValueNotifier readArticlesNotifier;
+  final double width;
   const Edition_Single({
     super.key,
     required this.edition,
     required this.readArticlesNotifier,
+    required this.width,
   });
 
   @override
@@ -396,6 +400,8 @@ class _Edition_SingleState extends State<Edition_Single> {
                         padding: EdgeInsets.all(8),
                         child: Other_Instances_Cardbuild(
                           article: processedArticle,
+                          height: min(widget.width * .6, 250),
+                          width: widget.width,
                         ),
                       );
                     },

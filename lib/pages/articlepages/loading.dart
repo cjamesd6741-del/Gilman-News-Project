@@ -17,7 +17,7 @@ class _LoadingState extends State<Loading> {
   Map data = {};
   bool recommended = false;
   bool _cancelled = false;
-
+  // Article Functions
   void get_article_Data(String author, String title, int id) async {
     final articlejsonjson = await _getter.fetchArticleJson(id);
     if (_cancelled || !mounted) return;
@@ -49,6 +49,7 @@ class _LoadingState extends State<Loading> {
     }
   }
 
+  // Author Functions
   void get_author_data(String author) async {
     final Storedata _storedata = Storedata();
     final authorList = await _storedata.followed_author_reader();
@@ -81,6 +82,41 @@ class _LoadingState extends State<Loading> {
     }
   }
 
+  // Article Of The Day Functions
+  void get_article_of_day() async {
+    Map<dynamic, dynamic> article = await _getter.fetch_article_of_the_day();
+    push_to_article_of_the_daypage(
+      article['json'],
+      article['title'],
+      article['author'],
+    );
+  }
+
+  void push_to_article_of_the_daypage(Map inputjson, title, author) {
+    print(title);
+    print(author);
+    if (!_cancelled && mounted) {
+      Navigator.pushReplacementNamed(
+        context,
+        '/article_of_the_day',
+        arguments: {
+          'words': inputjson['body'],
+          'title': title,
+          'author': author,
+          'date': inputjson['date'],
+          'category': inputjson['category'],
+          'image_urls': inputjson['Image_urls'],
+          'image_labels': inputjson['Image_label'],
+          'id': inputjson['id'],
+          'recommended': recommended,
+          'prevauthor': data["prevauthor"],
+          'prevtitle': data["prevtitle"],
+          'prevID': data['prevID'],
+        },
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -102,6 +138,8 @@ class _LoadingState extends State<Loading> {
           case 'author':
             print('author load initialized');
             get_author_data(data['author']);
+          case 'article_of_the_day':
+            get_article_of_day();
         }
       }
     });

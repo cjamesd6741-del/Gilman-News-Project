@@ -16,9 +16,12 @@ import 'package:The_Gilman_News/services/cardbuilder.dart';
 import 'package:The_Gilman_News/services/carousel_image.dart';
 
 class Article_Page extends StatefulWidget {
+  // Substantiate necessary vars
   // shows the actual article
-  final int tab_index;
-  final RouteObserver<ModalRoute<void>> observer;
+  final int
+  tab_index; // tells what tab this instance of article page is on (either 1 or 2 for now)
+  final RouteObserver<ModalRoute<void>>
+  observer; // routeobserver so allows didPop didPush etc. not very necessary in the current config
   const Article_Page({
     super.key,
     required this.tab_index,
@@ -30,26 +33,26 @@ class Article_Page extends StatefulWidget {
 }
 
 class Article_PageState extends State<Article_Page> with RouteAware {
-  CacheManager cacheManager = CacheManager();
+  CacheManager cacheManager = CacheManager(); // create cache instance
   bool _isRouteVisible = false; // is on current tab?
   bool _isTabVisible = false; // is on current screen?
   Storedata storedata = Storedata(); // class for data storage
-  Textconfigure textconfigure = Textconfigure();
+  Textconfigure textconfigure = Textconfigure(); // for sizing of title text
   TextStyle appbartextStyle = GoogleFonts.lora(
     fontSize: 18,
     height: 1.2,
     color: Color.fromARGB(255, 25, 38, 56),
     fontWeight: FontWeight.bold,
-  );
-  List categories = [];
-  Stopwatch stopwatch = Stopwatch();
+  ); // tells textconfigure the size to calc
+  List categories = []; // categories
+  Stopwatch stopwatch = Stopwatch(); // tracks amount of time in article
   List authorslist = [];
   String authors = '';
-  Similarity_Finder similar = Similarity_Finder();
-  int id = 0;
-  int current_image_index = 0;
+  Similarity_Finder similar = Similarity_Finder(); // creates recommendations
+  int id = 0; // no clue
+  int current_image_index = 0; // controls carousel
   late Future<List<Article>> recs;
-  bool _initialized = false;
+  bool _initialized = false; // prevents double initialization later
   String prevauthor = ''; // init
   String prevtitle = ''; // init
   int previd = 0;
@@ -71,13 +74,15 @@ class Article_PageState extends State<Article_Page> with RouteAware {
   initState() {
     super.initState();
     final cached = cacheManager.get("read_articles") ?? []; //gets read articles
-    readarticles = cached.toSet();
+    readarticles = cached.toSet(); // use set for quick searching through
     followed_authors = storedata
         .followed_author_reader(); // gets followed authors
     storedata.updatearticleread(); // +1 to articles read
     stopwatch.start();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // runs 1 frame after the creation of element
+
       args = ModalRoute.of(context)?.settings.arguments;
       if (args != null && args is Map) {
         categories = args['category'] ?? [];
@@ -91,6 +96,8 @@ class Article_PageState extends State<Article_Page> with RouteAware {
             previd = args['prevID'] ?? 0;
           });
         }
+      } else {
+        print("no args sent to article page");
       }
     });
   }
@@ -633,6 +640,10 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                                     );
                                   }).toList();
 
+                                  final width = MediaQuery.sizeOf(
+                                    context,
+                                  ).width;
+
                                   return Padding(
                                     padding: const EdgeInsets.only(
                                       bottom: 30,
@@ -652,6 +663,8 @@ class Article_PageState extends State<Article_Page> with RouteAware {
                                                 0,
                                               ),
                                           child: Other_Instances_Cardbuild(
+                                            width: width,
+                                            height: min(width * .6, 250),
                                             article: recommend,
                                             onleave: onLeave,
                                           ),

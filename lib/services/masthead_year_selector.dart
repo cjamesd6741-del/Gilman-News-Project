@@ -35,7 +35,7 @@ class _YearSelectorState extends State<YearSelector> {
           child: Text(
             "Use Slider to Select Year",
             style: GoogleFonts.lora(
-              fontSize: 15,
+              fontSize: 22,
               fontStyle: FontStyle.italic,
               color: const Color.fromARGB(255, 60, 78, 87),
             ),
